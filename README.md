@@ -12,6 +12,10 @@ preserving workbook parts it does not modify. There are no runtime dependencies.
 npm install @entree_pos/xlsx
 ```
 
+New to the library? Follow the [visual tutorial](https://huangxuewu.github.io/entree-xlsx/)
+from a basic data export through styling, formulas, templates, charts,
+PivotTables, and password encryption.
+
 ```js
 import { createWorkbook } from "@entree_pos/xlsx";
 

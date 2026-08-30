@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A practical, visual tutorial for creating polished Excel workbooks with @entree_pos/xlsx.">
+  <meta name="theme-color" content="#f6f8fb">
+  <title>@entree_pos/xlsx | Visual tutorial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#tutorial">Skip to tutorial</a>
+
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Entree XLSX home">
+      <span class="brand-mark" aria-hidden="true">X</span>
+      <span>@entree_pos/xlsx</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="#tutorial">Tutorial</a>
+      <a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md">API</a>
+      <a href="https://www.npmjs.com/package/@entree_pos/xlsx">npm</a>
+      <a href="https://github.com/huangxuewu/entree-xlsx">GitHub</a>
+      <button class="theme-button" type="button" aria-label="Change color theme">Theme</button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Modern JavaScript for Node.js 18+</p>
+        <h1 id="hero-title">Build better Excel files.</h1>
+        <p class="hero-summary">Eight small examples. Real workbook results. Zero runtime dependencies.</p>
+        <div class="install-row">
+          <code>npm install @entree_pos/xlsx</code>
+          <button class="copy-button" type="button" data-copy="npm install @entree_pos/xlsx">Copy</button>
+        </div>
+        <div class="hero-actions">
+          <a class="button primary" href="#lesson-1">Start with data</a>
+          <a class="button secondary" href="assets/examples/06-create-a-chart.xlsx" download>Download an example</a>
+        </div>
+      </div>
+      <figure class="hero-result">
+        <div class="window-bar"><span>monthly-revenue.xlsx</span><span>Live workbook result</span></div>
+        <img src="assets/results/06-create-a-chart.png" alt="Excel worksheet with monthly revenue data and a blue line chart" width="1470" height="662">
+      </figure>
+    </section>
+
+    <section class="orientation" aria-labelledby="path-title">
+      <div>
+        <p class="section-kicker">A practical learning path</p>
+        <h2 id="path-title">Start useful. Add power only when you need it.</h2>
+      </div>
+      <p>Common spreadsheet work begins with exporting data, then moves into presentation, calculation, layout, templates, analysis, and security. This guide follows that order.</p>
+    </section>
+
+    <div class="docs-layout" id="tutorial">
+      <aside class="contents" aria-label="Tutorial contents">
+        <p class="contents-label">Tutorial</p>
+        <ol>
+          <li><a href="#lesson-1"><span>01</span>Create a workbook</a></li>
+          <li><a href="#lesson-2"><span>02</span>Style it well</a></li>
+          <li><a href="#lesson-3"><span>03</span>Add formulas</a></li>
+          <li><a href="#lesson-4"><span>04</span>Improve layout</a></li>
+          <li><a href="#lesson-5"><span>05</span>Edit a template</a></li>
+          <li><a href="#lesson-6"><span>06</span>Create a chart</a></li>
+          <li><a href="#lesson-7"><span>07</span>Build a PivotTable</a></li>
+          <li><a href="#lesson-8"><span>08</span>Protect and encrypt</a></li>
+        </ol>
+        <a class="contents-reference" href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md">Read the full API reference</a>
+      </aside>
+
+      <div class="lessons">
+        <article class="lesson" id="lesson-1">
+          <header class="lesson-header">
+            <div class="lesson-number">01</div>
+            <div>
+              <p class="difficulty">Easy · 3 minutes</p>
+              <h2>Create a workbook from data</h2>
+              <p class="use-case"><strong>Use case:</strong> Export an array of application records to an Excel file that users can filter, share, and open immediately.</p>
+            </div>
+          </header>
+          <div class="lesson-grid">
+            <div class="code-panel">
+              <div class="panel-bar"><span>create-inventory.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
+
+const workbook = createWorkbook("Inventory");
+const sheet = workbook.sheet();
+
+sheet.replaceData([
+  { sku: "BK-101", item: "Burger", stock: 34 },
+  { sku: "FR-204", item: "Fries", stock: 18 },
+  { sku: "DR-305", item: "Cold Brew", stock: 27 },
+  { sku: "DS-410", item: "Cake", stock: 9 }
+]);
+
+sheet.autoFit({ min: 12, max: 28, padding: 3 });
+await workbook.save("inventory.xlsx");</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/01-create-workbook.png" target="_blank"><img src="assets/results/01-create-workbook.png" alt="Inventory worksheet with SKU, item, and stock columns" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/01-create-workbook.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p>Object keys become column headers in insertion order. Normalize records first if different rows can contain different keys.</p></div>
+            <div class="note advanced"><h3>Advanced use</h3><p>Use <code>toBuffer()</code> when returning a file from an HTTP route, or <code>toBase64()</code> when another service expects text.</p></div>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-2">
+          <header class="lesson-header">
+            <div class="lesson-number">02</div>
+            <div>
+              <p class="difficulty">Easy · 6 minutes</p>
+              <h2>Define styles once, then reuse them</h2>
+              <p class="use-case"><strong>Use case:</strong> Give reports a consistent visual system without repeating font, fill, alignment, and number format objects everywhere.</p>
+            </div>
+          </header>
+          <div class="lesson-grid">
+            <div class="code-panel">
+              <div class="panel-bar"><span>styles.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <pre><code>workbook.styles
+  .define("money", {
+    numberFormat: "$#,##0.00;[Red]-$#,##0.00"
+  })
+  .define("success", {
+    bold: true,
+    color: "#2E7D5B",
+    fill: "#E6F4ED",
+    horizontal: "center"
+  });
+
+sheet.cell("C6").style("money");
+sheet.cell("C7").style("success");
+
+sheet.range("A4:D4").style({
+  bold: true,
+  color: "#FFFFFF",
+  fill: "#2457C5"
+});</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/02-reusable-styles.png" target="_blank"><img src="assets/results/02-reusable-styles.png" alt="Worksheet demonstrating reusable label, money, success, and warning styles" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/02-reusable-styles.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p>Excel stores style records globally. Named styles keep large workbooks smaller and make visual changes easier to maintain.</p></div>
+            <div class="note advanced"><h3>Advanced use</h3><p>Style ranges with inside and outline borders, copy styles between cells, or clear selected properties without changing values.</p></div>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-3">
+          <header class="lesson-header">
+            <div class="lesson-number">03</div>
+            <div>
+              <p class="difficulty">Intermediate · 7 minutes</p>
+              <h2>Add formulas and number formats</h2>
+              <p class="use-case"><strong>Use case:</strong> Build invoices, budgets, or reports whose totals continue to update when a user edits the workbook in Excel.</p>
+            </div>
+          </header>
+          <div class="lesson-grid">
+            <div class="code-panel">
+              <div class="panel-bar"><span>invoice-totals.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <pre><code>sheet.range("A4:D7").setValues([
+  ["Item", "Quantity", "Price", "Total"],
+  ["Classic Burger", 2, 12.5, null],
+  ["Seasoned Fries", 1, 4, null],
+  ["Cold Brew", 2, 3.5, null]
+]);
+
+sheet.cell("D5").formula("B5*C5", 25);
+sheet.cell("D6").formula("B6*C6", 4);
+sheet.cell("D7").formula("B7*C7", 7);
+sheet.cell("D8").formula("SUM(D5:D7)", 36);
+
+sheet.range("C5:D8").style({
+  numberFormat: "$#,##0.00"
+});</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/03-formulas-and-formats.png" target="_blank"><img src="assets/results/03-formulas-and-formats.png" alt="Invoice worksheet with formulas and currency formatted totals" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/03-formulas-and-formats.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p>The second argument to <code>formula()</code> is the cached value shown by previewers that do not calculate formulas. Excel recalculates the formula when opened.</p></div>
+            <div class="note advanced"><h3>Advanced use</h3><p>Combine formulas with locked styles and worksheet protection to create controlled calculation models.</p></div>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-4">
+          <header class="lesson-header">
+            <div class="lesson-number">04</div>
+            <div>
+              <p class="difficulty">Intermediate · 8 minutes</p>
+              <h2>Make reports easy to scan</h2>
+              <p class="use-case"><strong>Use case:</strong> Turn a raw export into an operational report with clear widths, merged headings, filters, number formats, and links.</p>
+            </div>
+          </header>
+          <div class="lesson-grid">
+            <div class="code-panel">
+              <div class="panel-bar"><span>order-report.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <pre><code>sheet.range("A1:E1").merge();
+sheet.cell("A1").set("Open orders").style({
+  bold: true,
+  fontSize: 18,
+  color: "#FFFFFF",
+  fill: "#17202A"
+});
+
+sheet.autoFilter("A4:E9");
+sheet.setColumnWidth("B", 22);
+sheet.setColumnWidth("E", 18);
+
+sheet.cell("E5")
+  .set("Open order")
+  .hyperlink(
+    "https://example.com/orders/1041",
+    "View order details"
+  );</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/04-layout-and-filters.png" target="_blank"><img src="assets/results/04-layout-and-filters.png" alt="Open order report with clear headings, formatted totals, filters, and detail links" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/04-layout-and-filters.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p><code>hyperlink()</code> adds the destination and tooltip. Set the visible cell label separately so every spreadsheet viewer shows useful text.</p></div>
+            <div class="note advanced"><h3>Advanced use</h3><p>Use <code>autoFit()</code> for unknown data, then override important columns with explicit widths to keep reports predictable.</p></div>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-5">
+          <header class="lesson-header">
+            <div class="lesson-number">05</div>
+            <div>
+              <p class="difficulty">Intermediate · 9 minutes</p>
+              <h2>Edit an existing template</h2>
+              <p class="use-case"><strong>Use case:</strong> Fill a branded invoice, financial model, or operations form while keeping its existing layout and embedded workbook parts.</p>
+            </div>
+          </header>
+          <div class="lesson-grid">
+            <div class="code-panel">
+              <div class="panel-bar"><span>fill-template.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <pre><code>import { openWorkbook } from "@entree_pos/xlsx";
+
+const workbook = await openWorkbook(
+  "invoice-template.xlsx"
+);
+const sheet = workbook.sheet("Invoice");
+
+sheet.range("A5:C7").setValues([
+  ["Lunch catering", 12, 18.5],
+  ["Coffee service", 12, 3.25],
+  ["Delivery", 1, 25]
+]);
+
+sheet.cell("D5").formula("B5*C5", 222);
+sheet.cell("D6").formula("B6*C6", 39);
+sheet.cell("D7").formula("B7*C7", 25);
+sheet.cell("D8").formula("SUM(D5:D7)", 286);
+
+await workbook.save("invoice-ready.xlsx");</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/05-edit-a-template.png" target="_blank"><img src="assets/results/05-edit-a-template.png" alt="Completed invoice created by editing a styled workbook template" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/05-edit-a-template.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p>Open the final file in the desktop app your customers use. Complex templates can contain macros, controls, or vendor-specific extensions.</p></div>
+            <div class="note advanced"><h3>Advanced use</h3><p>The library patches changed OOXML parts and preserves untouched images, VBA, form controls, and unknown extensions in XLSX and XLSM files.</p></div>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-6">
+          <header class="lesson-header">
+            <div class="lesson-number">06</div>
+            <div>
+              <p class="difficulty">Advanced · 10 minutes</p>
+              <h2>Create and edit a chart</h2>
+              <p class="use-case"><strong>Use case:</strong> Add a visual trend to a report so readers can understand change without scanning every value.</p>
+            </div>
+          </header>
+          <div class="lesson-grid lesson-grid-wide-result">
+            <div class="code-panel">
+              <div class="panel-bar"><span>revenue-chart.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <pre><code>const chart = workbook.charts.add("Sales", {
+  name: "RevenueTrend",
+  type: "line",
+  title: "Revenue trend",
+  range: "A4:B9",
+  position: { from: "D4", to: "K18" },
+  legend: false
+});
+
+// Change it later without rebuilding the chart.
+workbook.charts.update(chart.id, {
+  type: "column",
+  title: "Monthly revenue"
+});</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/06-create-a-chart.png" target="_blank"><img src="assets/results/06-create-a-chart.png" alt="Monthly revenue worksheet with a line chart positioned beside the data" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/06-create-a-chart.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p>The source range needs a header row and numeric values. Choose a chart type that matches the question, not just the shape of the data.</p></div>
+            <div class="note advanced"><h3>Advanced use</h3><p>Column, bar, line, pie, and scatter charts are supported. List existing charts, update them by ID, or remove them from a template.</p></div>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-7">
+          <header class="lesson-header">
+            <div class="lesson-number">07</div>
+            <div>
+              <p class="difficulty">Advanced · 12 minutes</p>
+              <h2>Build a native PivotTable</h2>
+              <p class="use-case"><strong>Use case:</strong> Summarize many source rows by region, category, store, or another dimension while letting Excel users explore the result.</p>
+            </div>
+          </header>
+          <div class="lesson-grid">
+            <div class="code-panel">
+              <div class="panel-bar"><span>sales-pivot.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <pre><code>workbook.addSheet("Summary");
+
+const pivot = workbook.pivots.add({
+  name: "SalesByRegion",
+  source: {
+    sheet: "Orders",
+    range: "A1:C7"
+  },
+  target: {
+    sheet: "Summary",
+    cell: "A4"
+  },
+  rows: ["region"],
+  columns: ["category"],
+  values: [
+    { field: "sales", summarize: "sum", name: "Total sales" }
+  ]
+});</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/07-create-a-pivot-table.png" target="_blank"><img src="assets/results/07-create-a-pivot-table.png" alt="Sales summary grouped by region and category with grand totals" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/07-create-a-pivot-table.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p>PivotTables rely on stable source headers. Excel refreshes the native pivot on open; lightweight preview tools may show only its cached values.</p></div>
+            <div class="note advanced"><h3>Advanced use</h3><p>Add filters, change row and column fields, or summarize with sum, count, average, minimum, and maximum.</p></div>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-8">
+          <header class="lesson-header">
+            <div class="lesson-number">08</div>
+            <div>
+              <p class="difficulty">Advanced · 10 minutes</p>
+              <h2>Protect editing and encrypt the file</h2>
+              <p class="use-case"><strong>Use case:</strong> Keep formulas from accidental edits, lock workbook structure, and require a password before the file can be opened.</p>
+            </div>
+          </header>
+          <div class="lesson-grid">
+            <div class="code-panel">
+              <div class="panel-bar"><span>private-report.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <pre><code>// Let users edit only the input cells.
+sheet.range("A5:C6").style({
+  fill: "#FFF2D8",
+  protection: { locked: false }
+});
+
+sheet.protect({
+  password: process.env.SHEET_PASSWORD,
+  selectUnlockedCells: true
+});
+
+workbook.protect({
+  password: process.env.STRUCTURE_PASSWORD,
+  structure: true
+});
+
+await workbook.save("private-report.xlsx", {
+  password: process.env.FILE_PASSWORD
+});</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/08-protection-and-encryption.png" target="_blank"><img src="assets/results/08-protection-and-encryption.png" alt="Protected sales report with yellow input cells and blue formula cells" loading="lazy"></a>
+              <figcaption><span>Result · password: demo</span><a href="assets/examples/08-protection-and-encryption.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p>Worksheet and workbook protection discourage edits. File encryption protects the file contents. Use environment variables or a secret manager for real passwords.</p></div>
+            <div class="note advanced"><h3>Advanced use</h3><p>Encrypted files use Excel-compatible AES-256 Agile Office encryption and can be reopened with <code>openWorkbook(path, { password })</code>.</p></div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <section class="next-step" aria-labelledby="next-title">
+      <p class="section-kicker">Ready for your own data?</p>
+      <h2 id="next-title">Install the library and keep the API reference nearby.</h2>
+      <div class="next-actions">
+        <a class="button primary" href="https://www.npmjs.com/package/@entree_pos/xlsx">Open on npm</a>
+        <a class="button secondary" href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md">Browse every method</a>
+        <a class="button secondary" href="https://github.com/huangxuewu/entree-xlsx/tree/main/site/examples">View tutorial source</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div><strong>@entree_pos/xlsx</strong><span>MIT licensed. Built for modern Node.js.</span></div>
+    <div class="research-links"><span>Learning path informed by common workflows documented by</span><a href="https://docs.sheetjs.com/docs/getting-started/examples/export/">SheetJS</a><a href="https://github.com/exceljs/exceljs">ExcelJS</a><a href="https://github.com/dtjohnson/xlsx-populate">xlsx-populate</a></div>
+  </footer>
+</body>
+</html>
