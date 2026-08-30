@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+
+- Add repository, homepage, and issue-tracker links for the public GitHub
+  project.
+- Rewrite the README as a programmer-focused introduction with concise examples
+  for styling, template editing, charts, PivotTables, and encryption.
+
 ## 0.1.0
 
 - Add a native ESM JavaScript API for Node.js 18 and newer.
