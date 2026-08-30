@@ -6,9 +6,6 @@
   <meta name="description" content="A practical, visual tutorial for creating polished Excel workbooks with @entree_pos/xlsx.">
   <meta name="theme-color" content="#f6f8fb">
   <title>@entree_pos/xlsx | Visual tutorial</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
 </head>
@@ -34,7 +31,7 @@
       <div class="hero-copy">
         <p class="eyebrow">Modern JavaScript for Node.js 18+</p>
         <h1 id="hero-title">Build better Excel files.</h1>
-        <p class="hero-summary">Eight small examples. Real workbook results. Zero runtime dependencies.</p>
+        <p class="hero-summary">Find your use case, copy the code, and compare the real workbook result.</p>
         <div class="install-row">
           <code>npm install @entree_pos/xlsx</code>
           <button class="copy-button" type="button" data-copy="npm install @entree_pos/xlsx">Copy</button>
@@ -53,7 +50,7 @@
     <section class="orientation" aria-labelledby="path-title">
       <div>
         <p class="section-kicker">A practical learning path</p>
-        <h2 id="path-title">Start useful. Add power only when you need it.</h2>
+        <h2 id="path-title">Choose what you are trying to build.</h2>
       </div>
       <p>Common spreadsheet work begins with exporting data, then moves into presentation, calculation, layout, templates, analysis, and security. This guide follows that order.</p>
     </section>
@@ -62,14 +59,14 @@
       <aside class="contents" aria-label="Tutorial contents">
         <p class="contents-label">Tutorial</p>
         <ol>
-          <li><a href="#lesson-1"><span>01</span>Create a workbook</a></li>
-          <li><a href="#lesson-2"><span>02</span>Style it well</a></li>
-          <li><a href="#lesson-3"><span>03</span>Add formulas</a></li>
-          <li><a href="#lesson-4"><span>04</span>Improve layout</a></li>
-          <li><a href="#lesson-5"><span>05</span>Edit a template</a></li>
-          <li><a href="#lesson-6"><span>06</span>Create a chart</a></li>
-          <li><a href="#lesson-7"><span>07</span>Build a PivotTable</a></li>
-          <li><a href="#lesson-8"><span>08</span>Protect and encrypt</a></li>
+          <li><a href="#lesson-1"><span>01</span>Export database records</a></li>
+          <li><a href="#lesson-2"><span>02</span>Reuse report styles</a></li>
+          <li><a href="#lesson-3"><span>03</span>Calculate invoice totals</a></li>
+          <li><a href="#lesson-4"><span>04</span>Build a filterable report</a></li>
+          <li><a href="#lesson-5"><span>05</span>Fill an invoice template</a></li>
+          <li><a href="#lesson-6"><span>06</span>Visualize revenue</a></li>
+          <li><a href="#lesson-7"><span>07</span>Summarize regional sales</a></li>
+          <li><a href="#lesson-8"><span>08</span>Secure a private report</a></li>
         </ol>
         <a class="contents-reference" href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md">Read the full API reference</a>
       </aside>
@@ -77,16 +74,16 @@
       <div class="lessons">
         <article class="lesson" id="lesson-1">
           <header class="lesson-header">
-            <div class="lesson-number">01</div>
             <div>
-              <p class="difficulty">Easy · 3 minutes</p>
-              <h2>Create a workbook from data</h2>
-              <p class="use-case"><strong>Use case:</strong> Export an array of application records to an Excel file that users can filter, share, and open immediately.</p>
+              <p class="difficulty">Beginner · 3 minutes</p>
+              <h2>I need to export database records</h2>
+              <p class="feature-name"><span>Feature</span> Workbook creation and record export</p>
+              <p class="use-case"><strong>Use this when:</strong> Your application has an array of records and a user needs a normal Excel file they can open, filter, and share.</p>
             </div>
           </header>
           <div class="lesson-grid">
             <div class="code-panel">
-              <div class="panel-bar"><span>create-inventory.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <div class="panel-bar"><span>Code: create-inventory.js</span><button class="copy-button" type="button">Copy code</button></div>
               <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
 
 const workbook = createWorkbook("Inventory");
@@ -109,22 +106,22 @@ await workbook.save("inventory.xlsx");</code></pre>
           </div>
           <div class="notes-grid">
             <div class="note"><h3>Be aware</h3><p>Object keys become column headers in insertion order. Normalize records first if different rows can contain different keys.</p></div>
-            <div class="note advanced"><h3>Advanced use</h3><p>Use <code>toBuffer()</code> when returning a file from an HTTP route, or <code>toBase64()</code> when another service expects text.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Return the workbook from an API</h3><p>Use <code>toBuffer()</code> when returning a file from an HTTP route, or <code>toBase64()</code> when another service expects text.</p></div></details>
           </div>
         </article>
 
         <article class="lesson" id="lesson-2">
           <header class="lesson-header">
-            <div class="lesson-number">02</div>
             <div>
-              <p class="difficulty">Easy · 6 minutes</p>
-              <h2>Define styles once, then reuse them</h2>
-              <p class="use-case"><strong>Use case:</strong> Give reports a consistent visual system without repeating font, fill, alignment, and number format objects everywhere.</p>
+              <p class="difficulty">Beginner · 6 minutes</p>
+              <h2>I need every report to use the same styles</h2>
+              <p class="feature-name"><span>Feature</span> Named and reusable workbook styles</p>
+              <p class="use-case"><strong>Use this when:</strong> Several reports need the same headers, currency formats, status colors, and brand treatment.</p>
             </div>
           </header>
           <div class="lesson-grid">
             <div class="code-panel">
-              <div class="panel-bar"><span>styles.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <div class="panel-bar"><span>Code: styles.js</span><button class="copy-button" type="button">Copy code</button></div>
               <pre><code>workbook.styles
   .define("money", {
     numberFormat: "$#,##0.00;[Red]-$#,##0.00"
@@ -152,22 +149,22 @@ sheet.range("A4:D4").style({
           </div>
           <div class="notes-grid">
             <div class="note"><h3>Be aware</h3><p>Excel stores style records globally. Named styles keep large workbooks smaller and make visual changes easier to maintain.</p></div>
-            <div class="note advanced"><h3>Advanced use</h3><p>Style ranges with inside and outline borders, copy styles between cells, or clear selected properties without changing values.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Compose and copy styles</h3><p>Style ranges with inside and outline borders, copy styles between cells, or clear selected properties without changing values.</p></div></details>
           </div>
         </article>
 
         <article class="lesson" id="lesson-3">
           <header class="lesson-header">
-            <div class="lesson-number">03</div>
             <div>
               <p class="difficulty">Intermediate · 7 minutes</p>
-              <h2>Add formulas and number formats</h2>
-              <p class="use-case"><strong>Use case:</strong> Build invoices, budgets, or reports whose totals continue to update when a user edits the workbook in Excel.</p>
+              <h2>I need invoice totals to calculate in Excel</h2>
+              <p class="feature-name"><span>Feature</span> Formulas, cached values, and number formats</p>
+              <p class="use-case"><strong>Use this when:</strong> You are generating an invoice, budget, or report whose totals must update when someone edits the spreadsheet.</p>
             </div>
           </header>
           <div class="lesson-grid">
             <div class="code-panel">
-              <div class="panel-bar"><span>invoice-totals.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <div class="panel-bar"><span>Code: invoice-totals.js</span><button class="copy-button" type="button">Copy code</button></div>
               <pre><code>sheet.range("A4:D7").setValues([
   ["Item", "Quantity", "Price", "Total"],
   ["Classic Burger", 2, 12.5, null],
@@ -191,22 +188,22 @@ sheet.range("C5:D8").style({
           </div>
           <div class="notes-grid">
             <div class="note"><h3>Be aware</h3><p>The second argument to <code>formula()</code> is the cached value shown by previewers that do not calculate formulas. Excel recalculates the formula when opened.</p></div>
-            <div class="note advanced"><h3>Advanced use</h3><p>Combine formulas with locked styles and worksheet protection to create controlled calculation models.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Control calculated cells</h3><p>Combine formulas with locked styles and worksheet protection to create controlled calculation models.</p></div></details>
           </div>
         </article>
 
         <article class="lesson" id="lesson-4">
           <header class="lesson-header">
-            <div class="lesson-number">04</div>
             <div>
               <p class="difficulty">Intermediate · 8 minutes</p>
-              <h2>Make reports easy to scan</h2>
-              <p class="use-case"><strong>Use case:</strong> Turn a raw export into an operational report with clear widths, merged headings, filters, number formats, and links.</p>
+              <h2>I need an order report staff can filter</h2>
+              <p class="feature-name"><span>Feature</span> Layout, filters, merged cells, widths, and links</p>
+              <p class="use-case"><strong>Use this when:</strong> A raw export is technically correct but staff need a readable daily report with filters and links back to your application.</p>
             </div>
           </header>
           <div class="lesson-grid">
             <div class="code-panel">
-              <div class="panel-bar"><span>order-report.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <div class="panel-bar"><span>Code: order-report.js</span><button class="copy-button" type="button">Copy code</button></div>
               <pre><code>sheet.range("A1:E1").merge();
 sheet.cell("A1").set("Open orders").style({
   bold: true,
@@ -233,22 +230,22 @@ sheet.cell("E5")
           </div>
           <div class="notes-grid">
             <div class="note"><h3>Be aware</h3><p><code>hyperlink()</code> adds the destination and tooltip. Set the visible cell label separately so every spreadsheet viewer shows useful text.</p></div>
-            <div class="note advanced"><h3>Advanced use</h3><p>Use <code>autoFit()</code> for unknown data, then override important columns with explicit widths to keep reports predictable.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Balance automatic and fixed widths</h3><p>Use <code>autoFit()</code> for unknown data, then override important columns with explicit widths to keep reports predictable.</p></div></details>
           </div>
         </article>
 
         <article class="lesson" id="lesson-5">
           <header class="lesson-header">
-            <div class="lesson-number">05</div>
             <div>
               <p class="difficulty">Intermediate · 9 minutes</p>
-              <h2>Edit an existing template</h2>
-              <p class="use-case"><strong>Use case:</strong> Fill a branded invoice, financial model, or operations form while keeping its existing layout and embedded workbook parts.</p>
+              <h2>I need to fill an existing invoice template</h2>
+              <p class="feature-name"><span>Feature</span> Lossless XLSX and XLSM template editing</p>
+              <p class="use-case"><strong>Use this when:</strong> A designer or accountant already owns the workbook layout and your code only needs to insert current data.</p>
             </div>
           </header>
           <div class="lesson-grid">
             <div class="code-panel">
-              <div class="panel-bar"><span>fill-template.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <div class="panel-bar"><span>Code: fill-template.js</span><button class="copy-button" type="button">Copy code</button></div>
               <pre><code>import { openWorkbook } from "@entree_pos/xlsx";
 
 const workbook = await openWorkbook(
@@ -276,22 +273,22 @@ await workbook.save("invoice-ready.xlsx");</code></pre>
           </div>
           <div class="notes-grid">
             <div class="note"><h3>Be aware</h3><p>Open the final file in the desktop app your customers use. Complex templates can contain macros, controls, or vendor-specific extensions.</p></div>
-            <div class="note advanced"><h3>Advanced use</h3><p>The library patches changed OOXML parts and preserves untouched images, VBA, form controls, and unknown extensions in XLSX and XLSM files.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Preserve complex workbook parts</h3><p>The library patches changed OOXML parts and preserves untouched images, VBA, form controls, and unknown extensions in XLSX and XLSM files.</p></div></details>
           </div>
         </article>
 
         <article class="lesson" id="lesson-6">
           <header class="lesson-header">
-            <div class="lesson-number">06</div>
             <div>
               <p class="difficulty">Advanced · 10 minutes</p>
-              <h2>Create and edit a chart</h2>
-              <p class="use-case"><strong>Use case:</strong> Add a visual trend to a report so readers can understand change without scanning every value.</p>
+              <h2>I need to add a revenue chart</h2>
+              <p class="feature-name"><span>Feature</span> Native Excel chart creation and editing</p>
+              <p class="use-case"><strong>Use this when:</strong> A report contains monthly or categorical values and readers need to recognize a trend without scanning every number.</p>
             </div>
           </header>
           <div class="lesson-grid lesson-grid-wide-result">
             <div class="code-panel">
-              <div class="panel-bar"><span>revenue-chart.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <div class="panel-bar"><span>Code: revenue-chart.js</span><button class="copy-button" type="button">Copy code</button></div>
               <pre><code>const chart = workbook.charts.add("Sales", {
   name: "RevenueTrend",
   type: "line",
@@ -314,22 +311,22 @@ workbook.charts.update(chart.id, {
           </div>
           <div class="notes-grid">
             <div class="note"><h3>Be aware</h3><p>The source range needs a header row and numeric values. Choose a chart type that matches the question, not just the shape of the data.</p></div>
-            <div class="note advanced"><h3>Advanced use</h3><p>Column, bar, line, pie, and scatter charts are supported. List existing charts, update them by ID, or remove them from a template.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Edit charts after creation</h3><p>Column, bar, line, pie, and scatter charts are supported. List existing charts, update them by ID, or remove them from a template.</p></div></details>
           </div>
         </article>
 
         <article class="lesson" id="lesson-7">
           <header class="lesson-header">
-            <div class="lesson-number">07</div>
             <div>
               <p class="difficulty">Advanced · 12 minutes</p>
-              <h2>Build a native PivotTable</h2>
-              <p class="use-case"><strong>Use case:</strong> Summarize many source rows by region, category, store, or another dimension while letting Excel users explore the result.</p>
+              <h2>I need to summarize sales by region</h2>
+              <p class="feature-name"><span>Feature</span> Native Excel PivotTable creation</p>
+              <p class="use-case"><strong>Use this when:</strong> Many source rows need to be grouped by region, category, store, or another dimension that Excel users may explore.</p>
             </div>
           </header>
           <div class="lesson-grid">
             <div class="code-panel">
-              <div class="panel-bar"><span>sales-pivot.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <div class="panel-bar"><span>Code: sales-pivot.js</span><button class="copy-button" type="button">Copy code</button></div>
               <pre><code>workbook.addSheet("Summary");
 
 const pivot = workbook.pivots.add({
@@ -356,22 +353,22 @@ const pivot = workbook.pivots.add({
           </div>
           <div class="notes-grid">
             <div class="note"><h3>Be aware</h3><p>PivotTables rely on stable source headers. Excel refreshes the native pivot on open; lightweight preview tools may show only its cached values.</p></div>
-            <div class="note advanced"><h3>Advanced use</h3><p>Add filters, change row and column fields, or summarize with sum, count, average, minimum, and maximum.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Change the analysis</h3><p>Add filters, change row and column fields, or summarize with sum, count, average, minimum, and maximum.</p></div></details>
           </div>
         </article>
 
         <article class="lesson" id="lesson-8">
           <header class="lesson-header">
-            <div class="lesson-number">08</div>
             <div>
               <p class="difficulty">Advanced · 10 minutes</p>
-              <h2>Protect editing and encrypt the file</h2>
-              <p class="use-case"><strong>Use case:</strong> Keep formulas from accidental edits, lock workbook structure, and require a password before the file can be opened.</p>
+              <h2>I need to secure a private report</h2>
+              <p class="feature-name"><span>Feature</span> Cell protection, workbook protection, and file encryption</p>
+              <p class="use-case"><strong>Use this when:</strong> Users may edit input cells but formulas and workbook structure must stay locked, or the file itself contains private data.</p>
             </div>
           </header>
           <div class="lesson-grid">
             <div class="code-panel">
-              <div class="panel-bar"><span>private-report.js</span><button class="copy-button" type="button">Copy code</button></div>
+              <div class="panel-bar"><span>Code: private-report.js</span><button class="copy-button" type="button">Copy code</button></div>
               <pre><code>// Let users edit only the input cells.
 sheet.range("A5:C6").style({
   fill: "#FFF2D8",
@@ -399,7 +396,7 @@ await workbook.save("private-report.xlsx", {
           </div>
           <div class="notes-grid">
             <div class="note"><h3>Be aware</h3><p>Worksheet and workbook protection discourage edits. File encryption protects the file contents. Use environment variables or a secret manager for real passwords.</p></div>
-            <div class="note advanced"><h3>Advanced use</h3><p>Encrypted files use Excel-compatible AES-256 Agile Office encryption and can be reopened with <code>openWorkbook(path, { password })</code>.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Reopen encrypted workbooks</h3><p>Encrypted files use Excel-compatible AES-256 Agile Office encryption and can be reopened with <code>openWorkbook(path, { password })</code>.</p></div></details>
           </div>
         </article>
       </div>
