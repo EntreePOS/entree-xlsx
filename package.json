@@ -1,0 +1,53 @@
+{
+  "name": "@entree_pos/xlsx",
+  "version": "0.2.0",
+  "description": "A zero-dependency modern JavaScript API for lossless XLSX/XLSM editing, charts, pivot tables, and Office password encryption.",
+  "keywords": [
+    "xlsx",
+    "excel",
+    "spreadsheet",
+    "workbook",
+    "worksheet",
+    "entreepos"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huangxuewu/entree-xlsx.git"
+  },
+  "homepage": "https://github.com/huangxuewu/entree-xlsx#readme",
+  "bugs": {
+    "url": "https://github.com/huangxuewu/entree-xlsx/issues"
+  },
+  "license": "MIT",
+  "author": "Entree POS",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "default": "./src/index.js"
+    }
+  },
+  "bin": {
+    "entree-xlsx": "./src/cli.js"
+  },
+  "files": [
+    "src",
+    "docs",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "npm test && npm audit --omit=dev && npm pack --dry-run",
+    "prepublishOnly": "npm run check"
+  }
+}
