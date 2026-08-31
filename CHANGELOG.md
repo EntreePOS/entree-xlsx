@@ -11,6 +11,11 @@
 - Rename raw OOXML escape hatches to `unsafeRaw` so advanced access is clearly
   marked.
 - Add a categorized API cheatsheet with direct links to working examples.
+- Make every tutorial code block a complete runnable file that generates its
+  displayed and downloadable workbook.
+- Order tutorial examples by increasing code difficulty and add an automated
+  documentation sync check for GitHub Pages.
+- Include row and column grand totals in generated PivotTable cached results.
 
 ## 0.2.2
 

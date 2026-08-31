@@ -27,6 +27,10 @@ test("creates, discovers, updates, and removes a pivot table with cache records"
   assert.deepEqual(pivot.rows, ["Region"]);
   assert.equal(workbook.sheet("Summary").get("A4"), "East");
   assert.equal(workbook.sheet("Summary").get("B4"), 10);
+  assert.equal(workbook.sheet("Summary").get("D3"), "Grand Total");
+  assert.equal(workbook.sheet("Summary").get("D4"), 30);
+  assert.equal(workbook.sheet("Summary").get("A6"), "Total");
+  assert.equal(workbook.sheet("Summary").get("D6"), 50);
 
   const output = workbook.toBuffer();
   const files = extractZip(output);

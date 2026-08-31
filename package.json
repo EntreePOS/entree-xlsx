@@ -43,6 +43,9 @@
   "scripts": {
     "test": "node --test \"test/*.test.js\"",
     "showcase": "node test/generate-examples.js",
+    "tutorial:sync": "node site/examples/sync-code-snippets.js",
+    "tutorial:check": "node site/examples/sync-code-snippets.js --check",
+    "tutorial:generate": "node site/examples/generate-all.js",
     "check": "npm test && npm audit --omit=dev && npm pack --dry-run",
     "prepublishOnly": "npm run check"
   }

@@ -147,7 +147,16 @@ function renderPivot(config) {
   const columnKeys = uniqueKeys(config.records, config.columns);
   const headers = config.rows.map((index) => config.fields[index]);
   for (const columnKey of columnKeys) {
-    for (const value of config.values) headers.push([...columnKey, value.name].filter(Boolean).join(" - "));
+    for (const value of config.values) {
+      headers.push(config.values.length === 1
+        ? columnKey.join(" - ")
+        : [...columnKey, value.name].filter(Boolean).join(" - "));
+    }
+  }
+  if (config.showGrandTotals) {
+    for (const value of config.values) {
+      headers.push(config.values.length === 1 ? "Grand Total" : `Grand Total - ${value.name}`);
+    }
   }
   const output = [headers];
   for (const rowKey of rowKeys) {
@@ -158,13 +167,23 @@ function renderPivot(config) {
         JSON.stringify(keyFor(record, config.columns)) === JSON.stringify(columnKey));
       for (const value of config.values) row.push(aggregate(matching.map((record) => record[value.field]), value.summarize));
     }
+    if (config.showGrandTotals) {
+      const matching = config.records.filter((record) =>
+        JSON.stringify(keyFor(record, config.rows)) === JSON.stringify(rowKey));
+      for (const value of config.values) {
+        row.push(aggregate(matching.map((record) => record[value.field]), value.summarize));
+      }
+    }
     output.push(row);
   }
   if (config.showGrandTotals) {
-    const row = [...config.rows.map((_, index) => index === 0 ? "Grand Total" : "")];
+    const row = [...config.rows.map((_, index) => index === 0 ? "Total" : "")];
     for (const columnKey of columnKeys) {
       const matching = config.records.filter((record) => JSON.stringify(keyFor(record, config.columns)) === JSON.stringify(columnKey));
       for (const value of config.values) row.push(aggregate(matching.map((record) => record[value.field]), value.summarize));
+    }
+    for (const value of config.values) {
+      row.push(aggregate(config.records.map((record) => record[value.field]), value.summarize));
     }
     output.push(row);
   }

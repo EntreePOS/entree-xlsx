@@ -327,7 +327,7 @@ h1 {
   display: grid;
   grid-template-columns: minmax(360px, .9fr) minmax(430px, 1.1fr);
   gap: 24px;
-  align-items: stretch;
+  align-items: start;
 }
 
 .lesson-grid-wide-result { grid-template-columns: minmax(360px, .72fr) minmax(520px, 1.28fr); }
@@ -351,6 +351,15 @@ h1 {
 }
 
 pre { margin: 0; padding: 24px; overflow: auto; font-size: 12.5px; line-height: 1.72; tab-size: 2; }
+.code-panel pre { max-height: min(68vh, 720px); }
+
+.panel-actions { display: flex; align-items: center; gap: 6px; flex: none; }
+.panel-actions a {
+  padding: 8px 7px;
+  color: #c5d3e3;
+  text-decoration: none;
+}
+.panel-actions a:hover { color: #ffffff; }
 
 .result-card {
   display: flex;

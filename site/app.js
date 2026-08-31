@@ -26,6 +26,24 @@ themeButton.addEventListener("click", () => {
   updateThemeLabel();
 });
 
+async function copyText(value) {
+  try {
+    await navigator.clipboard.writeText(value);
+    return;
+  } catch {
+    const textarea = document.createElement("textarea");
+    textarea.value = value;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.append(textarea);
+    textarea.select();
+    const copied = document.execCommand("copy");
+    textarea.remove();
+    if (!copied) throw new Error("The browser blocked clipboard access.");
+  }
+}
+
 document.querySelectorAll(".copy-button").forEach((button) => {
   button.addEventListener("click", async () => {
     const explicitText = button.dataset.copy;
@@ -33,9 +51,13 @@ document.querySelectorAll(".copy-button").forEach((button) => {
     const value = explicitText ?? code;
     if (!value) return;
 
-    await navigator.clipboard.writeText(value);
     const original = button.textContent;
-    button.textContent = "Copied";
+    try {
+      await copyText(value);
+      button.textContent = "Copied";
+    } catch {
+      button.textContent = "Copy failed";
+    }
     window.setTimeout(() => { button.textContent = original; }, 1400);
   });
 });
@@ -43,10 +65,14 @@ document.querySelectorAll(".copy-button").forEach((button) => {
 const links = [...document.querySelectorAll(".contents a[href^='#lesson-']")];
 const lessons = [...document.querySelectorAll(".lesson")];
 
+const visibleLessons = new Map();
 const observer = new IntersectionObserver((entries) => {
-  const visible = entries
-    .filter((entry) => entry.isIntersecting)
-    .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) visibleLessons.set(entry.target.id, entry);
+    else visibleLessons.delete(entry.target.id);
+  });
+  const visible = [...visibleLessons.values()]
+    .sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top))[0];
   if (!visible) return;
 
   links.forEach((link) => {
