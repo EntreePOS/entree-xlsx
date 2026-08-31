@@ -39,108 +39,270 @@
         </div>
         <div class="hero-actions">
           <a class="button primary" href="#lesson-1">Start with data</a>
-          <a class="button secondary" href="assets/examples/06-create-a-chart.xlsx" download>Download an example</a>
+          <a class="button secondary" href="assets/examples/11-create-a-chart.xlsx" download>Download an example</a>
         </div>
       </div>
       <figure class="hero-result">
         <div class="window-bar"><span>monthly-revenue.xlsx</span><span>Live workbook result</span></div>
-        <img src="assets/results/06-create-a-chart.png" alt="Excel worksheet with monthly revenue data and a blue line chart" width="1470" height="662">
+        <img src="assets/results/11-create-a-chart.png" alt="Excel worksheet with monthly revenue data and a blue line chart" width="1470" height="662">
       </figure>
     </section>
 
     <section class="orientation" aria-labelledby="path-title">
       <div>
-        <p class="section-kicker">Start with the common jobs</p>
-        <h2 id="path-title">Most developers need these three things first.</h2>
+        <p class="section-kicker">Learn one small step at a time</p>
+        <h2 id="path-title">Begin with five tiny, complete examples.</h2>
       </div>
-      <p>Export application data, make the workbook readable, then add calculations. Complete these first. The remaining lessons solve more specific reporting needs.</p>
+      <p>Each opening example adds only one new idea. Copy it, run it, open the result, then continue when it feels familiar.</p>
       <ol class="beginner-path" aria-label="Recommended first lessons">
-        <li><a href="#lesson-1"><span>Start here</span><strong>Export your data</strong><small>Turn JavaScript records into an XLSX file.</small></a></li>
-        <li><a href="#lesson-2"><span>Then</span><strong>Make it look good</strong><small>Add readable headers, currency, and status styles.</small></a></li>
-        <li><a href="#lesson-3"><span>Next</span><strong>Add calculations</strong><small>Write formulas that recalculate when users edit cells.</small></a></li>
+        <li><a href="#lesson-1"><span>01 · 1 minute</span><strong>Add data</strong><small>Write a few rows and save the file.</small></a></li>
+        <li><a href="#lesson-2"><span>02 · 2 minutes</span><strong>Export records</strong><small>Turn JavaScript objects into rows.</small></a></li>
+        <li><a href="#lesson-3"><span>03 · 2 minutes</span><strong>Change a cell</strong><small>Update a value and add a row.</small></a></li>
+        <li><a href="#lesson-4"><span>04 · 2 minutes</span><strong>Add a sheet</strong><small>Organize related data in two tabs.</small></a></li>
+        <li><a href="#lesson-5"><span>05 · 3 minutes</span><strong>Add simple style</strong><small>Format a header and currency.</small></a></li>
       </ol>
     </section>
 
     <div class="docs-layout" id="tutorial">
       <aside class="contents" aria-label="Tutorial contents">
-        <p class="contents-label">Start here</p>
+        <p class="contents-label">First five examples</p>
         <ol>
-          <li><a href="#lesson-1"><span>01</span>Export application data</a></li>
-          <li><a href="#lesson-2"><span>02</span>Style a polished workbook</a></li>
-          <li><a href="#lesson-3"><span>03</span>Add formulas and totals</a></li>
+          <li><a href="#lesson-1"><span>01</span>Add data</a></li>
+          <li><a href="#lesson-2"><span>02</span>Export object records</a></li>
+          <li><a href="#lesson-3"><span>03</span>Change individual cells</a></li>
+          <li><a href="#lesson-4"><span>04</span>Add another sheet</a></li>
+          <li><a href="#lesson-5"><span>05</span>Add your first style</a></li>
         </ol>
         <p class="contents-label contents-label-secondary">Build real reports</p>
         <ol>
-          <li><a href="#lesson-4"><span>04</span>Add filters and links</a></li>
-          <li><a href="#lesson-5"><span>05</span>Update an Excel template</a></li>
-          <li><a href="#lesson-6"><span>06</span>Create a chart</a></li>
+          <li><a href="#lesson-6"><span>06</span>Reuse professional styles</a></li>
+          <li><a href="#lesson-7"><span>07</span>Add formulas and totals</a></li>
+          <li><a href="#lesson-8"><span>08</span>Add filters and links</a></li>
+          <li><a href="#lesson-9"><span>09</span>Update an Excel template</a></li>
+          <li><a href="#lesson-10"><span>10</span>Format dates and percentages</a></li>
         </ol>
         <p class="contents-label contents-label-secondary">Advanced when needed</p>
         <ol>
-          <li><a href="#lesson-7"><span>07</span>Build a PivotTable</a></li>
-          <li><a href="#lesson-8"><span>08</span>Protect and encrypt</a></li>
+          <li><a href="#lesson-11"><span>11</span>Create a chart</a></li>
+          <li><a href="#lesson-12"><span>12</span>Edit a chart</a></li>
+          <li><a href="#lesson-13"><span>13</span>Build a PivotTable</a></li>
+          <li><a href="#lesson-14"><span>14</span>Protect a worksheet</a></li>
+          <li><a href="#lesson-15"><span>15</span>Encrypt a workbook</a></li>
         </ol>
       </aside>
 
       <div class="lessons">
-        <article class="lesson" id="lesson-1">
+        <article class="lesson lesson-foundation" id="lesson-1">
           <header class="lesson-header">
             <div>
-              <p class="difficulty">Beginner · 3 minutes</p>
-              <h2>Export JavaScript records to Excel</h2>
-              <p class="feature-name"><span>You learn</span> Workbook creation, record export, and file saving</p>
-              <p class="use-case"><strong>Use this when:</strong> Your application has an array of records and someone needs an Excel file they can open, filter, and share.</p>
+              <p class="difficulty">Beginner · 1 minute</p>
+              <h2>Add your first rows</h2>
+              <p class="feature-name"><span>You learn</span> Create a workbook, add plain data, and save it</p>
+              <p class="use-case"><strong>Use this when:</strong> You want the smallest complete example that creates an Excel file you can open.</p>
             </div>
           </header>
           <div class="lesson-grid">
             <div class="code-panel">
-              <div class="panel-bar"><span>Complete example: 01-create-workbook.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/01-create-workbook.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <div class="panel-bar"><span>Complete example: 01-add-data.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/01-add-data.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
+
+const workbook = createWorkbook("People");
+const sheet = workbook.sheet();
+
+sheet.setData([
+  ["Name", "Age"],
+  ["Mina", 28],
+  ["Noah", 34]
+]);
+
+await workbook.save("01-add-data.xlsx");</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/01-add-data.png" target="_blank"><img src="assets/results/01-add-data.png" alt="A simple worksheet containing names and ages" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/01-add-data.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p><code>setData()</code> starts at cell A1. Each inner array becomes one worksheet row.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Choose the sheet name</h3><p>The name passed to <code>createWorkbook("People")</code> becomes the first worksheet tab.</p></div></details>
+          </div>
+        </article>
+
+        <article class="lesson lesson-foundation" id="lesson-2">
+          <header class="lesson-header">
+            <div>
+              <p class="difficulty">Beginner · 2 minutes</p>
+              <h2>Export JavaScript objects</h2>
+              <p class="feature-name"><span>You learn</span> Turn an array of records into headers and rows</p>
+              <p class="use-case"><strong>Use this when:</strong> Your application already has database records or API results as JavaScript objects.</p>
+            </div>
+          </header>
+          <div class="lesson-grid">
+            <div class="code-panel">
+              <div class="panel-bar"><span>Complete example: 02-export-records.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/02-export-records.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
+
+const workbook = createWorkbook("Inventory");
+const sheet = workbook.sheet();
+
+const items = [
+  { sku: "BK-101", item: "Classic Burger", stock: 34 },
+  { sku: "FR-204", item: "Seasoned Fries", stock: 18 },
+  { sku: "DR-305", item: "Cold Brew", stock: 27 }
+];
+
+sheet.setData(items);
+
+await workbook.save("02-export-records.xlsx");</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/02-export-records.png" target="_blank"><img src="assets/results/02-export-records.png" alt="Inventory records exported with SKU, item, and stock headers" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/02-export-records.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p>Object keys become the header row in insertion order. Keep the same keys across every record.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Prepare records first</h3><p>Map database fields to clear column names before calling <code>setData()</code> when internal field names are not reader friendly.</p></div></details>
+          </div>
+        </article>
+
+        <article class="lesson lesson-foundation" id="lesson-3">
+          <header class="lesson-header">
+            <div>
+              <p class="difficulty">Beginner · 2 minutes</p>
+              <h2>Change individual cells</h2>
+              <p class="feature-name"><span>You learn</span> Address cells by name and set their values</p>
+              <p class="use-case"><strong>Use this when:</strong> Most of the sheet is ready and you only need to correct a value or append a small amount of data.</p>
+            </div>
+          </header>
+          <div class="lesson-grid">
+            <div class="code-panel">
+              <div class="panel-bar"><span>Complete example: 03-change-cells.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/03-change-cells.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
               <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
 
 const workbook = createWorkbook("Inventory");
 const sheet = workbook.sheet();
 
 sheet.setData([
-  { sku: "BK-101", item: "Classic Burger", stock: 34 },
-  { sku: "FR-204", item: "Seasoned Fries", stock: 18 },
-  { sku: "DR-305", item: "Cold Brew", stock: 27 },
-  { sku: "DS-410", item: "Chocolate Cake", stock: 9 }
+  ["Item", "Stock"],
+  ["Classic Burger", 34],
+  ["Seasoned Fries", 18]
 ]);
 
-sheet.range("A1:C1").style({
-  bold: true,
-  color: "#FFFFFF",
-  fill: "#2457C5",
-  horizontal: "center",
-  vertical: "center",
-  border: { bottom: { style: "medium", color: "#17202A" } }
-});
-sheet.range("A1:C5").style({
-  border: {
-    outline: { style: "thin", color: "#CBD5E1" },
-    inside: { style: "thin", color: "#CBD5E1" }
-  }
-});
-sheet.range("C2:C5").style({
-  numberFormat: "#,##0",
-  horizontal: "right"
-});
-sheet.autoFit({ min: 12, max: 28, padding: 3 });
+// Change one existing cell.
+sheet.cell("B3").set(24);
 
-await workbook.save("01-create-workbook.xlsx");</code></pre>
+// Add one more row.
+sheet.cell("A4").set("Cold Brew");
+sheet.cell("B4").set(27);
+
+await workbook.save("03-change-cells.xlsx");</code></pre>
             </div>
             <figure class="result-card">
-              <a href="assets/results/01-create-workbook.png" target="_blank"><img src="assets/results/01-create-workbook.png" alt="Inventory worksheet with SKU, item, and stock columns" loading="lazy"></a>
-              <figcaption><span>Result</span><a href="assets/examples/01-create-workbook.xlsx" download>Download XLSX</a></figcaption>
+              <a href="assets/results/03-change-cells.png" target="_blank"><img src="assets/results/03-change-cells.png" alt="Inventory worksheet after changing one value and adding a row" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/03-change-cells.xlsx" download>Download XLSX</a></figcaption>
             </figure>
           </div>
           <div class="notes-grid">
-            <div class="note"><h3>Be aware</h3><p>Object keys become column headers in insertion order. Normalize records first if different rows can contain different keys.</p></div>
-            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Return the workbook from an API</h3><p>Use <code>toBuffer()</code> when returning a file from an HTTP route, or <code>toBase64()</code> when another service expects text.</p></div></details>
+            <div class="note"><h3>Be aware</h3><p>Excel addresses combine a column letter and row number. For example, <code>B3</code> means column B, row 3.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Read before changing</h3><p>Use <code>sheet.cell("B3").value</code> when the new value depends on what is already in the cell.</p></div></details>
           </div>
         </article>
 
-        <article class="lesson" id="lesson-2">
+        <article class="lesson lesson-foundation" id="lesson-4">
+          <header class="lesson-header">
+            <div>
+              <p class="difficulty">Beginner · 2 minutes</p>
+              <h2>Add another worksheet</h2>
+              <p class="feature-name"><span>You learn</span> Put related datasets in separate workbook tabs</p>
+              <p class="use-case"><strong>Use this when:</strong> One file needs separate tabs for products, categories, locations, or other related lists.</p>
+            </div>
+          </header>
+          <div class="lesson-grid">
+            <div class="code-panel">
+              <div class="panel-bar"><span>Complete example: 04-multiple-sheets.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/04-multiple-sheets.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
+
+const workbook = createWorkbook("Products");
+
+const products = workbook.sheet();
+products.setData([
+  ["Product", "Price"],
+  ["Classic Burger", 12.5],
+  ["Cold Brew", 3.5]
+]);
+
+const categories = workbook.addSheet("Categories");
+categories.setData([
+  ["Category", "Products"],
+  ["Food", 1],
+  ["Drinks", 1]
+]);
+
+// Both sheets are saved in the same XLSX file.
+await workbook.save("04-multiple-sheets.xlsx");</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/04-multiple-sheets.png" target="_blank"><img src="assets/results/04-multiple-sheets.png" alt="Workbook showing separate Products and Categories worksheet tabs" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/04-multiple-sheets.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p>Worksheet names must be unique inside a workbook. Keep names short so their tabs remain easy to scan.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Add data immediately</h3><p><code>workbook.addSheet("Categories", data)</code> can create and populate a sheet in one call.</p></div></details>
+          </div>
+        </article>
+
+        <article class="lesson lesson-foundation" id="lesson-5">
+          <header class="lesson-header">
+            <div>
+              <p class="difficulty">Beginner · 3 minutes</p>
+              <h2>Add your first style</h2>
+              <p class="feature-name"><span>You learn</span> Style a header, format currency, and set column widths</p>
+              <p class="use-case"><strong>Use this when:</strong> Your data exports correctly and you want one small visual improvement before learning a full style system.</p>
+            </div>
+          </header>
+          <div class="lesson-grid">
+            <div class="code-panel">
+              <div class="panel-bar"><span>Complete example: 05-first-style.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/05-first-style.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
+
+const workbook = createWorkbook("Menu");
+const sheet = workbook.sheet();
+
+sheet.setData([
+  ["Item", "Price"],
+  ["Classic Burger", 12.5],
+  ["Seasoned Fries", 4],
+  ["Cold Brew", 3.5]
+]);
+
+// Style only the header row.
+sheet.range("A1:B1").style({
+  bold: true,
+  color: "#FFFFFF",
+  fill: "#2457C5"
+});
+
+// Format prices and make both columns readable.
+sheet.range("B2:B4").style({ numberFormat: "$#,##0.00" });
+sheet.setColumnWidth("A", 22);
+sheet.setColumnWidth("B", 12);
+
+await workbook.save("05-first-style.xlsx");</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/05-first-style.png" target="_blank"><img src="assets/results/05-first-style.png" alt="Simple menu worksheet with a blue header and currency prices" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/05-first-style.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p>Keep numbers as numbers. A number format changes how Excel displays a value without turning it into text.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Reuse styles later</h3><p>The next lesson replaces repeated style objects with named styles you can apply throughout the workbook.</p></div></details>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-6">
           <header class="lesson-header">
             <div>
               <p class="difficulty">Beginner · 6 minutes</p>
@@ -151,7 +313,7 @@ await workbook.save("01-create-workbook.xlsx");</code></pre>
           </header>
           <div class="lesson-grid">
             <div class="code-panel">
-              <div class="panel-bar"><span>Complete example: 02-reusable-styles.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/02-reusable-styles.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <div class="panel-bar"><span>Complete example: 06-reusable-styles.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/06-reusable-styles.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
               <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
 
 const workbook = createWorkbook("Style Guide");
@@ -197,11 +359,11 @@ sheet.setColumnWidth("A", 24);
 sheet.setColumnWidth("B", 14);
 sheet.setColumnWidth("C", 16);
 
-await workbook.save("02-reusable-styles.xlsx");</code></pre>
+await workbook.save("06-reusable-styles.xlsx");</code></pre>
             </div>
             <figure class="result-card">
-              <a href="assets/results/02-reusable-styles.png" target="_blank"><img src="assets/results/02-reusable-styles.png" alt="Worksheet demonstrating reusable label, money, success, and warning styles" loading="lazy"></a>
-              <figcaption><span>Result</span><a href="assets/examples/02-reusable-styles.xlsx" download>Download XLSX</a></figcaption>
+              <a href="assets/results/06-reusable-styles.png" target="_blank"><img src="assets/results/06-reusable-styles.png" alt="Worksheet demonstrating reusable label, money, success, and warning styles" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/06-reusable-styles.xlsx" download>Download XLSX</a></figcaption>
             </figure>
           </div>
           <div class="notes-grid">
@@ -210,7 +372,7 @@ await workbook.save("02-reusable-styles.xlsx");</code></pre>
           </div>
         </article>
 
-        <article class="lesson" id="lesson-3">
+        <article class="lesson" id="lesson-7">
           <header class="lesson-header">
             <div>
               <p class="difficulty">Intermediate · 7 minutes</p>
@@ -221,7 +383,7 @@ await workbook.save("02-reusable-styles.xlsx");</code></pre>
           </header>
           <div class="lesson-grid">
             <div class="code-panel">
-              <div class="panel-bar"><span>Complete example: 03-formulas-and-formats.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/03-formulas-and-formats.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <div class="panel-bar"><span>Complete example: 07-formulas-and-formats.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/07-formulas-and-formats.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
               <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
 
 const workbook = createWorkbook("Invoice");
@@ -279,11 +441,11 @@ sheet.setColumnWidth("B", 12);
 sheet.setColumnWidth("C", 14);
 sheet.setColumnWidth("D", 15);
 
-await workbook.save("03-formulas-and-formats.xlsx");</code></pre>
+await workbook.save("07-formulas-and-formats.xlsx");</code></pre>
             </div>
             <figure class="result-card">
-              <a href="assets/results/03-formulas-and-formats.png" target="_blank"><img src="assets/results/03-formulas-and-formats.png" alt="Invoice worksheet with formulas and currency formatted totals" loading="lazy"></a>
-              <figcaption><span>Result</span><a href="assets/examples/03-formulas-and-formats.xlsx" download>Download XLSX</a></figcaption>
+              <a href="assets/results/07-formulas-and-formats.png" target="_blank"><img src="assets/results/07-formulas-and-formats.png" alt="Invoice worksheet with formulas and currency formatted totals" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/07-formulas-and-formats.xlsx" download>Download XLSX</a></figcaption>
             </figure>
           </div>
           <div class="notes-grid">
@@ -292,7 +454,7 @@ await workbook.save("03-formulas-and-formats.xlsx");</code></pre>
           </div>
         </article>
 
-        <article class="lesson" id="lesson-4">
+        <article class="lesson" id="lesson-8">
           <header class="lesson-header">
             <div>
               <p class="difficulty">Intermediate · 8 minutes</p>
@@ -303,7 +465,7 @@ await workbook.save("03-formulas-and-formats.xlsx");</code></pre>
           </header>
           <div class="lesson-grid">
             <div class="code-panel">
-              <div class="panel-bar"><span>Complete example: 04-layout-and-filters.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/04-layout-and-filters.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <div class="panel-bar"><span>Complete example: 08-layout-and-filters.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/08-layout-and-filters.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
               <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
 
 const workbook = createWorkbook("Orders");
@@ -367,11 +529,11 @@ sheet.setColumnWidth("C", 16);
 sheet.setColumnWidth("D", 14);
 sheet.setColumnWidth("E", 18);
 
-await workbook.save("04-layout-and-filters.xlsx");</code></pre>
+await workbook.save("08-layout-and-filters.xlsx");</code></pre>
             </div>
             <figure class="result-card">
-              <a href="assets/results/04-layout-and-filters.png" target="_blank"><img src="assets/results/04-layout-and-filters.png" alt="Open order report with clear headings, formatted totals, filters, and detail links" loading="lazy"></a>
-              <figcaption><span>Result</span><a href="assets/examples/04-layout-and-filters.xlsx" download>Download XLSX</a></figcaption>
+              <a href="assets/results/08-layout-and-filters.png" target="_blank"><img src="assets/results/08-layout-and-filters.png" alt="Open order report with clear headings, formatted totals, filters, and detail links" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/08-layout-and-filters.xlsx" download>Download XLSX</a></figcaption>
             </figure>
           </div>
           <div class="notes-grid">
@@ -380,7 +542,7 @@ await workbook.save("04-layout-and-filters.xlsx");</code></pre>
           </div>
         </article>
 
-        <article class="lesson" id="lesson-5">
+        <article class="lesson" id="lesson-9">
           <header class="lesson-header">
             <div>
               <p class="difficulty">Intermediate · 10 minutes</p>
@@ -391,7 +553,7 @@ await workbook.save("04-layout-and-filters.xlsx");</code></pre>
           </header>
           <div class="lesson-grid">
             <div class="code-panel">
-              <div class="panel-bar"><span>Complete example: 05-edit-a-template.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/05-edit-a-template.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <div class="panel-bar"><span>Complete example: 09-edit-a-template.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/09-edit-a-template.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
               <pre><code>import { createWorkbook, openWorkbook } from "@entree_pos/xlsx";
 
 // This first block creates a small starter template so the example is runnable.
@@ -440,10 +602,10 @@ templateSheet.range("C5:D8").style({ numberFormat: "$#,##0.00" });
 templateSheet.range("A8:D8").style({ bold: true, fill: "#EAF0FF" });
 templateSheet.setColumnWidth("A", 24).setColumnWidth("B", 12);
 templateSheet.setColumnWidth("C", 14).setColumnWidth("D", 15);
-await template.save("05-invoice-template.xlsx");
+await template.save("09-invoice-template.xlsx");
 
 // Open the template and change only its data and formulas.
-const workbook = await openWorkbook("05-invoice-template.xlsx");
+const workbook = await openWorkbook("09-invoice-template.xlsx");
 const sheet = workbook.sheet("Invoice");
 
 sheet.range("A5:C7").setValues([
@@ -456,11 +618,11 @@ sheet.cell("D6").formula("B6*C6", 39);
 sheet.cell("D7").formula("B7*C7", 25);
 sheet.cell("D8").formula("SUM(D5:D7)", 286);
 
-await workbook.save("05-edit-a-template.xlsx");</code></pre>
+await workbook.save("09-edit-a-template.xlsx");</code></pre>
             </div>
             <figure class="result-card">
-              <a href="assets/results/05-edit-a-template.png" target="_blank"><img src="assets/results/05-edit-a-template.png" alt="Completed invoice created by editing a styled workbook template" loading="lazy"></a>
-              <figcaption><span>Result</span><a href="assets/examples/05-edit-a-template.xlsx" download>Download XLSX</a></figcaption>
+              <a href="assets/results/09-edit-a-template.png" target="_blank"><img src="assets/results/09-edit-a-template.png" alt="Completed invoice created by editing a styled workbook template" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/09-edit-a-template.xlsx" download>Download XLSX</a></figcaption>
             </figure>
           </div>
           <div class="notes-grid">
@@ -469,18 +631,151 @@ await workbook.save("05-edit-a-template.xlsx");</code></pre>
           </div>
         </article>
 
-        <article class="lesson" id="lesson-6">
+        <article class="lesson" id="lesson-10">
+          <header class="lesson-header">
+            <div>
+              <p class="difficulty">Intermediate · 6 minutes</p>
+              <h2>Format dates, percentages, and money</h2>
+              <p class="feature-name"><span>You learn</span> Keep typed values while controlling how Excel displays them</p>
+              <p class="use-case"><strong>Use this when:</strong> A report includes dates, rates, and budgets that should be sortable and calculable instead of stored as display text.</p>
+            </div>
+          </header>
+          <div class="lesson-grid">
+            <div class="code-panel">
+              <div class="panel-bar"><span>Complete example: 10-format-dates-and-percentages.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/10-format-dates-and-percentages.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
+
+const workbook = createWorkbook("Campaigns");
+const sheet = workbook.sheet();
+
+sheet.setData([
+  ["Campaign", "Start date", "Conversion", "Budget"],
+  ["Lunch launch", new Date("2026-09-01T12:00:00Z"), 0.184, 1250],
+  ["Fall catering", new Date("2026-10-15T12:00:00Z"), 0.126, 2400],
+  ["Holiday cards", new Date("2026-11-20T12:00:00Z"), 0.219, 980]
+]);
+
+sheet.range("A1:D1").style({
+  bold: true,
+  color: "#FFFFFF",
+  fill: "#2457C5"
+});
+sheet.range("B2:B4").style({ numberFormat: "mmm d, yyyy" });
+sheet.range("C2:C4").style({ numberFormat: "0.0%" });
+sheet.range("D2:D4").style({ numberFormat: "$#,##0" });
+sheet.setColumnWidth("A", 22);
+sheet.setColumnWidth("B", 18);
+sheet.setColumnWidth("C", 14);
+sheet.setColumnWidth("D", 14);
+
+await workbook.save("10-format-dates-and-percentages.xlsx");</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/10-format-dates-and-percentages.png" target="_blank"><img src="assets/results/10-format-dates-and-percentages.png" alt="Campaign worksheet with formatted dates, percentages, and currency values" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/10-format-dates-and-percentages.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p>Store percentages as decimal values. For example, <code>0.184</code> displays as <code>18.4%</code> with the <code>0.0%</code> format.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Keep dates sortable</h3><p>Write JavaScript <code>Date</code> objects and apply a date number format. Excel keeps the underlying date value for sorting and formulas.</p></div></details>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-11">
           <header class="lesson-header">
             <div>
               <p class="difficulty">Advanced · 12 minutes</p>
               <h2>Turn worksheet data into a chart</h2>
-              <p class="feature-name"><span>You learn</span> Native Excel chart creation and editing</p>
+              <p class="feature-name"><span>You learn</span> Native Excel chart creation from a worksheet range</p>
               <p class="use-case"><strong>Use this when:</strong> A report contains monthly or categorical values and readers need to recognize a trend without scanning every number.</p>
             </div>
           </header>
           <div class="lesson-grid lesson-grid-wide-result">
             <div class="code-panel">
-              <div class="panel-bar"><span>Complete example: 06-create-a-chart.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/06-create-a-chart.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <div class="panel-bar"><span>Complete example: 11-create-a-chart.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/11-create-a-chart.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
+
+const workbook = createWorkbook("Sales");
+const sheet = workbook.sheet();
+
+sheet.range("A1:H1").merge();
+sheet.cell("A1").set("Monthly revenue").style({
+  bold: true,
+  fontSize: 18,
+  color: "#FFFFFF",
+  fill: "#17202A",
+  vertical: "center"
+});
+sheet.setRowHeight(1, 32);
+sheet.range("A2:H2").merge();
+sheet.cell("A2").set("The chart references worksheet cells, so Excel can refresh it after edits.").style({
+  color: "#5F6B7A",
+  italic: true,
+  vertical: "center"
+});
+sheet.setRowHeight(2, 24);
+
+sheet.range("A4:B9").setValues([
+  ["Month", "Revenue"],
+  ["January", 18400],
+  ["February", 21350],
+  ["March", 20100],
+  ["April", 24750],
+  ["May", 26800]
+]);
+sheet.range("A4:B4").style({
+  bold: true,
+  color: "#FFFFFF",
+  fill: "#2457C5",
+  horizontal: "center",
+  vertical: "center",
+  border: { bottom: { style: "medium", color: "#17202A" } }
+});
+sheet.range("A4:B9").style({
+  border: {
+    outline: { style: "thin", color: "#CBD5E1" },
+    inside: { style: "thin", color: "#CBD5E1" }
+  }
+});
+sheet.range("B5:B9").style({ numberFormat: "$#,##0" });
+sheet.setColumnWidth("A", 15);
+sheet.setColumnWidth("B", 15);
+
+const chart = workbook.charts.add({
+  sheet: "Sales",
+  name: "RevenueTrend",
+  type: "line",
+  title: "Monthly revenue",
+  range: "A4:B9",
+  position: { from: "D4", to: "K18" },
+  legend: false
+});
+
+await workbook.save("11-create-a-chart.xlsx");</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/11-create-a-chart.png" target="_blank"><img src="assets/results/11-create-a-chart.png" alt="Monthly revenue worksheet with a line chart positioned beside the data" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/11-create-a-chart.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p>The source range needs a header row and numeric values. Choose a chart type that matches the question, not just the shape of the data.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Edit charts after creation</h3><p>Column, bar, line, pie, and scatter charts are supported. List existing charts, update them by ID, or remove them from a template.</p></div></details>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-12">
+          <header class="lesson-header">
+            <div>
+              <p class="difficulty">Advanced · 12 minutes</p>
+              <h2>Edit a chart without rebuilding it</h2>
+              <p class="feature-name"><span>You learn</span> Update chart type, title, and source range by chart ID</p>
+              <p class="use-case"><strong>Use this when:</strong> A workbook or template already contains a chart and your application needs to change how it presents current data.</p>
+            </div>
+          </header>
+          <div class="lesson-grid lesson-grid-wide-result">
+            <div class="code-panel">
+              <div class="panel-bar"><span>Complete example: 12-edit-a-chart.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/12-edit-a-chart.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
               <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
 
 const workbook = createWorkbook("Sales");
@@ -546,20 +841,20 @@ workbook.charts.update(chart.id, {
   range: "A4:B9"
 });
 
-await workbook.save("06-create-a-chart.xlsx");</code></pre>
+await workbook.save("12-edit-a-chart.xlsx");</code></pre>
             </div>
             <figure class="result-card">
-              <a href="assets/results/06-create-a-chart.png" target="_blank"><img src="assets/results/06-create-a-chart.png" alt="Monthly revenue worksheet with a line chart positioned beside the data" loading="lazy"></a>
-              <figcaption><span>Result</span><a href="assets/examples/06-create-a-chart.xlsx" download>Download XLSX</a></figcaption>
+              <a href="assets/results/12-edit-a-chart.png" target="_blank"><img src="assets/results/12-edit-a-chart.png" alt="Revenue chart after changing a column chart into a line chart" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/12-edit-a-chart.xlsx" download>Download XLSX</a></figcaption>
             </figure>
           </div>
           <div class="notes-grid">
-            <div class="note"><h3>Be aware</h3><p>The source range needs a header row and numeric values. Choose a chart type that matches the question, not just the shape of the data.</p></div>
-            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Edit charts after creation</h3><p>Column, bar, line, pie, and scatter charts are supported. List existing charts, update them by ID, or remove them from a template.</p></div></details>
+            <div class="note"><h3>Be aware</h3><p>Keep the chart ID returned by <code>charts.add()</code>. When opening a template, use <code>charts.list()</code> to find existing chart IDs first.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Update only what changed</h3><p><code>charts.update()</code> can change selected chart properties while leaving its position and other settings intact.</p></div></details>
           </div>
         </article>
 
-        <article class="lesson" id="lesson-7">
+        <article class="lesson" id="lesson-13">
           <header class="lesson-header">
             <div>
               <p class="difficulty">Advanced · 15 minutes</p>
@@ -570,7 +865,7 @@ await workbook.save("06-create-a-chart.xlsx");</code></pre>
           </header>
           <div class="lesson-grid">
             <div class="code-panel">
-              <div class="panel-bar"><span>Complete example: 07-create-a-pivot-table.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/07-create-a-pivot-table.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <div class="panel-bar"><span>Complete example: 13-create-a-pivot-table.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/13-create-a-pivot-table.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
               <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
 
 const workbook = createWorkbook("Orders");
@@ -639,11 +934,11 @@ summary.setColumnWidth("B", 18);
 summary.setColumnWidth("C", 18);
 summary.setColumnWidth("D", 22);
 
-await workbook.save("07-create-a-pivot-table.xlsx");</code></pre>
+await workbook.save("13-create-a-pivot-table.xlsx");</code></pre>
             </div>
             <figure class="result-card">
-              <a href="assets/results/07-create-a-pivot-table.png" target="_blank"><img src="assets/results/07-create-a-pivot-table.png" alt="Sales summary grouped by region and category with grand totals" loading="lazy"></a>
-              <figcaption><span>Result</span><a href="assets/examples/07-create-a-pivot-table.xlsx" download>Download XLSX</a></figcaption>
+              <a href="assets/results/13-create-a-pivot-table.png" target="_blank"><img src="assets/results/13-create-a-pivot-table.png" alt="Sales summary grouped by region and category with grand totals" loading="lazy"></a>
+              <figcaption><span>Result</span><a href="assets/examples/13-create-a-pivot-table.xlsx" download>Download XLSX</a></figcaption>
             </figure>
           </div>
           <div class="notes-grid">
@@ -652,18 +947,18 @@ await workbook.save("07-create-a-pivot-table.xlsx");</code></pre>
           </div>
         </article>
 
-        <article class="lesson" id="lesson-8">
+        <article class="lesson" id="lesson-14">
           <header class="lesson-header">
             <div>
               <p class="difficulty">Advanced · 18 minutes</p>
-              <h2>Lock formulas and encrypt the file</h2>
-              <p class="feature-name"><span>You learn</span> Cell protection, workbook protection, and file encryption</p>
-              <p class="use-case"><strong>Use this when:</strong> Users may edit input cells but formulas and workbook structure must stay locked, or the file itself contains private data.</p>
+              <h2>Protect editable cells and formulas</h2>
+              <p class="feature-name"><span>You learn</span> Cell protection, worksheet protection, and workbook structure protection</p>
+              <p class="use-case"><strong>Use this when:</strong> Users may edit input cells but formulas and workbook structure must stay locked.</p>
             </div>
           </header>
           <div class="lesson-grid">
             <div class="code-panel">
-              <div class="panel-bar"><span>Complete example: 08-protection-and-encryption.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/08-protection-and-encryption.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <div class="panel-bar"><span>Complete example: 14-protect-a-sheet.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/14-protect-a-sheet.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
               <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
 
 const workbook = createWorkbook("Private Report");
@@ -735,18 +1030,64 @@ sheet.setColumnWidth("B", 14);
 sheet.setColumnWidth("C", 14);
 sheet.setColumnWidth("D", 16);
 
-await workbook.save("08-protection-and-encryption.xlsx", {
+await workbook.save("14-protect-a-sheet.xlsx");</code></pre>
+            </div>
+            <figure class="result-card">
+              <a href="assets/results/14-protect-a-sheet.png" target="_blank"><img src="assets/results/14-protect-a-sheet.png" alt="Protected sales report with yellow input cells and blue formula cells" loading="lazy"></a>
+              <figcaption><span>Result · protection password: demo</span><a href="assets/examples/14-protect-a-sheet.xlsx" download>Download XLSX</a></figcaption>
+            </figure>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Be aware</h3><p>Worksheet and workbook protection control ordinary editing in Excel. They do not encrypt the file contents.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Choose allowed actions</h3><p>Protection options can allow selecting unlocked cells while preventing formatting, row changes, and edits to locked formulas.</p></div></details>
+          </div>
+        </article>
+
+        <article class="lesson" id="lesson-15">
+          <header class="lesson-header">
+            <div>
+              <p class="difficulty">Advanced · 5 minutes</p>
+              <h2>Require a password to open the workbook</h2>
+              <p class="feature-name"><span>You learn</span> Excel-compatible AES-256 file encryption</p>
+              <p class="use-case"><strong>Use this when:</strong> The workbook contains private information and its contents must stay unreadable without a password.</p>
+            </div>
+          </header>
+          <div class="lesson-grid">
+            <div class="code-panel">
+              <div class="panel-bar"><span>Complete example: 15-encrypt-a-workbook.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/15-encrypt-a-workbook.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
+
+const workbook = createWorkbook("Private Balances");
+const sheet = workbook.sheet();
+
+sheet.setData([
+  ["Account", "Balance"],
+  ["River Cafe", 1250],
+  ["North Market", 840],
+  ["Park Bistro", 2175]
+]);
+sheet.range("A1:B1").style({
+  bold: true,
+  color: "#FFFFFF",
+  fill: "#2457C5"
+});
+sheet.range("B2:B4").style({ numberFormat: "$#,##0.00" });
+sheet.setColumnWidth("A", 22);
+sheet.setColumnWidth("B", 16);
+
+// Excel asks for this password before opening the file.
+await workbook.save("15-encrypt-a-workbook.xlsx", {
   password: "demo"
 });</code></pre>
             </div>
             <figure class="result-card">
-              <a href="assets/results/08-protection-and-encryption.png" target="_blank"><img src="assets/results/08-protection-and-encryption.png" alt="Protected sales report with yellow input cells and blue formula cells" loading="lazy"></a>
-              <figcaption><span>Result · password: demo</span><a href="assets/examples/08-protection-and-encryption.xlsx" download>Download XLSX</a></figcaption>
+              <a href="assets/results/15-encrypt-a-workbook.png" target="_blank"><img src="assets/results/15-encrypt-a-workbook.png" alt="Private account balance worksheet protected by an open password" loading="lazy"></a>
+              <figcaption><span>Result · open password: demo</span><a href="assets/examples/15-encrypt-a-workbook.xlsx" download>Download XLSX</a></figcaption>
             </figure>
           </div>
           <div class="notes-grid">
-            <div class="note"><h3>Be aware</h3><p>Worksheet and workbook protection discourage edits. File encryption protects the file contents. Use environment variables or a secret manager for real passwords.</p></div>
-            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Reopen encrypted workbooks</h3><p>Encrypted files use Excel-compatible AES-256 Agile Office encryption and can be reopened with <code>openWorkbook("private-report.xlsx", { password: "demo" })</code>.</p></div></details>
+            <div class="note"><h3>Be aware</h3><p>Do not hardcode real passwords in source control. Read them from a secret manager or environment variable in production.</p></div>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Open encrypted files again</h3><p>Use <code>openWorkbook("private.xlsx", { password: "demo" })</code> when reading an encrypted workbook.</p></div></details>
           </div>
         </article>
       </div>
@@ -769,7 +1110,7 @@ await workbook.save("08-protection-and-encryption.xlsx", {
               <thead><tr><th scope="col">API</th><th scope="col">Description</th><th scope="col">Example</th></tr></thead>
               <tbody>
                 <tr><td><code>createWorkbook(name?)</code></td><td>Create a workbook with one named sheet.</td><td><a href="#lesson-1">Lesson 1</a></td></tr>
-                <tr><td><code>openWorkbook(source, options?)</code></td><td>Open a path, URL, or binary workbook asynchronously.</td><td><a href="#lesson-5">Lesson 5</a></td></tr>
+                <tr><td><code>openWorkbook(source, options?)</code></td><td>Open a path, URL, or binary workbook asynchronously.</td><td><a href="#lesson-9">Lesson 9</a></td></tr>
                 <tr><td><code>openWorkbookSync(path, options?)</code></td><td>Open a local workbook with synchronous file access.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#openworkbooksyncpath-options">API example</a></td></tr>
                 <tr><td><code>parseWorkbook(bytes, options?)</code></td><td>Parse workbook bytes already held in memory.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#parseworkbookdata-options">API example</a></td></tr>
                 <tr><td><code>workbook.save(path, options?)</code></td><td>Write an XLSX or XLSM file asynchronously.</td><td><a href="#lesson-1">Lesson 1</a></td></tr>
@@ -790,15 +1131,15 @@ await workbook.save("08-protection-and-encryption.xlsx", {
               <tbody>
                 <tr><td><code>workbook.sheet(reference?)</code></td><td>Get a sheet by name or zero-based index, or throw if missing.</td><td><a href="#lesson-1">Lesson 1</a></td></tr>
                 <tr><td><code>workbook.findSheet(reference?)</code></td><td>Get a sheet when present, otherwise return undefined.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookfindsheetreference">API example</a></td></tr>
-                <tr><td><code>workbook.addSheet(name, data?)</code></td><td>Add a sheet and optionally fill it with data.</td><td><a href="#lesson-7">Lesson 7</a></td></tr>
+                <tr><td><code>workbook.addSheet(name, data?)</code></td><td>Add a sheet and optionally fill it with data.</td><td><a href="#lesson-4">Lesson 4</a></td></tr>
                 <tr><td><code>workbook.renameSheet(reference, name)</code></td><td>Rename a sheet while preserving its content.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookrenamesheetreference-newname">API example</a></td></tr>
                 <tr><td><code>workbook.removeSheet(reference)</code></td><td>Remove a sheet while keeping at least one sheet.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookremovesheetreference">API example</a></td></tr>
                 <tr><td><code>workbook.sheetNames</code></td><td>Read sheet names in workbook order.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbooksheetnames">API example</a></td></tr>
                 <tr><td><code>workbook.sheetCount</code></td><td>Read the number of sheets.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbooksheetcount">API example</a></td></tr>
                 <tr><td><code>workbook.properties</code></td><td>Read or merge title, author, and document metadata.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookproperties">API example</a></td></tr>
-                <tr><td><code>workbook.styles</code></td><td>Access reusable named style definitions.</td><td><a href="#lesson-2">Lesson 2</a></td></tr>
-                <tr><td><code>workbook.charts</code></td><td>Access chart creation and editing methods.</td><td><a href="#lesson-6">Lesson 6</a></td></tr>
-                <tr><td><code>workbook.pivotTables</code></td><td>Access native PivotTable creation and editing methods.</td><td><a href="#lesson-7">Lesson 7</a></td></tr>
+                <tr><td><code>workbook.styles</code></td><td>Access reusable named style definitions.</td><td><a href="#lesson-6">Lesson 6</a></td></tr>
+                <tr><td><code>workbook.charts</code></td><td>Access chart creation and editing methods.</td><td><a href="#lesson-11">Lesson 11</a></td></tr>
+                <tr><td><code>workbook.pivotTables</code></td><td>Access native PivotTable creation and editing methods.</td><td><a href="#lesson-13">Lesson 13</a></td></tr>
                 <tr><td><code>workbook.toJSON(options?)</code></td><td>Convert every sheet to arrays of record objects.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbooktojsonoptions">API example</a></td></tr>
               </tbody>
             </table>
@@ -815,9 +1156,9 @@ await workbook.save("08-protection-and-encryption.xlsx", {
                 <tr><td><code>sheet.appendData(records, options?)</code></td><td>Append object records using the existing header order.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetappenddatarecords-options">API example</a></td></tr>
                 <tr><td><code>sheet.appendRows(rows, options?)</code></td><td>Append positional rows or write rows at a chosen origin.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetappendrowsdata-options">API example</a></td></tr>
                 <tr><td><code>sheet.get(address)</code></td><td>Read a cell value directly.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetgetaddress">API example</a></td></tr>
-                <tr><td><code>sheet.set(address, value)</code></td><td>Set a cell value and keep chaining worksheet methods.</td><td><a href="#lesson-5">Lesson 5</a></td></tr>
+                <tr><td><code>sheet.set(address, value)</code></td><td>Set a cell value and keep chaining worksheet methods.</td><td><a href="#lesson-3">Lesson 3</a></td></tr>
                 <tr><td><code>sheet.cell(address)</code></td><td>Get a Cell object for values, formulas, styles, and links.</td><td><a href="#lesson-3">Lesson 3</a></td></tr>
-                <tr><td><code>sheet.range(address)</code></td><td>Get a rectangular Range object.</td><td><a href="#lesson-2">Lesson 2</a></td></tr>
+                <tr><td><code>sheet.range(address)</code></td><td>Get a rectangular Range object.</td><td><a href="#lesson-5">Lesson 5</a></td></tr>
                 <tr><td><code>sheet.toRows(options?)</code></td><td>Read a sheet region as arrays of values.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheettorowsoptions">API example</a></td></tr>
                 <tr><td><code>sheet.toRecords(options?)</code></td><td>Read rows as objects keyed by the header row.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheettorecordsoptions">API example</a></td></tr>
                 <tr><td><code>sheet.toCsv(options?)</code></td><td>Export a sheet region as CSV or delimiter separated text.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheettocsvoptions">API example</a></td></tr>
@@ -826,7 +1167,7 @@ await workbook.save("08-protection-and-encryption.xlsx", {
                 <tr><td><code>sheet.deleteRows(start, count?)</code></td><td>Delete rows and shift following rows upward.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetdeleterowsstartrow-count">API example</a></td></tr>
                 <tr><td><code>sheet.copyRow(source, target, options?)</code></td><td>Copy a row and adjust relative formula references.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetcopyrowsourcerow-targetrow-options">API example</a></td></tr>
                 <tr><td><code>range.getValues()</code></td><td>Read a rectangular array of values.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#rangegetvalues">API example</a></td></tr>
-                <tr><td><code>range.setValues(rows)</code></td><td>Write a rectangular array of values.</td><td><a href="#lesson-4">Lesson 4</a></td></tr>
+                <tr><td><code>range.setValues(rows)</code></td><td>Write a rectangular array of values.</td><td><a href="#lesson-8">Lesson 8</a></td></tr>
               </tbody>
             </table>
           </div>
@@ -838,9 +1179,9 @@ await workbook.save("08-protection-and-encryption.xlsx", {
             <table class="api-table">
               <thead><tr><th scope="col">API</th><th scope="col">Description</th><th scope="col">Example</th></tr></thead>
               <tbody>
-                <tr><td><code>cell.style(style, mode?)</code></td><td>Apply a named style, style object, or composed style list.</td><td><a href="#lesson-2">Lesson 2</a></td></tr>
-                <tr><td><code>range.style(style, mode?)</code></td><td>Apply styles across a range with position aware borders.</td><td><a href="#lesson-2">Lesson 2</a></td></tr>
-                <tr><td><code>styles.define(name, style, options?)</code></td><td>Create or replace one reusable named style.</td><td><a href="#lesson-2">Lesson 2</a></td></tr>
+                <tr><td><code>cell.style(style, mode?)</code></td><td>Apply a named style, style object, or composed style list.</td><td><a href="#lesson-6">Lesson 6</a></td></tr>
+                <tr><td><code>range.style(style, mode?)</code></td><td>Apply styles across a range with position aware borders.</td><td><a href="#lesson-5">Lesson 5</a></td></tr>
+                <tr><td><code>styles.define(name, style, options?)</code></td><td>Create or replace one reusable named style.</td><td><a href="#lesson-6">Lesson 6</a></td></tr>
                 <tr><td><code>styles.defineMany(definitions)</code></td><td>Create several related styles atomically.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#stylesdefinemanydefinitions">API example</a></td></tr>
                 <tr><td><code>styles.get(name)</code></td><td>Read a fully resolved named style.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#stylesgetname">API example</a></td></tr>
                 <tr><td><code>styles.getDefinition(name)</code></td><td>Inspect the stored style and its parent names.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#stylesgetdefinitionname">API example</a></td></tr>
@@ -849,13 +1190,13 @@ await workbook.save("08-protection-and-encryption.xlsx", {
                 <tr><td><code>cell.copyStyleFrom(source, mode?)</code></td><td>Copy formatting from another cell.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#cellcopystylefromsource-mode">API example</a></td></tr>
                 <tr><td><code>range.copyStyleFrom(source, options?)</code></td><td>Copy formatting from another range.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#rangecopystylefromsource-options">API example</a></td></tr>
                 <tr><td><code>cell.clearStyle(parts?)</code></td><td>Remove all or selected cell formatting.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#cellclearstyleparts">API example</a></td></tr>
-                <tr><td><code>cell.numberFormat(format)</code></td><td>Apply an Excel number format string.</td><td><a href="#lesson-3">Lesson 3</a></td></tr>
-                <tr><td><code>sheet.autoFit(options?)</code></td><td>Estimate practical column widths from current values.</td><td><a href="#lesson-4">Lesson 4</a></td></tr>
-                <tr><td><code>sheet.setColumnWidth(column, width)</code></td><td>Set an exact Excel column width.</td><td><a href="#lesson-4">Lesson 4</a></td></tr>
-                <tr><td><code>sheet.setRowHeight(row, height)</code></td><td>Set an exact row height in points.</td><td><a href="#lesson-4">Lesson 4</a></td></tr>
-                <tr><td><code>sheet.merge(range)</code></td><td>Merge cells in a range.</td><td><a href="#lesson-5">Lesson 5</a></td></tr>
+                <tr><td><code>cell.numberFormat(format)</code></td><td>Apply an Excel number format string.</td><td><a href="#lesson-10">Lesson 10</a></td></tr>
+                <tr><td><code>sheet.autoFit(options?)</code></td><td>Estimate practical column widths from current values.</td><td><a href="#lesson-8">Lesson 8</a></td></tr>
+                <tr><td><code>sheet.setColumnWidth(column, width)</code></td><td>Set an exact Excel column width.</td><td><a href="#lesson-5">Lesson 5</a></td></tr>
+                <tr><td><code>sheet.setRowHeight(row, height)</code></td><td>Set an exact row height in points.</td><td><a href="#lesson-8">Lesson 8</a></td></tr>
+                <tr><td><code>sheet.merge(range)</code></td><td>Merge cells in a range.</td><td><a href="#lesson-9">Lesson 9</a></td></tr>
                 <tr><td><code>sheet.unmerge(range)</code></td><td>Remove an exact merged range.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetunmergerange">API example</a></td></tr>
-                <tr><td><code>sheet.autoFilter(range?)</code></td><td>Add Excel filter controls to a data range.</td><td><a href="#lesson-4">Lesson 4</a></td></tr>
+                <tr><td><code>sheet.autoFilter(range?)</code></td><td>Add Excel filter controls to a data range.</td><td><a href="#lesson-8">Lesson 8</a></td></tr>
               </tbody>
             </table>
           </div>
@@ -867,14 +1208,14 @@ await workbook.save("08-protection-and-encryption.xlsx", {
             <table class="api-table">
               <thead><tr><th scope="col">API</th><th scope="col">Description</th><th scope="col">Example</th></tr></thead>
               <tbody>
-                <tr><td><code>cell.formula(formula, result?)</code></td><td>Store a formula and optional cached result.</td><td><a href="#lesson-3">Lesson 3</a></td></tr>
+                <tr><td><code>cell.formula(formula, result?)</code></td><td>Store a formula and optional cached result.</td><td><a href="#lesson-7">Lesson 7</a></td></tr>
                 <tr><td><code>cell.hyperlink(target, tooltip?)</code></td><td>Add a web, file, or internal workbook link.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#cellhyperlinktarget-tooltip">API example</a></td></tr>
-                <tr><td><code>charts.add(options)</code></td><td>Create a column, bar, line, pie, or scatter chart.</td><td><a href="#lesson-6">Lesson 6</a></td></tr>
-                <tr><td><code>charts.list(sheet?)</code></td><td>Inspect charts in one sheet or the whole workbook.</td><td><a href="#lesson-6">Lesson 6</a></td></tr>
+                <tr><td><code>charts.add(options)</code></td><td>Create a column, bar, line, pie, or scatter chart.</td><td><a href="#lesson-11">Lesson 11</a></td></tr>
+                <tr><td><code>charts.list(sheet?)</code></td><td>Inspect charts in one sheet or the whole workbook.</td><td><a href="#lesson-12">Lesson 12</a></td></tr>
                 <tr><td><code>charts.update(reference, changes)</code></td><td>Change chart data, type, title, name, or position.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookcharts">API example</a></td></tr>
                 <tr><td><code>charts.remove(reference)</code></td><td>Remove a chart and its package parts.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookcharts">API example</a></td></tr>
-                <tr><td><code>pivotTables.add(config)</code></td><td>Create a native PivotTable and cached worksheet result.</td><td><a href="#lesson-7">Lesson 7</a></td></tr>
-                <tr><td><code>pivotTables.list(sheet?)</code></td><td>Inspect PivotTables in one sheet or the workbook.</td><td><a href="#lesson-7">Lesson 7</a></td></tr>
+                <tr><td><code>pivotTables.add(config)</code></td><td>Create a native PivotTable and cached worksheet result.</td><td><a href="#lesson-13">Lesson 13</a></td></tr>
+                <tr><td><code>pivotTables.list(sheet?)</code></td><td>Inspect PivotTables in one sheet or the workbook.</td><td><a href="#lesson-13">Lesson 13</a></td></tr>
                 <tr><td><code>pivotTables.update(reference, changes)</code></td><td>Rebuild a PivotTable with changed fields or summary rules.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookpivottables">API example</a></td></tr>
                 <tr><td><code>pivotTables.remove(reference)</code></td><td>Remove a PivotTable, cache, and relationships.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookpivottables">API example</a></td></tr>
                 <tr><td><code>range.forEach(callback)</code></td><td>Visit each Cell in a range with row and column offsets.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#rangeforeachcallback">API example</a></td></tr>
@@ -890,11 +1231,11 @@ await workbook.save("08-protection-and-encryption.xlsx", {
             <table class="api-table">
               <thead><tr><th scope="col">API</th><th scope="col">Description</th><th scope="col">Example</th></tr></thead>
               <tbody>
-                <tr><td><code>sheet.protectSheet(options?)</code></td><td>Control which worksheet edits Excel allows.</td><td><a href="#lesson-8">Lesson 8</a></td></tr>
+                <tr><td><code>sheet.protectSheet(options?)</code></td><td>Control which worksheet edits Excel allows.</td><td><a href="#lesson-14">Lesson 14</a></td></tr>
                 <tr><td><code>sheet.unprotectSheet()</code></td><td>Remove worksheet editing protection.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetprotectsheetoptions-and-worksheetunprotectsheet">API example</a></td></tr>
-                <tr><td><code>workbook.protectStructure(options?)</code></td><td>Prevent ordinary sheet structure changes in Excel.</td><td><a href="#lesson-8">Lesson 8</a></td></tr>
+                <tr><td><code>workbook.protectStructure(options?)</code></td><td>Prevent ordinary sheet structure changes in Excel.</td><td><a href="#lesson-14">Lesson 14</a></td></tr>
                 <tr><td><code>workbook.unprotectStructure()</code></td><td>Remove workbook structure protection.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookprotectstructureoptions-and-workbookunprotectstructure">API example</a></td></tr>
-                <tr><td><code>workbook.save(path, { password })</code></td><td>Encrypt file contents with Excel compatible AES-256.</td><td><a href="#lesson-8">Lesson 8</a></td></tr>
+                <tr><td><code>workbook.save(path, { password })</code></td><td>Encrypt file contents with Excel compatible AES-256.</td><td><a href="#lesson-15">Lesson 15</a></td></tr>
                 <tr><td><code>sheet.unsafeRaw</code></td><td>Access the internal worksheet record as an unstable escape hatch.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetunsaferaw">API example</a></td></tr>
                 <tr><td><code>cell.unsafeRaw</code></td><td>Access the internal cell record as an unstable escape hatch.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#cellunsaferaw">API example</a></td></tr>
               </tbody>

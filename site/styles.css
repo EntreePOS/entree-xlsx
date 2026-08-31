@@ -263,7 +263,7 @@ h1 {
 
 .beginner-path {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   margin: 52px 0 0;
   padding: 0;
   border-top: 1px solid var(--line);
@@ -275,7 +275,7 @@ h1 {
 .beginner-path a {
   display: flex;
   min-height: 164px;
-  padding: 24px 28px 20px;
+  padding: 24px 20px 20px;
   flex-direction: column;
   color: var(--ink);
   text-decoration: none;
@@ -289,7 +289,7 @@ h1 {
   font-size: 11px;
   font-weight: 800;
 }
-.beginner-path strong { margin-top: 18px; font-size: 21px; letter-spacing: -.025em; }
+.beginner-path strong { margin-top: 18px; font-size: 19px; letter-spacing: -.025em; }
 .beginner-path small { max-width: 30ch; margin-top: 7px; color: var(--muted); font-size: 14px; line-height: 1.5; }
 
 .docs-layout {
@@ -414,6 +414,8 @@ pre { margin: 0; padding: 24px; overflow: auto; font-size: 12.5px; line-height: 
 }
 
 .result-card img { width: 100%; height: 100%; object-fit: contain; }
+.lesson-foundation .result-card > a:first-child { min-height: 0; flex: none; }
+.lesson-foundation .result-card img { height: auto; }
 
 .result-card figcaption {
   min-height: 44px;
@@ -599,6 +601,9 @@ footer strong { color: var(--ink); }
 @media (max-width: 1120px) {
   .hero { grid-template-columns: 1fr; min-height: auto; }
   .hero-result { max-width: 920px; transform: none; }
+  .beginner-path { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .beginner-path li:nth-child(3) { border-right: 0; }
+  .beginner-path li:nth-child(n + 4) { border-top: 1px solid var(--line); }
   .docs-layout { grid-template-columns: 190px minmax(0, 1fr); gap: 40px; }
   .lesson-grid, .lesson-grid-wide-result { grid-template-columns: 1fr; }
   .result-card > a:first-child { min-height: 260px; }
@@ -615,7 +620,7 @@ footer strong { color: var(--ink); }
   .hero-summary { font-size: 18px; }
   .orientation { padding: 72px 0; }
   .beginner-path { grid-template-columns: 1fr; margin-top: 38px; }
-  .beginner-path li { border-right: 0; border-bottom: 1px solid var(--line); }
+  .beginner-path li, .beginner-path li:nth-child(n + 4) { border-top: 0; border-right: 0; border-bottom: 1px solid var(--line); }
   .beginner-path li:last-child { border-bottom: 0; }
   .beginner-path a { min-height: auto; padding-inline: 0; }
   .docs-layout { display: block; padding-top: 72px; }

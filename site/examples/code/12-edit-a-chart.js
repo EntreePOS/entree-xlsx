@@ -63,4 +63,4 @@ workbook.charts.update(chart.id, {
   range: "A4:B9"
 });
 
-await workbook.save("06-create-a-chart.xlsx");
+await workbook.save("12-edit-a-chart.xlsx");

@@ -69,6 +69,4 @@ sheet.setColumnWidth("B", 14);
 sheet.setColumnWidth("C", 14);
 sheet.setColumnWidth("D", 16);
 
-await workbook.save("08-protection-and-encryption.xlsx", {
-  password: "demo"
-});
+await workbook.save("14-protect-a-sheet.xlsx");

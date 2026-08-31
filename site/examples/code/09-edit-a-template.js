@@ -46,10 +46,10 @@ templateSheet.range("C5:D8").style({ numberFormat: "$#,##0.00" });
 templateSheet.range("A8:D8").style({ bold: true, fill: "#EAF0FF" });
 templateSheet.setColumnWidth("A", 24).setColumnWidth("B", 12);
 templateSheet.setColumnWidth("C", 14).setColumnWidth("D", 15);
-await template.save("05-invoice-template.xlsx");
+await template.save("09-invoice-template.xlsx");
 
 // Open the template and change only its data and formulas.
-const workbook = await openWorkbook("05-invoice-template.xlsx");
+const workbook = await openWorkbook("09-invoice-template.xlsx");
 const sheet = workbook.sheet("Invoice");
 
 sheet.range("A5:C7").setValues([
@@ -62,4 +62,4 @@ sheet.cell("D6").formula("B6*C6", 39);
 sheet.cell("D7").formula("B7*C7", 25);
 sheet.cell("D8").formula("SUM(D5:D7)", 286);
 
-await workbook.save("05-edit-a-template.xlsx");
+await workbook.save("09-edit-a-template.xlsx");

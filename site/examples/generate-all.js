@@ -29,21 +29,28 @@ async function runExample(fileName) {
 
 async function createSecurityPreview() {
   const workbook = await openWorkbook(
-    join(outputDirectory, "08-protection-and-encryption.xlsx"),
+    join(outputDirectory, "15-encrypt-a-workbook.xlsx"),
     { password: "demo" }
   );
-  await writeFile(join(previewDirectory, "08-security-preview.xlsx"), workbook.toBuffer());
+  await writeFile(join(previewDirectory, "15-security-preview.xlsx"), workbook.toBuffer());
 }
 
 for (const fileName of [
-  "01-create-workbook.js",
-  "02-reusable-styles.js",
-  "03-formulas-and-formats.js",
-  "04-layout-and-filters.js",
-  "05-edit-a-template.js",
-  "06-create-a-chart.js",
-  "07-create-a-pivot-table.js",
-  "08-protection-and-encryption.js"
+  "01-add-data.js",
+  "02-export-records.js",
+  "03-change-cells.js",
+  "04-multiple-sheets.js",
+  "05-first-style.js",
+  "06-reusable-styles.js",
+  "07-formulas-and-formats.js",
+  "08-layout-and-filters.js",
+  "09-edit-a-template.js",
+  "10-format-dates-and-percentages.js",
+  "11-create-a-chart.js",
+  "12-edit-a-chart.js",
+  "13-create-a-pivot-table.js",
+  "14-protect-a-sheet.js",
+  "15-encrypt-a-workbook.js"
 ]) {
   await runExample(fileName);
 }

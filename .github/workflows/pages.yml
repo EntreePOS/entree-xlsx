@@ -28,6 +28,8 @@ jobs:
         uses: actions/checkout@v6
       - name: Verify tutorial code examples
         run: node site/examples/sync-code-snippets.js --check
+      - name: Verify tutorial workbooks
+        run: node site/examples/verify-all.js
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload tutorial site

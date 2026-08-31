@@ -8,14 +8,21 @@ const pagePath = join(siteDirectory, "index.html");
 const checkOnly = process.argv.includes("--check");
 
 const sourceFiles = [
-  "01-create-workbook.js",
-  "02-reusable-styles.js",
-  "03-formulas-and-formats.js",
-  "04-layout-and-filters.js",
-  "05-edit-a-template.js",
-  "06-create-a-chart.js",
-  "07-create-a-pivot-table.js",
-  "08-protection-and-encryption.js"
+  "01-add-data.js",
+  "02-export-records.js",
+  "03-change-cells.js",
+  "04-multiple-sheets.js",
+  "05-first-style.js",
+  "06-reusable-styles.js",
+  "07-formulas-and-formats.js",
+  "08-layout-and-filters.js",
+  "09-edit-a-template.js",
+  "10-format-dates-and-percentages.js",
+  "11-create-a-chart.js",
+  "12-edit-a-chart.js",
+  "13-create-a-pivot-table.js",
+  "14-protect-a-sheet.js",
+  "15-encrypt-a-workbook.js"
 ];
 
 function escapeHtml(source) {
@@ -28,22 +35,18 @@ function escapeHtml(source) {
 
 let page = await readFile(pagePath, "utf8");
 const originalPage = page;
-let previousLineCount = 0;
-
 for (const [index, fileName] of sourceFiles.entries()) {
   const lesson = index + 1;
   const sourceText = await readFile(join(examplesDirectory, "code", fileName), "utf8");
   const lineCount = sourceText.trimEnd().split("\n").length;
-  if (lineCount <= previousLineCount) {
-    throw new Error(`Lesson ${lesson} must be more detailed than lesson ${lesson - 1}.`);
-  }
+  if (lesson === 1 && lineCount > 15) throw new Error("Lesson 1 must stay beginner friendly and fit within 15 lines.");
+  if (lesson <= 5 && lineCount > 30) throw new Error(`Foundation lesson ${lesson} must fit within 30 lines.`);
   if (!sourceText.includes('from "@entree_pos/xlsx"') || !sourceText.includes(".save(")) {
     throw new Error(`Lesson ${lesson} is not a complete runnable example.`);
   }
-  previousLineCount = lineCount;
   const source = escapeHtml(sourceText);
   const pattern = new RegExp(
-    `(<article class="lesson" id="lesson-${lesson}">[\\s\\S]*?<pre><code>)[\\s\\S]*?(</code></pre>)`
+    `(<article class="[^"]*\\blesson\\b[^"]*" id="lesson-${lesson}">[\\s\\S]*?<pre><code>)[\\s\\S]*?(</code></pre>)`
   );
 
   if (!pattern.test(page)) {

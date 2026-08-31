@@ -43,4 +43,4 @@ sheet.setColumnWidth("A", 24);
 sheet.setColumnWidth("B", 14);
 sheet.setColumnWidth("C", 16);
 
-await workbook.save("02-reusable-styles.xlsx");
+await workbook.save("06-reusable-styles.xlsx");
