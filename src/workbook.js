@@ -43,7 +43,7 @@ export class Workbook {
     return new ChartCollection(this.source);
   }
 
-  get pivots() {
+  get pivotTables() {
     return new PivotCollection(this.source);
   }
 
@@ -51,7 +51,7 @@ export class Workbook {
     return new StyleCollection(this.source);
   }
 
-  protect(options = {}) {
+  protectStructure(options = {}) {
     const config = typeof options === "string" ? { password: options } : options;
     this.source.WorkbookProtection = {
       lockStructure: config.structure !== false,
@@ -63,7 +63,7 @@ export class Workbook {
     return this;
   }
 
-  unprotect() {
+  unprotectStructure() {
     delete this.source.WorkbookProtection;
     const state = getPackageState(this.source);
     if (state) state.workbookDirty = true;
@@ -89,7 +89,7 @@ export class Workbook {
     );
   }
 
-  trySheet(reference = 0) {
+  findSheet(reference = 0) {
     try {
       return this.sheet(reference);
     } catch (error) {
@@ -106,13 +106,13 @@ export class Workbook {
     const state = getPackageState(this.source);
     if (state) state.workbookDirty = true;
     const sheet = this.sheet(name);
-    if (data.length) sheet.addRows(data, { origin: "A1", skipHeader: false });
+    if (data.length) sheet.appendRows(data, { origin: "A1", skipHeader: false });
     return sheet;
   }
 
   removeSheet(reference) {
     if (this.source.SheetNames.length <= 1) throw new RangeError("A workbook must contain at least one worksheet.");
-    const name = this.resolveName(reference);
+    const name = this.#resolveName(reference);
     delete this.source.Sheets[name];
     this.source.SheetNames.splice(this.source.SheetNames.indexOf(name), 1);
     const state = getPackageState(this.source);
@@ -122,7 +122,7 @@ export class Workbook {
 
   renameSheet(reference, newName) {
     validateSheetName(newName);
-    const oldName = this.resolveName(reference);
+    const oldName = this.#resolveName(reference);
     if (oldName !== newName && this.source.Sheets[newName]) throw new DuplicateSheetError(newName);
     if (oldName === newName) return this.sheet(oldName);
     const index = this.source.SheetNames.indexOf(oldName);
@@ -162,7 +162,7 @@ export class Workbook {
     return Object.fromEntries(this.source.SheetNames.map((name) => [name, this.sheet(name).toRecords(options)]));
   }
 
-  resolveName(reference) {
+  #resolveName(reference) {
     const name = typeof reference === "number" ? this.source.SheetNames[reference] : reference;
     if (!name || !this.source.Sheets[name]) throw new SheetNotFoundError(reference, this.source.SheetNames);
     return name;

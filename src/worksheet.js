@@ -13,6 +13,17 @@ function cloneCell(cell) {
   return structuredClone(cell);
 }
 
+function rowShape(data) {
+  if (!Array.isArray(data)) throw new TypeError("Rows must be an array.");
+  if (!data.length) return undefined;
+  const shape = Array.isArray(data[0]) ? "array" : "object";
+  const valid = shape === "array"
+    ? data.every(Array.isArray)
+    : data.every((row) => row !== null && typeof row === "object" && !Array.isArray(row));
+  if (!valid) throw new TypeError("Every row must be an array or every row must be an object.");
+  return shape;
+}
+
 function shiftedFormula(formula, startRow, delta, deletedEnd) {
   if (!formula) return formula;
   return formula.replace(/(\$?[A-Z]{1,3})(\$?)(\d+)/g, (match, column, absolute, rowText) => {
@@ -52,7 +63,7 @@ export class Worksheet {
     return this.getName();
   }
 
-  get raw() {
+  get unsafeRaw() {
     return this.source;
   }
 
@@ -77,8 +88,8 @@ export class Worksheet {
     return new Range(this.source, address, this.onChange, this.onStructureChange, this.resolveStyle);
   }
 
-  addRows(data, options = {}) {
-    if (!Array.isArray(data)) throw new TypeError("Rows must be an array.");
+  appendRows(data, options = {}) {
+    const shape = rowShape(data);
     if (!data.length) return this;
     const existing = this.usedRange ? decodeRange(this.usedRange) : undefined;
     const origin = options.origin === undefined || options.origin === -1
@@ -88,14 +99,13 @@ export class Worksheet {
         : typeof options.origin === "number"
           ? { r: options.origin, c: 0 }
           : options.origin;
-    const objectRows = data.length > 0 && !Array.isArray(data[0]);
+    const objectRows = shape === "object";
     let rows = data;
     if (objectRows) {
       const headers = options.header ?? [...new Set(data.flatMap((row) => Object.keys(row)))];
       rows = [...(options.skipHeader ? [] : [headers]), ...data.map((row) => headers.map((header) => row[header]))];
     }
     rows.forEach((row, rowOffset) => {
-      if (!Array.isArray(row)) throw new TypeError("Every row must be an array or every row must be an object.");
       row.forEach((value, columnOffset) => this.cell({ r: origin.r + rowOffset, c: origin.c + columnOffset }).set(value));
     });
     return this;
@@ -203,14 +213,44 @@ export class Worksheet {
     return this;
   }
 
-  replaceData(data, options = {}) {
+  appendData(records, options = {}) {
+    if (!Array.isArray(records)) throw new TypeError("Records must be an array.");
+    if (!records.length) return this;
+    if (records.some((record) => record === null || typeof record !== "object" || Array.isArray(record))) {
+      throw new TypeError("Every record must be an object.");
+    }
+
+    if (!this.usedRange) {
+      return this.appendRows(records, {
+        ...options,
+        origin: options.origin ?? "A1",
+        skipHeader: false
+      });
+    }
+
+    const used = decodeRange(this.usedRange);
+    const headers = options.header ?? Array.from(
+      { length: used.e.c - used.s.c + 1 },
+      (_, offset) => this.cell({ r: used.s.r, c: used.s.c + offset }).value
+    ).map((value, index) => String(value ?? `Column${index + 1}`));
+
+    return this.appendRows(records, {
+      ...options,
+      origin: options.origin ?? { r: used.e.r + 1, c: used.s.c },
+      header: headers,
+      skipHeader: true
+    });
+  }
+
+  setData(data, options = {}) {
+    rowShape(data);
     for (const key of cellAddresses(this.source)) {
       delete this.source[key];
       this.onChange(key, "clear");
     }
     delete this.source["!ref"];
     this.onStructureChange();
-    return this.addRows(data, { ...options, origin: "A1", skipHeader: options.skipHeader ?? false });
+    return this.appendRows(data, { ...options, origin: "A1", skipHeader: options.skipHeader ?? false });
   }
 
   toRows(options = {}) {
@@ -307,7 +347,7 @@ export class Worksheet {
     return this;
   }
 
-  protect(options = {}) {
+  protectSheet(options = {}) {
     const config = typeof options === "string" ? { password: options } : options;
     this.source["!protection"] = {
       sheet: true,
@@ -331,7 +371,7 @@ export class Worksheet {
     return this;
   }
 
-  unprotect() {
+  unprotectSheet() {
     delete this.source["!protection"];
     this.onStructureChange();
     return this;

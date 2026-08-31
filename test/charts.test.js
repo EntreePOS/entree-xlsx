@@ -5,14 +5,15 @@ import { extractZip } from "../src/zip.js";
 
 test("creates, discovers, updates, and removes a chart", () => {
   const workbook = createWorkbook("Sales");
-  workbook.sheet().replaceData([
+  workbook.sheet().setData([
     ["Month", "Revenue", "Orders"],
     ["Jan", 1200, 24],
     ["Feb", 1800, 31],
     ["Mar", 1600, 28]
   ]);
 
-  const created = workbook.charts.add("Sales", {
+  const created = workbook.charts.add({
+    sheet: "Sales",
     type: "column",
     title: "Monthly sales",
     range: "A1:C4",

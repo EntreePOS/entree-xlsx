@@ -6,16 +6,14 @@ export { Worksheet } from "./worksheet.js";
 export { Workbook } from "./workbook.js";
 export { ChartCollection } from "./charts.js";
 export { PivotCollection } from "./pivots.js";
-export { XlsxClient } from "./client.js";
 export * from "./errors.js";
 export { StyleCollection, composeStyles, normalizeColor, normalizeStyle } from "./style.js";
 export { decryptWorkbookBuffer, encryptWorkbookBuffer, isCompoundFile } from "./encryption.js";
 
-export const xlsx = new XlsxClient();
-export const createWorkbook = xlsx.create.bind(xlsx);
-export const openWorkbook = xlsx.open.bind(xlsx);
-export const openWorkbookSync = xlsx.openSync.bind(xlsx);
-export const parseWorkbook = xlsx.parse.bind(xlsx);
-export const version = "0.1.0";
+const client = new XlsxClient();
 
-export default xlsx;
+export const createWorkbook = client.create.bind(client);
+export const openWorkbook = client.open.bind(client);
+export const openWorkbookSync = client.openSync.bind(client);
+export const parseWorkbook = client.parse.bind(client);
+export const version = "0.3.0";

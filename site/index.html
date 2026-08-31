@@ -19,6 +19,7 @@
     </a>
     <nav aria-label="Primary navigation">
       <a href="#tutorial">Tutorial</a>
+      <a href="#cheatsheet">Cheatsheet</a>
       <a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md">API</a>
       <a href="https://www.npmjs.com/package/@entree_pos/xlsx">npm</a>
       <a href="https://github.com/huangxuewu/entree-xlsx">GitHub</a>
@@ -68,7 +69,6 @@
           <li><a href="#lesson-7"><span>07</span>Summarize regional sales</a></li>
           <li><a href="#lesson-8"><span>08</span>Secure a private report</a></li>
         </ol>
-        <a class="contents-reference" href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md">Read the full API reference</a>
       </aside>
 
       <div class="lessons">
@@ -89,7 +89,7 @@
 const workbook = createWorkbook("Inventory");
 const sheet = workbook.sheet();
 
-sheet.replaceData([
+sheet.setData([
   { sku: "BK-101", item: "Burger", stock: 34 },
   { sku: "FR-204", item: "Fries", stock: 18 },
   { sku: "DR-305", item: "Cold Brew", stock: 27 },
@@ -289,7 +289,8 @@ await workbook.save("invoice-ready.xlsx");</code></pre>
           <div class="lesson-grid lesson-grid-wide-result">
             <div class="code-panel">
               <div class="panel-bar"><span>Code: revenue-chart.js</span><button class="copy-button" type="button">Copy code</button></div>
-              <pre><code>const chart = workbook.charts.add("Sales", {
+              <pre><code>const chart = workbook.charts.add({
+  sheet: "Sales",
   name: "RevenueTrend",
   type: "line",
   title: "Revenue trend",
@@ -329,7 +330,7 @@ workbook.charts.update(chart.id, {
               <div class="panel-bar"><span>Code: sales-pivot.js</span><button class="copy-button" type="button">Copy code</button></div>
               <pre><code>workbook.addSheet("Summary");
 
-const pivot = workbook.pivots.add({
+const pivot = workbook.pivotTables.add({
   name: "SalesByRegion",
   source: {
     sheet: "Orders",
@@ -375,12 +376,12 @@ sheet.range("A5:C6").style({
   protection: { locked: false }
 });
 
-sheet.protect({
+sheet.protectSheet({
   password: process.env.SHEET_PASSWORD,
   selectUnlockedCells: true
 });
 
-workbook.protect({
+workbook.protectStructure({
   password: process.env.STRUCTURE_PASSWORD,
   structure: true
 });
@@ -401,6 +402,159 @@ await workbook.save("private-report.xlsx", {
         </article>
       </div>
     </div>
+
+    <section class="cheatsheet" id="cheatsheet" aria-labelledby="cheatsheet-title">
+      <header class="cheatsheet-header">
+        <div>
+          <p class="section-kicker">API cheatsheet</p>
+          <h2 id="cheatsheet-title">Find the method for the job.</h2>
+        </div>
+        <p>Start with data, move through formatting and analysis, then reach for advanced access only when the public methods do not cover the workbook part you need.</p>
+      </header>
+
+      <div class="api-groups">
+        <details class="api-group" open>
+          <summary><span>01</span><strong>Create, open, and save</strong><small>9 APIs</small></summary>
+          <div class="api-table-wrap">
+            <table class="api-table">
+              <thead><tr><th scope="col">API</th><th scope="col">Description</th><th scope="col">Example</th></tr></thead>
+              <tbody>
+                <tr><td><code>createWorkbook(name?)</code></td><td>Create a workbook with one named sheet.</td><td><a href="#lesson-1">Lesson 1</a></td></tr>
+                <tr><td><code>openWorkbook(source, options?)</code></td><td>Open a path, URL, or binary workbook asynchronously.</td><td><a href="#lesson-5">Lesson 5</a></td></tr>
+                <tr><td><code>openWorkbookSync(path, options?)</code></td><td>Open a local workbook with synchronous file access.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#openworkbooksyncpath-options">API example</a></td></tr>
+                <tr><td><code>parseWorkbook(bytes, options?)</code></td><td>Parse workbook bytes already held in memory.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#parseworkbookdata-options">API example</a></td></tr>
+                <tr><td><code>workbook.save(path, options?)</code></td><td>Write an XLSX or XLSM file asynchronously.</td><td><a href="#lesson-1">Lesson 1</a></td></tr>
+                <tr><td><code>workbook.saveSync(path, options?)</code></td><td>Write an XLSX or XLSM file synchronously.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbooksavesyncpath-options">API example</a></td></tr>
+                <tr><td><code>workbook.toBuffer(options?)</code></td><td>Return Node.js Buffer output for storage or HTTP responses.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbooktobufferoptions">API example</a></td></tr>
+                <tr><td><code>workbook.toUint8Array(options?)</code></td><td>Return portable binary output as a Uint8Array.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbooktouint8arrayoptions">API example</a></td></tr>
+                <tr><td><code>workbook.toBase64(options?)</code></td><td>Return Base64 output for text based transport.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbooktobase64options">API example</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="api-group">
+          <summary><span>02</span><strong>Workbooks and sheets</strong><small>12 APIs</small></summary>
+          <div class="api-table-wrap">
+            <table class="api-table">
+              <thead><tr><th scope="col">API</th><th scope="col">Description</th><th scope="col">Example</th></tr></thead>
+              <tbody>
+                <tr><td><code>workbook.sheet(reference?)</code></td><td>Get a sheet by name or zero-based index, or throw if missing.</td><td><a href="#lesson-1">Lesson 1</a></td></tr>
+                <tr><td><code>workbook.findSheet(reference?)</code></td><td>Get a sheet when present, otherwise return undefined.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookfindsheetreference">API example</a></td></tr>
+                <tr><td><code>workbook.addSheet(name, data?)</code></td><td>Add a sheet and optionally fill it with data.</td><td><a href="#lesson-7">Lesson 7</a></td></tr>
+                <tr><td><code>workbook.renameSheet(reference, name)</code></td><td>Rename a sheet while preserving its content.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookrenamesheetreference-newname">API example</a></td></tr>
+                <tr><td><code>workbook.removeSheet(reference)</code></td><td>Remove a sheet while keeping at least one sheet.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookremovesheetreference">API example</a></td></tr>
+                <tr><td><code>workbook.sheetNames</code></td><td>Read sheet names in workbook order.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbooksheetnames">API example</a></td></tr>
+                <tr><td><code>workbook.sheetCount</code></td><td>Read the number of sheets.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbooksheetcount">API example</a></td></tr>
+                <tr><td><code>workbook.properties</code></td><td>Read or merge title, author, and document metadata.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookproperties">API example</a></td></tr>
+                <tr><td><code>workbook.styles</code></td><td>Access reusable named style definitions.</td><td><a href="#lesson-2">Lesson 2</a></td></tr>
+                <tr><td><code>workbook.charts</code></td><td>Access chart creation and editing methods.</td><td><a href="#lesson-6">Lesson 6</a></td></tr>
+                <tr><td><code>workbook.pivotTables</code></td><td>Access native PivotTable creation and editing methods.</td><td><a href="#lesson-7">Lesson 7</a></td></tr>
+                <tr><td><code>workbook.toJSON(options?)</code></td><td>Convert every sheet to arrays of record objects.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbooktojsonoptions">API example</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="api-group">
+          <summary><span>03</span><strong>Write and read data</strong><small>16 APIs</small></summary>
+          <div class="api-table-wrap">
+            <table class="api-table">
+              <thead><tr><th scope="col">API</th><th scope="col">Description</th><th scope="col">Example</th></tr></thead>
+              <tbody>
+                <tr><td><code>sheet.setData(data, options?)</code></td><td>Replace current cell data and write a complete dataset from A1.</td><td><a href="#lesson-1">Lesson 1</a></td></tr>
+                <tr><td><code>sheet.appendData(records, options?)</code></td><td>Append object records using the existing header order.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetappenddatarecords-options">API example</a></td></tr>
+                <tr><td><code>sheet.appendRows(rows, options?)</code></td><td>Append positional rows or write rows at a chosen origin.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetappendrowsdata-options">API example</a></td></tr>
+                <tr><td><code>sheet.get(address)</code></td><td>Read a cell value directly.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetgetaddress">API example</a></td></tr>
+                <tr><td><code>sheet.set(address, value)</code></td><td>Set a cell value and keep chaining worksheet methods.</td><td><a href="#lesson-5">Lesson 5</a></td></tr>
+                <tr><td><code>sheet.cell(address)</code></td><td>Get a Cell object for values, formulas, styles, and links.</td><td><a href="#lesson-3">Lesson 3</a></td></tr>
+                <tr><td><code>sheet.range(address)</code></td><td>Get a rectangular Range object.</td><td><a href="#lesson-2">Lesson 2</a></td></tr>
+                <tr><td><code>sheet.toRows(options?)</code></td><td>Read a sheet region as arrays of values.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheettorowsoptions">API example</a></td></tr>
+                <tr><td><code>sheet.toRecords(options?)</code></td><td>Read rows as objects keyed by the header row.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheettorecordsoptions">API example</a></td></tr>
+                <tr><td><code>sheet.toCsv(options?)</code></td><td>Export a sheet region as CSV or delimiter separated text.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheettocsvoptions">API example</a></td></tr>
+                <tr><td><code>sheet.toHtml(options?)</code></td><td>Export a sheet region as an escaped HTML table.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheettohtmloptions">API example</a></td></tr>
+                <tr><td><code>sheet.insertRows(before, count?, options?)</code></td><td>Insert rows and shift values, formulas, merges, and row data.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetinsertrowsbeforerow-count-options">API example</a></td></tr>
+                <tr><td><code>sheet.deleteRows(start, count?)</code></td><td>Delete rows and shift following rows upward.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetdeleterowsstartrow-count">API example</a></td></tr>
+                <tr><td><code>sheet.copyRow(source, target, options?)</code></td><td>Copy a row and adjust relative formula references.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetcopyrowsourcerow-targetrow-options">API example</a></td></tr>
+                <tr><td><code>range.getValues()</code></td><td>Read a rectangular array of values.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#rangegetvalues">API example</a></td></tr>
+                <tr><td><code>range.setValues(rows)</code></td><td>Write a rectangular array of values.</td><td><a href="#lesson-4">Lesson 4</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="api-group">
+          <summary><span>04</span><strong>Style and lay out reports</strong><small>18 APIs</small></summary>
+          <div class="api-table-wrap">
+            <table class="api-table">
+              <thead><tr><th scope="col">API</th><th scope="col">Description</th><th scope="col">Example</th></tr></thead>
+              <tbody>
+                <tr><td><code>cell.style(style, mode?)</code></td><td>Apply a named style, style object, or composed style list.</td><td><a href="#lesson-2">Lesson 2</a></td></tr>
+                <tr><td><code>range.style(style, mode?)</code></td><td>Apply styles across a range with position aware borders.</td><td><a href="#lesson-2">Lesson 2</a></td></tr>
+                <tr><td><code>styles.define(name, style, options?)</code></td><td>Create or replace one reusable named style.</td><td><a href="#lesson-2">Lesson 2</a></td></tr>
+                <tr><td><code>styles.defineMany(definitions)</code></td><td>Create several related styles atomically.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#stylesdefinemanydefinitions">API example</a></td></tr>
+                <tr><td><code>styles.get(name)</code></td><td>Read a fully resolved named style.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#stylesgetname">API example</a></td></tr>
+                <tr><td><code>styles.getDefinition(name)</code></td><td>Inspect the stored style and its parent names.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#stylesgetdefinitionname">API example</a></td></tr>
+                <tr><td><code>styles.list()</code></td><td>List every stored named style definition.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#styleslist">API example</a></td></tr>
+                <tr><td><code>styles.remove(name)</code></td><td>Remove an unused named style.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#stylesremovename">API example</a></td></tr>
+                <tr><td><code>cell.copyStyleFrom(source, mode?)</code></td><td>Copy formatting from another cell.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#cellcopystylefromsource-mode">API example</a></td></tr>
+                <tr><td><code>range.copyStyleFrom(source, options?)</code></td><td>Copy formatting from another range.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#rangecopystylefromsource-options">API example</a></td></tr>
+                <tr><td><code>cell.clearStyle(parts?)</code></td><td>Remove all or selected cell formatting.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#cellclearstyleparts">API example</a></td></tr>
+                <tr><td><code>cell.numberFormat(format)</code></td><td>Apply an Excel number format string.</td><td><a href="#lesson-3">Lesson 3</a></td></tr>
+                <tr><td><code>sheet.autoFit(options?)</code></td><td>Estimate practical column widths from current values.</td><td><a href="#lesson-4">Lesson 4</a></td></tr>
+                <tr><td><code>sheet.setColumnWidth(column, width)</code></td><td>Set an exact Excel column width.</td><td><a href="#lesson-4">Lesson 4</a></td></tr>
+                <tr><td><code>sheet.setRowHeight(row, height)</code></td><td>Set an exact row height in points.</td><td><a href="#lesson-4">Lesson 4</a></td></tr>
+                <tr><td><code>sheet.merge(range)</code></td><td>Merge cells in a range.</td><td><a href="#lesson-5">Lesson 5</a></td></tr>
+                <tr><td><code>sheet.unmerge(range)</code></td><td>Remove an exact merged range.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetunmergerange">API example</a></td></tr>
+                <tr><td><code>sheet.autoFilter(range?)</code></td><td>Add Excel filter controls to a data range.</td><td><a href="#lesson-4">Lesson 4</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="api-group">
+          <summary><span>05</span><strong>Formulas, charts, and PivotTables</strong><small>12 APIs</small></summary>
+          <div class="api-table-wrap">
+            <table class="api-table">
+              <thead><tr><th scope="col">API</th><th scope="col">Description</th><th scope="col">Example</th></tr></thead>
+              <tbody>
+                <tr><td><code>cell.formula(formula, result?)</code></td><td>Store a formula and optional cached result.</td><td><a href="#lesson-3">Lesson 3</a></td></tr>
+                <tr><td><code>cell.hyperlink(target, tooltip?)</code></td><td>Add a web, file, or internal workbook link.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#cellhyperlinktarget-tooltip">API example</a></td></tr>
+                <tr><td><code>charts.add(options)</code></td><td>Create a column, bar, line, pie, or scatter chart.</td><td><a href="#lesson-6">Lesson 6</a></td></tr>
+                <tr><td><code>charts.list(sheet?)</code></td><td>Inspect charts in one sheet or the whole workbook.</td><td><a href="#lesson-6">Lesson 6</a></td></tr>
+                <tr><td><code>charts.update(reference, changes)</code></td><td>Change chart data, type, title, name, or position.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookcharts">API example</a></td></tr>
+                <tr><td><code>charts.remove(reference)</code></td><td>Remove a chart and its package parts.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookcharts">API example</a></td></tr>
+                <tr><td><code>pivotTables.add(config)</code></td><td>Create a native PivotTable and cached worksheet result.</td><td><a href="#lesson-7">Lesson 7</a></td></tr>
+                <tr><td><code>pivotTables.list(sheet?)</code></td><td>Inspect PivotTables in one sheet or the workbook.</td><td><a href="#lesson-7">Lesson 7</a></td></tr>
+                <tr><td><code>pivotTables.update(reference, changes)</code></td><td>Rebuild a PivotTable with changed fields or summary rules.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookpivottables">API example</a></td></tr>
+                <tr><td><code>pivotTables.remove(reference)</code></td><td>Remove a PivotTable, cache, and relationships.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookpivottables">API example</a></td></tr>
+                <tr><td><code>range.forEach(callback)</code></td><td>Visit each Cell in a range with row and column offsets.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#rangeforeachcallback">API example</a></td></tr>
+                <tr><td><code>cell.clear(options?)</code></td><td>Clear a cell while optionally keeping its style.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#cellclearoptions">API example</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="api-group">
+          <summary><span>06</span><strong>Protect and inspect</strong><small>7 APIs</small></summary>
+          <div class="api-table-wrap">
+            <table class="api-table">
+              <thead><tr><th scope="col">API</th><th scope="col">Description</th><th scope="col">Example</th></tr></thead>
+              <tbody>
+                <tr><td><code>sheet.protectSheet(options?)</code></td><td>Control which worksheet edits Excel allows.</td><td><a href="#lesson-8">Lesson 8</a></td></tr>
+                <tr><td><code>sheet.unprotectSheet()</code></td><td>Remove worksheet editing protection.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetprotectsheetoptions-and-worksheetunprotectsheet">API example</a></td></tr>
+                <tr><td><code>workbook.protectStructure(options?)</code></td><td>Prevent ordinary sheet structure changes in Excel.</td><td><a href="#lesson-8">Lesson 8</a></td></tr>
+                <tr><td><code>workbook.unprotectStructure()</code></td><td>Remove workbook structure protection.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#workbookprotectstructureoptions-and-workbookunprotectstructure">API example</a></td></tr>
+                <tr><td><code>workbook.save(path, { password })</code></td><td>Encrypt file contents with Excel compatible AES-256.</td><td><a href="#lesson-8">Lesson 8</a></td></tr>
+                <tr><td><code>sheet.unsafeRaw</code></td><td>Access the internal worksheet record as an unstable escape hatch.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#worksheetunsaferaw">API example</a></td></tr>
+                <tr><td><code>cell.unsafeRaw</code></td><td>Access the internal cell record as an unstable escape hatch.</td><td><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md#cellunsaferaw">API example</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+      <p class="cheatsheet-note">Need style property names, encryption helpers, or every option? <a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md">Open the complete API reference.</a></p>
+    </section>
 
     <section class="next-step" aria-labelledby="next-title">
       <p class="section-kicker">Ready for your own data?</p>

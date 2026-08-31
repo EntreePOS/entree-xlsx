@@ -45,10 +45,10 @@ test("defines, inherits, composes, and persists named Excel styles", () => {
 
   const reopened = parseWorkbook(workbook.toBuffer());
   assert.deepEqual(reopened.styles.names.sort(), ["currency", "reportBase", "reportHeader"]);
-  assert.equal(reopened.sheet().cell("A1").raw.namedStyle, "reportHeader");
-  assert.equal(reopened.sheet().cell("A1").raw.style.font.bold, true);
-  assert.equal(reopened.sheet().cell("A1").raw.style.font.name, "Aptos");
-  assert.equal(reopened.sheet().cell("D2").raw.style.numberFormat, "$#,##0.00;[Red]-$#,##0.00");
+  assert.equal(reopened.sheet().cell("A1").unsafeRaw.namedStyle, "reportHeader");
+  assert.equal(reopened.sheet().cell("A1").unsafeRaw.style.font.bold, true);
+  assert.equal(reopened.sheet().cell("A1").unsafeRaw.style.font.name, "Aptos");
+  assert.equal(reopened.sheet().cell("D2").unsafeRaw.style.numberFormat, "$#,##0.00;[Red]-$#,##0.00");
 });
 
 test("applies range outline and interior borders positionally", () => {
@@ -58,10 +58,10 @@ test("applies range outline and interior borders positionally", () => {
     outline: { style: "medium", color: "#17324D" },
     inside: { style: "thin", color: "#CCCCCC" }
   } });
-  assert.equal(sheet.cell("A1").raw.style.border.top.style, "medium");
-  assert.equal(sheet.cell("A1").raw.style.border.right.style, "thin");
-  assert.equal(sheet.cell("B2").raw.style.border.bottom.style, "medium");
-  assert.equal(sheet.cell("B2").raw.style.border.left.style, "thin");
+  assert.equal(sheet.cell("A1").unsafeRaw.style.border.top.style, "medium");
+  assert.equal(sheet.cell("A1").unsafeRaw.style.border.right.style, "thin");
+  assert.equal(sheet.cell("B2").unsafeRaw.style.border.bottom.style, "medium");
+  assert.equal(sheet.cell("B2").unsafeRaw.style.border.left.style, "thin");
 });
 
 test("copies and selectively clears style properties", () => {
@@ -69,11 +69,11 @@ test("copies and selectively clears style properties", () => {
   const sheet = workbook.sheet();
   sheet.cell("A1").style({ bold: true, fill: "#17324D", wrapText: true });
   sheet.cell("B1").copyStyleFrom("A1").clearStyle(["fill", "bold"]);
-  assert.equal(sheet.cell("B1").raw.style.fill, undefined);
-  assert.equal(sheet.cell("B1").raw.style.font, undefined);
-  assert.equal(sheet.cell("B1").raw.style.alignment.wrapText, true);
+  assert.equal(sheet.cell("B1").unsafeRaw.style.fill, undefined);
+  assert.equal(sheet.cell("B1").unsafeRaw.style.font, undefined);
+  assert.equal(sheet.cell("B1").unsafeRaw.style.alignment.wrapText, true);
   sheet.range("A1:B1").clearStyle("wrapText");
-  assert.equal(sheet.cell("A1").raw.style.alignment, undefined);
+  assert.equal(sheet.cell("A1").unsafeRaw.style.alignment, undefined);
 });
 
 test("deduplicates repeated styles in preserved templates", () => {

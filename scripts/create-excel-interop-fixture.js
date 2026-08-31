@@ -7,7 +7,7 @@ await mkdir(outputDirectory, { recursive: true });
 
 function baseWorkbook() {
   const workbook = createWorkbook("Orders");
-  workbook.sheet().replaceData([
+  workbook.sheet().setData([
     ["Region", "Month", "Sales"],
     ["East", "Jan", 10],
     ["East", "Feb", 20],
@@ -26,12 +26,12 @@ await writeFile(paths.base, base.toBuffer());
 await writeFile(paths.encryptedBase, base.toBuffer({ password: "Entree123!" }));
 
 const chart = baseWorkbook();
-chart.charts.add("Orders", { name: "SalesChart", type: "column", title: "Sales", range: "A1:C5" });
+chart.charts.add({ sheet: "Orders", name: "SalesChart", type: "column", title: "Sales", range: "A1:C5" });
 paths.chart = resolve(outputDirectory, "excel-chart.xlsx");
 await writeFile(paths.chart, chart.toBuffer());
 
 const pivot = baseWorkbook();
-pivot.pivots.add({
+pivot.pivotTables.add({
   name: "SalesPivot",
   source: { sheet: "Orders", range: "A1:C5" },
   target: { sheet: "Summary", cell: "A3" },
@@ -78,8 +78,8 @@ paths.preservedStyles = resolve(outputDirectory, "excel-styles-preserved.xlsx");
 await writeFile(paths.preservedStyles, preservedStyles.toBuffer());
 
 const complete = baseWorkbook();
-complete.charts.add("Orders", { name: "SalesChart", type: "column", title: "Sales", range: "A1:C5" });
-complete.pivots.add({
+complete.charts.add({ sheet: "Orders", name: "SalesChart", type: "column", title: "Sales", range: "A1:C5" });
+complete.pivotTables.add({
   name: "SalesPivot",
   source: { sheet: "Orders", range: "A1:C5" },
   target: { sheet: "Summary", cell: "A3" },
@@ -87,8 +87,8 @@ complete.pivots.add({
   columns: ["Month"],
   values: [{ field: "Sales", summarize: "sum", name: "Total Sales" }]
 });
-complete.protect({ password: "Book123!", structure: true });
-complete.sheet("Summary").protect({ password: "Sheet123!" });
+complete.protectStructure({ password: "Book123!", structure: true });
+complete.sheet("Summary").protectSheet({ password: "Sheet123!" });
 paths.complete = resolve(outputDirectory, "excel-complete-encrypted.xlsx");
 await writeFile(paths.complete, complete.toBuffer({ password: "Entree123!" }));
 

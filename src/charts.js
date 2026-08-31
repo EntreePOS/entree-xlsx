@@ -217,10 +217,13 @@ export class ChartCollection {
     return names.flatMap((sheetName) => chartEntries(state, sheetName).map(({ anchorXml, xml, ...entry }) => ({ ...entry, sheet: sheetName })));
   }
 
-  add(sheet, config) {
+  add(config) {
+    if (!config || typeof config !== "object" || Array.isArray(config)) throw new TypeError("Chart options must be an object.");
+    const { sheet, ...chartConfig } = config;
+    if (sheet === undefined) throw new TypeError("A chart requires a sheet.");
     const sheetName = typeof sheet === "number" ? this.workbook.SheetNames[sheet] : sheet;
     if (!this.workbook.Sheets[sheetName]) throw new RangeError(`Worksheet ${String(sheet)} does not exist.`);
-    const normalized = normalizeConfig(sheetName, config);
+    const normalized = normalizeConfig(sheetName, chartConfig);
     const state = ensurePackageState(this.workbook);
     const sheetPath = state.sheetPaths.get(sheetName);
     const drawing = ensureDrawing(state, sheetPath);

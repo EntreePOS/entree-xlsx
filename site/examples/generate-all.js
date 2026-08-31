@@ -66,7 +66,7 @@ async function createBasicWorkbook() {
   const workbook = createWorkbook("Inventory");
   const sheet = workbook.sheet();
 
-  sheet.replaceData([
+  sheet.setData([
     { sku: "BK-101", item: "Classic Burger", stock: 34 },
     { sku: "FR-204", item: "Seasoned Fries", stock: 18 },
     { sku: "DR-305", item: "Cold Brew", stock: 27 },
@@ -229,7 +229,8 @@ async function createChartWorkbook() {
   sheet.range("B5:B9").style({ numberFormat: "$#,##0" });
   sheet.setColumnWidth("A", 15).setColumnWidth("B", 15);
 
-  workbook.charts.add("Sales", {
+  workbook.charts.add({
+    sheet: "Sales",
     name: "RevenueTrend",
     type: "line",
     title: "Revenue trend",
@@ -246,7 +247,7 @@ async function createPivotWorkbook() {
   const source = workbook.sheet();
   const summary = workbook.addSheet("Summary");
 
-  source.replaceData([
+  source.setData([
     { region: "North", category: "Food", sales: 420 },
     { region: "North", category: "Drinks", sales: 180 },
     { region: "South", category: "Food", sales: 510 },
@@ -260,7 +261,7 @@ async function createPivotWorkbook() {
   source.autoFit({ min: 12, max: 22, padding: 3 });
 
   addReportTitle(summary, "Sales by region", "A native PivotTable with cached source records and refresh-on-open support.", "F");
-  workbook.pivots.add({
+  workbook.pivotTables.add({
     name: "SalesByRegion",
     source: { sheet: "Orders", range: "A1:C7" },
     target: { sheet: "Summary", cell: "A4" },
@@ -270,7 +271,8 @@ async function createPivotWorkbook() {
   });
   summary.cell("B4").set("Drinks");
   summary.cell("C4").set("Food");
-  summary.setColumnWidth("A", 20).setColumnWidth("B", 16).setColumnWidth("C", 16).setColumnWidth("D", 20);
+  summary.cell("A8").set("Total");
+  summary.setColumnWidth("A", 24).setColumnWidth("B", 16).setColumnWidth("C", 16).setColumnWidth("D", 20);
 
   await workbook.save(join(outputDirectory, "07-create-a-pivot-table.xlsx"));
 
@@ -290,7 +292,7 @@ async function createPivotWorkbook() {
   addGrid(previewSheet, "A4:D8");
   previewSheet.range("B5:D8").style({ numberFormat: "$#,##0" });
   previewSheet.range("A8:D8").style({ bold: true, fill: palette.blueSoft });
-  previewSheet.setColumnWidth("A", 20).setColumnWidth("B", 16).setColumnWidth("C", 16).setColumnWidth("D", 20);
+  previewSheet.setColumnWidth("A", 24).setColumnWidth("B", 16).setColumnWidth("C", 16).setColumnWidth("D", 20);
   await preview.save(join(previewDirectory, "07-pivot-preview.xlsx"));
 }
 
@@ -312,8 +314,8 @@ async function createSecurityWorkbook() {
   sheet.cell("D6").formula("B6*C6", 10.5).style({ fill: palette.blueSoft, numberFormat: "$#,##0.00" });
   sheet.cell("D7").formula("SUM(D5:D6)", 34.5).style({ bold: true, fill: palette.blueSoft, numberFormat: "$#,##0.00" });
   sheet.range("A7:C7").style({ bold: true, fill: palette.blueSoft });
-  sheet.protect({ password: "demo", selectUnlockedCells: true, formatCells: false });
-  workbook.protect({ password: "demo", structure: true });
+  sheet.protectSheet({ password: "demo", selectUnlockedCells: true, formatCells: false });
+  workbook.protectStructure({ password: "demo", structure: true });
   sheet.setColumnWidth("A", 22).setColumnWidth("B", 14).setColumnWidth("C", 14).setColumnWidth("D", 16);
 
   await writeFile(join(previewDirectory, "08-security-preview.xlsx"), workbook.toBuffer());

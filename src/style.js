@@ -330,7 +330,7 @@ export class StyleCollection {
     return structuredClone(this.#resolveName(styleName(name), []));
   }
 
-  definition(name) {
+  getDefinition(name) {
     const key = styleName(name);
     const definition = this.workbook.DefinedStyles?.[key];
     if (!definition) throw new ReferenceError(`Unknown style ${JSON.stringify(key)}. Available styles: ${this.names.join(", ") || "none"}.`);
@@ -338,7 +338,7 @@ export class StyleCollection {
   }
 
   list() {
-    return this.names.map((name) => this.definition(name));
+    return this.names.map((name) => this.getDefinition(name));
   }
 
   remove(name) {

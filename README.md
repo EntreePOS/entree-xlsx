@@ -22,7 +22,7 @@ import { createWorkbook } from "@entree_pos/xlsx";
 const workbook = createWorkbook("Orders");
 const sheet = workbook.sheet("Orders");
 
-sheet.replaceData([
+sheet.setData([
   { order: 1001, customer: "Ada", total: 18.5 },
   { order: 1002, customer: "Linus", total: 24 },
   { order: 1003, customer: "Grace", total: 31.25 }
@@ -182,7 +182,8 @@ sheet.range("A1:C3").setValues([
   ["Fries", 1, 4]
 ]);
 
-sheet.addRows([["Drink", 2, 3.5]]);
+sheet.appendRows([["Drink", 2, 3.5]]);
+sheet.appendData([{ item: "Shake", qty: 1, price: 5.25 }]);
 sheet.insertRows(4, 2);
 sheet.copyRow(2, 4);
 sheet.deleteRows(10, 1);
@@ -212,13 +213,18 @@ console.log(workbook.sheetNames);
 console.log(workbook.sheetCount);
 ```
 
+Use `setData()` when the new dataset should replace the current cell values.
+Use `appendData()` for object records that should follow the sheet's existing
+headers, and `appendRows()` for positional array rows.
+
 ## Add a chart
 
 Charts use worksheet ranges as their data source and cell addresses for
 placement.
 
 ```js
-const chart = workbook.charts.add("Orders", {
+const chart = workbook.charts.add({
+  sheet: "Orders",
   name: "RevenueChart",
   type: "column", // column, bar, line, pie, or scatter
   title: "Monthly revenue",
@@ -228,7 +234,8 @@ const chart = workbook.charts.add("Orders", {
 
 workbook.charts.update(chart.id, {
   type: "line",
-  title: "Revenue trend"
+  title: "Revenue trend",
+  range: "A1:B13"
 });
 
 console.log(workbook.charts.list("Orders"));
@@ -243,7 +250,7 @@ pivot.
 ```js
 workbook.addSheet("Summary");
 
-const pivot = workbook.pivots.add({
+const pivot = workbook.pivotTables.add({
   name: "SalesPivot",
   source: { sheet: "Orders", range: "A1:D500" },
   target: { sheet: "Summary", cell: "A3" },
@@ -255,7 +262,7 @@ const pivot = workbook.pivots.add({
   ]
 });
 
-workbook.pivots.update(pivot.id, {
+workbook.pivotTables.update(pivot.id, {
   rows: ["Store"],
   columns: ["Region"]
 });
@@ -285,12 +292,12 @@ Workbook and worksheet protection control editing and structure. They are
 separate from file encryption:
 
 ```js
-workbook.protect({
+workbook.protectStructure({
   password: process.env.STRUCTURE_PASSWORD,
   structure: true
 });
 
-workbook.sheet("Orders").protect({
+workbook.sheet("Orders").protectSheet({
   password: process.env.SHEET_PASSWORD
 });
 ```

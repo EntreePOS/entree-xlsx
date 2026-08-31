@@ -5,7 +5,7 @@ import { readCompoundFile } from "../src/cfb.js";
 
 test("encrypts and decrypts an XLSX package using Agile Office encryption", () => {
   const workbook = createWorkbook("Private");
-  workbook.sheet().replaceData([["Secret"], ["restaurant report"]]);
+  workbook.sheet().setData([["Secret"], ["restaurant report"]]);
   const plain = workbook.toBuffer();
   const encrypted = encryptWorkbookBuffer(plain, "correct horse", { spinCount: 2_000 });
   assert.equal(isCompoundFile(encrypted), true);

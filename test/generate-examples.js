@@ -146,7 +146,8 @@ async function createChartExample() {
   sheet.range("A11:C13").style("note");
   sheet.setColumnWidth("A", 16).setColumnWidth("B", 16);
   for (const column of ["C", "D", "E", "F", "G", "H", "I", "J"]) sheet.setColumnWidth(column, 11);
-  workbook.charts.add("Sales", {
+  workbook.charts.add({
+    sheet: "Sales",
     type: "line",
     title: "Monthly Sales ($)",
     legend: false,
@@ -186,7 +187,7 @@ async function createPivotExample() {
   const summary = workbook.sheet("Summary");
   addTitle(summary, "3. PIVOT TABLE — RESULT", "The library writes the PivotTable definition, cache definition, and cache records.", "D");
   summary.range("A4:D4").setValues([["Pivot output", "Food", "Drinks", "Grand Total"]]).style("header");
-  workbook.pivots.add({
+  workbook.pivotTables.add({
     name: "SalesByRegion",
     source: { sheet: "Orders", range: "A4:C10" },
     target: { sheet: "Summary", cell: "A5" },
@@ -232,8 +233,8 @@ async function createProtectionAndEncryptionExample() {
   sheet.merge("A9:D10").set("A9", "Yellow cells are editable. Blue cells contain protected formulas. The whole XLSX file is encrypted with AES-256 Agile Office encryption.");
   sheet.range("A9:D10").style("note");
   sheet.setColumnWidth("A", 22).setColumnWidth("B", 14).setColumnWidth("C", 14).setColumnWidth("D", 16);
-  sheet.protect({ password: "demo", selectUnlockedCells: true, formatCells: false });
-  workbook.protect({ password: "demo", structure: true });
+  sheet.protectSheet({ password: "demo", selectUnlockedCells: true, formatCells: false });
+  workbook.protectStructure({ password: "demo", structure: true });
 
   await workbook.save(join(outputDirectory, "04-protection-and-encryption.xlsx"), { password: "demo" });
 }

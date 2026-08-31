@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0
+
+- Replace ambiguous method names with task-focused APIs: `setData()`,
+  `appendRows()`, `appendData()`, `findSheet()`, `pivotTables`,
+  `protectStructure()`, `protectSheet()`, and `getDefinition()`.
+- Simplify chart creation to one options object with a required `sheet` field.
+- Remove the default client export, public `XlsxClient`, and internal helper
+  methods from the supported API surface.
+- Rename raw OOXML escape hatches to `unsafeRaw` so advanced access is clearly
+  marked.
+- Add a categorized API cheatsheet with direct links to working examples.
+
 ## 0.2.2
 
 - Link the npm package homepage to the live, task-oriented tutorial at

@@ -1,6 +1,6 @@
 # @entree_pos/xlsx API Reference
 
-Version: `0.1.0`  
+Version: `0.3.0`
 Runtime: Node.js 18 or newer  
 Module format: native ECMAScript modules (ESM)  
 Runtime dependencies: none
@@ -45,7 +45,7 @@ import { createWorkbook } from "@entree_pos/xlsx";
 const workbook = createWorkbook("Orders");
 const orders = workbook.sheet("Orders");
 
-orders.replaceData([
+orders.setData([
   { order: 1001, customer: "Ada", total: 18.5 },
   { order: 1002, customer: "Linus", total: 24 }
 ]);
@@ -69,16 +69,13 @@ await workbook.save("orders.xlsx");
 | `openWorkbook(source, options?)` | Opens an XLSX/XLSM path, URL, or binary value; `options.password` opens Agile-encrypted files. |
 | `openWorkbookSync(path, options?)` | Synchronously opens a local workbook. |
 | `parseWorkbook(data, options?)` | Parses in-memory workbook bytes, including password-encrypted Office files. |
-| `xlsx` | The default `XlsxClient` instance. |
-| default export | The same default `XlsxClient` instance as `xlsx`. |
 | `version` | The package version string. |
-| `XlsxClient` | Client class behind the top-level helper functions. |
 | `Workbook` | Workbook class. |
 | `Worksheet` | Worksheet class. |
 | `Range` | Range class. |
 | `Cell` | Cell class. |
 | `ChartCollection` | Chart create/list/update/remove API exposed as `workbook.charts`. |
-| `PivotCollection` | PivotTable create/list/update/remove API exposed as `workbook.pivots`. |
+| `PivotCollection` | PivotTable create/list/update/remove API exposed as `workbook.pivotTables`. |
 | `StyleCollection` | Reusable named-style API exposed as `workbook.styles`. |
 | `composeStyles(...styles)` | Normalizes and merges style objects from left to right. |
 | `encryptWorkbookBuffer` | Applies AES-256 Agile Office password encryption to XLSX bytes. |
@@ -212,56 +209,6 @@ const workbook = parseWorkbook(await response.arrayBuffer());
 const privateWorkbook = parseWorkbook(encryptedBytes, { password: process.env.REPORT_PASSWORD });
 ```
 
-## Default client
-
-The named `xlsx` export and default export are the same `XlsxClient` instance:
-
-```js
-import xlsx, { xlsx as namedClient } from "@entree_pos/xlsx";
-
-console.log(xlsx === namedClient); // true
-
-const workbook = xlsx.create("Orders");
-const opened = await xlsx.open("orders.xlsx");
-```
-
----
-
-# `XlsxClient`
-
-Most applications should use the top-level helper functions. `XlsxClient` is
-available when an explicit client object is more convenient.
-
-```js
-import { XlsxClient } from "@entree_pos/xlsx";
-
-const client = new XlsxClient();
-```
-
-## `client.create(firstSheetName?)`
-
-Equivalent to `createWorkbook(firstSheetName)`.
-
-Returns: `Workbook`
-
-## `client.open(source)`
-
-Equivalent to `openWorkbook(source)`.
-
-Returns: `Promise<Workbook>`
-
-## `client.openSync(path)`
-
-Equivalent to `openWorkbookSync(path)`.
-
-Returns: `Workbook`
-
-## `client.parse(data)`
-
-Equivalent to `parseWorkbook(data)`.
-
-Returns: `Workbook`
-
 ---
 
 # `Workbook`
@@ -325,13 +272,13 @@ const byIndex = workbook.sheet(1);
 const orders = workbook.sheet("Orders");
 ```
 
-## `workbook.trySheet(reference?)`
+## `workbook.findSheet(reference?)`
 
 Returns a worksheet when found, otherwise returns `undefined`. Other unexpected
 errors are still thrown.
 
 ```js
-const optional = workbook.trySheet("Optional");
+const optional = workbook.findSheet("Optional");
 if (optional) console.log(optional.usedRange);
 ```
 
@@ -443,12 +390,6 @@ const data = workbook.toJSON();
 // }
 ```
 
-## `workbook.resolveName(reference)`
-
-Resolves a sheet name or zero-based index to a sheet name. This is primarily an
-internal helper; ordinary code should call `sheet()`, `trySheet()`, or another
-sheet-management method.
-
 ## `workbook.styles`
 
 Returns the workbook's `StyleCollection`. Use it to define reusable styles,
@@ -475,7 +416,8 @@ part, so they appear as real named cell styles in Excel and survive reopening.
 Returns the workbook's `ChartCollection`.
 
 ```js
-const chart = workbook.charts.add("Sales", {
+const chart = workbook.charts.add({
+  sheet: "Sales",
   name: "RevenueChart",
   type: "column",
   title: "Monthly revenue",
@@ -497,12 +439,12 @@ Instead of `range`, advanced callers can pass `series` entries containing
 `name`, `nameCell`, `categories`, `xValues`, and `values` ranges. Chart updates
 require `range` or `series` so the data mapping remains explicit.
 
-## `workbook.pivots`
+## `workbook.pivotTables`
 
 Returns the workbook's `PivotCollection`.
 
 ```js
-const pivot = workbook.pivots.add({
+const pivot = workbook.pivotTables.add({
   name: "SalesPivot",
   source: { sheet: "Orders", range: "A1:D500" },
   target: { sheet: "Summary", cell: "A3" },
@@ -514,22 +456,22 @@ const pivot = workbook.pivots.add({
   style: "PivotStyleMedium9"
 });
 
-workbook.pivots.list("Summary");
-workbook.pivots.update(pivot.id, { rows: ["Store"], columns: ["Region"] });
-workbook.pivots.remove(pivot.id);
+workbook.pivotTables.list("Summary");
+workbook.pivotTables.update(pivot.id, { rows: ["Store"], columns: ["Region"] });
+workbook.pivotTables.remove(pivot.id);
 ```
 
 Summaries can use `sum`, `count`, `average`, `min`, or `max`. Creation writes a
 PivotTable definition, cache definition, cache records, workbook and worksheet
 relationships, and a cached summary in the target cells.
 
-## `workbook.protect(options?)` and `workbook.unprotect()`
+## `workbook.protectStructure(options?)` and `workbook.unprotectStructure()`
 
 Protects workbook structure from ordinary Excel UI edits.
 
 ```js
-workbook.protect({ password: "structure-password", structure: true });
-workbook.unprotect();
+workbook.protectStructure({ password: "structure-password", structure: true });
+workbook.unprotectStructure();
 ```
 
 This is an editing control, not encryption. Use a save password to protect the
@@ -613,7 +555,7 @@ const resolvedHeader = workbook.styles.get("reportHeader");
 
 Changing the returned object does not change the definition.
 
-## `styles.definition(name)`
+## `styles.getDefinition(name)`
 
 Returns the stored definition without resolving inheritance:
 
@@ -663,7 +605,7 @@ Read-only worksheet name.
 Read-only A1 range covering every populated cell, such as `"A1:D25"`. It is
 `undefined` for a completely empty sheet.
 
-## `worksheet.raw`
+## `worksheet.unsafeRaw`
 
 Returns the internal worksheet object. This is an advanced escape hatch and is
 not a stable interchange format. Prefer the documented methods.
@@ -703,7 +645,7 @@ Returns a `Range` object.
 const header = worksheet.range("A1:D1");
 ```
 
-## `worksheet.addRows(data, options?)`
+## `worksheet.appendRows(data, options?)`
 
 Appends or inserts array rows or object rows.
 
@@ -718,7 +660,7 @@ Options:
 Array rows:
 
 ```js
-worksheet.addRows([
+worksheet.appendRows([
   [1001, "Ada", 18.5],
   [1002, "Linus", 24]
 ]);
@@ -727,7 +669,7 @@ worksheet.addRows([
 Object rows:
 
 ```js
-worksheet.addRows([
+worksheet.appendRows([
   { order: 1001, customer: "Ada", total: 18.5 },
   { order: 1002, customer: "Linus", total: 24 }
 ], {
@@ -739,13 +681,36 @@ worksheet.addRows([
 Append object rows to a sheet that already has headers:
 
 ```js
-worksheet.addRows([
+worksheet.appendRows([
   { order: 1003, customer: "Grace", total: 31 }
 ], {
   header: ["order", "customer", "total"],
   skipHeader: true
 });
 ```
+
+For record objects, prefer `appendData()`. It reuses the current header row so
+you do not need to repeat the header order.
+
+## `worksheet.appendData(records, options?)`
+
+Appends object records below existing data. When the worksheet is empty, it
+creates a header row. When data already exists, it reads the first used row as
+the header order and maps each record to those columns.
+
+```js
+worksheet.setData([
+  { order: 1001, customer: "Ada", total: 18.5 }
+]);
+
+worksheet.appendData([
+  { customer: "Linus", total: 24, order: 1002 }
+]);
+```
+
+Use `options.header` to provide an explicit property order. Use
+`options.origin` only when the records should be written somewhere other than
+the next row after the used range.
 
 ## `worksheet.insertRows(beforeRow, count?, options?)`
 
@@ -778,14 +743,14 @@ worksheet.copyRow(5, 12);
 worksheet.copyRow(5, 13, { values: false });
 ```
 
-## `worksheet.replaceData(data, options?)`
+## `worksheet.setData(data, options?)`
 
 Removes existing cells, resets the used range, and writes new data starting at
 `A1`. Existing layout metadata such as merges, widths, heights, and filters is
 not automatically cleared.
 
 ```js
-worksheet.replaceData([
+worksheet.setData([
   { item: "Burger", quantity: 2 },
   { item: "Fries", quantity: 1 }
 ]);
@@ -932,18 +897,18 @@ worksheet.autoFit({ min: 10, max: 40, padding: 3 });
 
 Auto-fit is an estimate; Node.js does not have Excel's font-rendering engine.
 
-## `worksheet.protect(options?)` and `worksheet.unprotect()`
+## `worksheet.protectSheet(options?)` and `worksheet.unprotectSheet()`
 
 Adds or removes Excel worksheet editing protection.
 
 ```js
-worksheet.protect({
+worksheet.protectSheet({
   password: "sheet-password",
   objects: true,
   scenarios: true
 });
 
-worksheet.unprotect();
+worksheet.unprotectSheet();
 ```
 
 Worksheet protection is not file encryption. Use `save(path, { password })`
@@ -970,7 +935,7 @@ console.log(cell.value);
 cell.value = 42;
 ```
 
-## `cell.raw`
+## `cell.unsafeRaw`
 
 Returns the internal cell record, or `undefined` when the cell has not been
 created. This is an advanced escape hatch and not a stable interchange format.
@@ -1086,12 +1051,6 @@ Clears a cell and returns it.
 worksheet.cell("A2").clear();
 worksheet.cell("B2").clear({ keepStyle: true });
 ```
-
-## `cell.ensure(defaultValue?)`
-
-Creates the cell when it does not exist and returns its internal record. This is
-primarily an internal helper; normal code should use `set()`, `style()`,
-`numberFormat()`, or `hyperlink()`.
 
 ---
 
@@ -1416,7 +1375,7 @@ worksheet.range("A2:C20").style({ protection: {
   locked: false,
   hidden: false
 } });
-worksheet.protect({ password: process.env.SHEET_PASSWORD });
+worksheet.protectSheet({ password: process.env.SHEET_PASSWORD });
 ```
 
 `editable: true` is shorthand for `protection.locked: false`.
@@ -1524,7 +1483,7 @@ workbook.properties = {
 };
 
 const sales = workbook.sheet("Sales");
-sales.replaceData([
+sales.setData([
   { item: "Burger", quantity: 12, revenue: 150 },
   { item: "Fries", quantity: 8, revenue: 32 },
   { item: "Drink", quantity: 15, revenue: 37.5 }
@@ -1552,13 +1511,13 @@ await workbook.save("daily-sales.xlsx");
 import { openWorkbook } from "@entree_pos/xlsx";
 
 const workbook = await openWorkbook("orders.xlsx");
-const orders = workbook.trySheet("Orders");
+const orders = workbook.findSheet("Orders");
 
 if (!orders) {
   throw new Error("The Orders sheet is required");
 }
 
-orders.addRows([
+orders.appendRows([
   { order: 1003, customer: "Grace", total: 31 }
 ], {
   header: ["order", "customer", "total"],
@@ -1576,7 +1535,7 @@ import { createWorkbook } from "@entree_pos/xlsx";
 
 createServer((request, response) => {
   const workbook = createWorkbook("Orders");
-  workbook.sheet().replaceData([
+  workbook.sheet().setData([
     { order: 1001, total: 18.5 },
     { order: 1002, total: 24 }
   ]);
@@ -1623,7 +1582,7 @@ await workbook.save("report-updated.xlsx");
 import { createWorkbook } from "@entree_pos/xlsx";
 
 const workbook = createWorkbook("Orders");
-workbook.sheet("Orders").replaceData([
+workbook.sheet("Orders").setData([
   { order: 1001, customerId: 1, total: 18.5 }
 ]);
 

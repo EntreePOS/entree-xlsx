@@ -1,6 +1,6 @@
 {
   "name": "@entree_pos/xlsx",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "A zero-dependency modern JavaScript API for lossless XLSX/XLSM editing, charts, pivot tables, and Office password encryption.",
   "keywords": [
     "xlsx",
@@ -22,12 +22,7 @@
   "author": "Entree POS",
   "type": "module",
   "main": "./src/index.js",
-  "exports": {
-    ".": {
-      "import": "./src/index.js",
-      "default": "./src/index.js"
-    }
-  },
+  "exports": "./src/index.js",
   "bin": {
     "entree-xlsx": "./src/cli.js"
   },

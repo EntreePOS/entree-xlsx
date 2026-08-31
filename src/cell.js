@@ -37,16 +37,16 @@ export class Cell {
     this.resolveStyle = resolveStyle;
   }
 
-  get raw() {
+  get unsafeRaw() {
     return this.worksheet[this.address];
   }
 
   get value() {
-    return this.raw?.value;
+    return this.unsafeRaw?.value;
   }
 
   set value(value) {
-    this.worksheet[this.address] = { ...(this.raw ?? {}), ...inferCell(value), formatted: undefined };
+    this.worksheet[this.address] = { ...(this.unsafeRaw ?? {}), ...inferCell(value), formatted: undefined };
     expandWorksheetRef(this.worksheet, this.coordinates);
     this.onChange(this.address, "value");
   }
@@ -59,7 +59,7 @@ export class Cell {
   formula(formula, result) {
     const valueCell = result === undefined ? { type: "number", value: undefined } : inferCell(result);
     this.worksheet[this.address] = {
-      ...(this.raw ?? {}),
+      ...(this.unsafeRaw ?? {}),
       ...valueCell,
       formula: String(formula).replace(/^=/, ""),
       formatted: undefined
@@ -76,7 +76,7 @@ export class Cell {
 
   applyStyle(style, mode = "merge", namedStyle) {
     if (!["merge", "replace"].includes(mode)) throw new TypeError('Style mode must be "merge" or "replace".');
-    const cell = this.ensure();
+    const cell = this.#ensure();
     cell.style = mode === "replace" ? structuredClone(style) : deepMerge(cell.style ?? {}, style);
     if (namedStyle) cell.namedStyle = namedStyle;
     else if (mode === "replace") delete cell.namedStyle;
@@ -86,11 +86,11 @@ export class Cell {
   }
 
   getStyle() {
-    return structuredClone(this.raw?.style ?? {});
+    return structuredClone(this.unsafeRaw?.style ?? {});
   }
 
   clearStyle(parts) {
-    const cell = this.ensure();
+    const cell = this.#ensure();
     if (parts === undefined) {
       cell.style = {};
       delete cell.namedStyle;
@@ -109,11 +109,11 @@ export class Cell {
 
   copyStyleFrom(source, mode = "replace") {
     const sourceCell = source instanceof Cell ? source : new Cell(this.worksheet, source, this.onChange, this.resolveStyle);
-    return this.applyStyle(sourceCell.getStyle(), mode, sourceCell.raw?.namedStyle);
+    return this.applyStyle(sourceCell.getStyle(), mode, sourceCell.unsafeRaw?.namedStyle);
   }
 
   numberFormat(format) {
-    const cell = this.ensure();
+    const cell = this.#ensure();
     cell.style = deepMerge(cell.style ?? {}, { numberFormat: String(format) });
     cell.styleDirty = true;
     this.onChange(this.address, "style");
@@ -121,23 +121,23 @@ export class Cell {
   }
 
   hyperlink(target, tooltip) {
-    this.ensure("").hyperlink = { target: String(target), ...(tooltip ? { tooltip: String(tooltip) } : {}) };
+    this.#ensure("").hyperlink = { target: String(target), ...(tooltip ? { tooltip: String(tooltip) } : {}) };
     this.onChange(this.address, "hyperlink");
     return this;
   }
 
   clear(options = {}) {
-    const style = options.keepStyle ? this.raw?.style : undefined;
-    const styleIndex = options.keepStyle ? this.raw?.styleIndex : undefined;
-    const namedStyle = options.keepStyle ? this.raw?.namedStyle : undefined;
+    const style = options.keepStyle ? this.unsafeRaw?.style : undefined;
+    const styleIndex = options.keepStyle ? this.unsafeRaw?.styleIndex : undefined;
+    const namedStyle = options.keepStyle ? this.unsafeRaw?.namedStyle : undefined;
     delete this.worksheet[this.address];
     if (style || styleIndex) this.worksheet[this.address] = { type: "blank", ...(style ? { style } : {}), ...(styleIndex ? { styleIndex } : {}), ...(namedStyle ? { namedStyle } : {}) };
     this.onChange(this.address, "clear");
     return this;
   }
 
-  ensure(defaultValue) {
-    if (!this.raw) this.value = defaultValue;
-    return this.raw;
+  #ensure(defaultValue) {
+    if (!this.unsafeRaw) this.value = defaultValue;
+    return this.unsafeRaw;
   }
 }

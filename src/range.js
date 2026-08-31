@@ -77,7 +77,7 @@ export class Range {
           r: this.coordinates.s.r + row,
           c: this.coordinates.s.c + column
         }, this.onChange, this.resolveStyle);
-        targetCell.applyStyle(sourceCell.getStyle(), options.mode ?? "replace", sourceCell.raw?.namedStyle);
+        targetCell.applyStyle(sourceCell.getStyle(), options.mode ?? "replace", sourceCell.unsafeRaw?.namedStyle);
       }
     }
     return this;

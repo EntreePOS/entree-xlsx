@@ -6,7 +6,7 @@ import { allTags, tagContent } from "../src/xml.js";
 
 test("creates, discovers, updates, and removes a pivot table with cache records", () => {
   const workbook = createWorkbook("Orders");
-  workbook.sheet().replaceData([
+  workbook.sheet().setData([
     ["Region", "Month", "Sales"],
     ["East", "Jan", 10],
     ["East", "Feb", 20],
@@ -15,7 +15,7 @@ test("creates, discovers, updates, and removes a pivot table with cache records"
   ]);
   workbook.addSheet("Summary");
 
-  const pivot = workbook.pivots.add({
+  const pivot = workbook.pivotTables.add({
     name: "SalesPivot",
     source: { sheet: "Orders", range: "A1:C5" },
     target: { sheet: "Summary", cell: "A3" },
@@ -35,26 +35,26 @@ test("creates, discovers, updates, and removes a pivot table with cache records"
   assert.ok([...files.keys()].some((path) => path.startsWith("xl/pivotCache/pivotCacheRecords")));
 
   const reopened = parseWorkbook(output);
-  assert.equal(reopened.pivots.list("Summary")[0].source.range, "A1:C5");
-  const updated = reopened.pivots.update("SalesPivot", {
+  assert.equal(reopened.pivotTables.list("Summary")[0].source.range, "A1:C5");
+  const updated = reopened.pivotTables.update("SalesPivot", {
     rows: ["Month"],
     columns: ["Region"]
   });
   assert.deepEqual(updated.rows, ["Month"]);
   assert.deepEqual(updated.columns, ["Region"]);
-  assert.equal(reopened.pivots.remove(updated.id), true);
-  assert.equal(reopened.pivots.list().length, 0);
+  assert.equal(reopened.pivotTables.remove(updated.id), true);
+  assert.equal(reopened.pivotTables.list().length, 0);
 });
 
 test("keeps worksheet rows ordered when cells are added above a generated pivot", () => {
   const workbook = createWorkbook("Orders");
-  workbook.sheet().replaceData([
+  workbook.sheet().setData([
     ["Region", "Sales"],
     ["East", 10],
     ["West", 7]
   ]);
   workbook.addSheet("Summary");
-  workbook.pivots.add({
+  workbook.pivotTables.add({
     source: { sheet: "Orders", range: "A1:B3" },
     target: { sheet: "Summary", cell: "A5" },
     rows: ["Region"],
