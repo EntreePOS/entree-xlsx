@@ -615,6 +615,7 @@ pre { margin: 0; padding: 24px; overflow: auto; font-size: 12.5px; line-height: 
 }
 .parameter-tooltip-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .parameter-tooltip-kind {
+  max-width: 62%;
   padding: 2px 6px;
   color: #c8d7e8;
   background: #24374a;
@@ -623,8 +624,9 @@ pre { margin: 0; padding: 24px; overflow: auto; font-size: 12.5px; line-height: 
   font-family: "Cascadia Code", "SFMono-Regular", ui-monospace, monospace;
   font-size: 9px;
   font-weight: 800;
-  letter-spacing: .06em;
-  text-transform: uppercase;
+  letter-spacing: .01em;
+  overflow-wrap: anywhere;
+  text-align: right;
 }
 .parameter-tooltip-copy { margin-top: 3px; font-size: 12px; line-height: 1.45; }
 .parameter-tooltip-schema {

@@ -121,6 +121,42 @@ const parameterHelp = {
   width: "The Excel column width to apply."
 };
 
+const parameterTypes = {
+  address: "string · object",
+  before: "number",
+  bytes: "binary",
+  callback: "function",
+  changes: "object",
+  column: "string · number",
+  config: "object",
+  count: "number",
+  data: "array",
+  definitions: "object",
+  format: "string",
+  formula: "string",
+  height: "number",
+  mode: "string",
+  name: "string",
+  options: "object",
+  parts: "string · string[]",
+  password: "string",
+  path: "string",
+  records: "object[]",
+  range: "string",
+  reference: "string · number",
+  result: "any",
+  row: "number",
+  rows: "array[]",
+  sheet: "string · number",
+  source: "value",
+  start: "number",
+  style: "style input",
+  target: "value",
+  tooltip: "string",
+  value: "any",
+  width: "number"
+};
+
 const signatureHelp = {
   "createWorkbook(name?)": {
     name: "The name of the first worksheet. Excel uses Sheet1 when omitted."
@@ -153,6 +189,31 @@ const signatureHelp = {
   "workbook.save(path, { password })": {
     password: "The password Excel will require before opening the encrypted file."
   }
+};
+
+const signatureTypes = {
+  "openWorkbook(source, options?)": { source: "path · URL · binary" },
+  "workbook.addSheet(name, data?)": { data: "any[][] · object[]" },
+  "sheet.setData(data, options?)": { data: "any[][] · object[]" },
+  "sheet.appendRows(rows, options?)": { rows: "any[][] · object[]" },
+  "sheet.get(address)": { address: "string · {r,c}" },
+  "sheet.set(address, value)": { address: "string · {r,c}" },
+  "sheet.cell(address)": { address: "string · {r,c}" },
+  "sheet.copyRow(source, target, options?)": { source: "number", target: "number" },
+  "range.setValues(rows)": { rows: "any[][]" },
+  "cell.style(style, mode?)": { style: "name · object · array", mode: "merge · replace" },
+  "range.style(style, mode?)": { style: "name · object · array", mode: "merge · replace" },
+  "cell.copyStyleFrom(source, mode?)": { source: "Cell · string", mode: "merge · replace" },
+  "range.copyStyleFrom(source, options?)": { source: "Range · string" },
+  "cell.formula(formula, result?)": { result: "any" },
+  "cell.hyperlink(target, tooltip?)": { target: "string" },
+  "charts.list(sheet?)": { sheet: "string · number" },
+  "charts.update(reference, changes)": { reference: "name · ID" },
+  "charts.remove(reference)": { reference: "name · ID" },
+  "pivotTables.list(sheet?)": { sheet: "string · number" },
+  "pivotTables.update(reference, changes)": { reference: "name · ID" },
+  "pivotTables.remove(reference)": { reference: "name · ID" },
+  "range.forEach(callback)": { callback: "function" }
 };
 
 const openOptions = {
@@ -492,7 +553,8 @@ function showParameterTooltip(parameter) {
   tooltipName.textContent = parameter.textContent;
   tooltipCopy.textContent = parameter.dataset.tooltip;
   const schema = parameter.dataset.schema ? JSON.parse(parameter.dataset.schema) : undefined;
-  tooltipKind.hidden = !schema;
+  tooltipKind.textContent = parameter.dataset.parameterType;
+  tooltipKind.hidden = false;
   tooltipSchema.hidden = !schema;
   parameterTooltip.classList.toggle("has-schema", Boolean(schema));
   tooltipProperties.replaceChildren();
@@ -551,6 +613,7 @@ document.querySelectorAll(".api-table td:first-child code").forEach((code) => {
     const name = label.replace(/\?$/, "");
     const description = signatureHelp[signature]?.[name] ?? parameterHelp[name];
     const schema = parameterSchemas[signature]?.[name];
+    const parameterType = signatureTypes[signature]?.[name] ?? parameterTypes[name];
     if (!description) {
       fragment.append(document.createTextNode(label));
     } else {
@@ -559,11 +622,12 @@ document.querySelectorAll(".api-table td:first-child code").forEach((code) => {
       parameter.tabIndex = 0;
       parameter.textContent = label;
       parameter.dataset.tooltip = description;
+      parameter.dataset.parameterType = parameterType;
       if (schema) parameter.dataset.schema = JSON.stringify(schema);
       parameter.setAttribute("aria-describedby", parameterTooltip.id);
       parameter.setAttribute("aria-label", schema
-        ? `${name} parameter: ${description} Accepted properties: ${schema.properties.map((property) => property.name).join(", ")}.`
-        : `${name} parameter: ${description}`);
+        ? `${name} parameter, type ${parameterType}: ${description} Accepted properties: ${schema.properties.map((property) => property.name).join(", ")}.`
+        : `${name} parameter, type ${parameterType}: ${description}`);
       parameter.addEventListener("pointerenter", () => showParameterTooltip(parameter));
       parameter.addEventListener("pointerleave", () => {
         if (document.activeElement !== parameter) hideParameterTooltip(parameter);
