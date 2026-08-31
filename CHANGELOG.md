@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.2
+
+- Link the npm package homepage to the live, task-oriented tutorial at
+  https://huangxuewu.github.io/entree-xlsx/.
+- Add downloadable example workbooks, rendered results, and progressive guides
+  for data export, styling, formulas, templates, charts, PivotTables, and
+  encryption.
+
 ## 0.2.1
 
 - Add repository, homepage, and issue-tracker links for the public GitHub

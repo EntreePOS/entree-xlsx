@@ -1,6 +1,6 @@
 {
   "name": "@entree_pos/xlsx",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A zero-dependency modern JavaScript API for lossless XLSX/XLSM editing, charts, pivot tables, and Office password encryption.",
   "keywords": [
     "xlsx",
