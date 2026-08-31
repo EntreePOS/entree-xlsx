@@ -377,17 +377,17 @@ sheet.range("A5:C6").style({
 });
 
 sheet.protectSheet({
-  password: process.env.SHEET_PASSWORD,
+  password: "demo",
   selectUnlockedCells: true
 });
 
 workbook.protectStructure({
-  password: process.env.STRUCTURE_PASSWORD,
+  password: "demo",
   structure: true
 });
 
 await workbook.save("private-report.xlsx", {
-  password: process.env.FILE_PASSWORD
+  password: "demo"
 });</code></pre>
             </div>
             <figure class="result-card">
@@ -397,7 +397,7 @@ await workbook.save("private-report.xlsx", {
           </div>
           <div class="notes-grid">
             <div class="note"><h3>Be aware</h3><p>Worksheet and workbook protection discourage edits. File encryption protects the file contents. Use environment variables or a secret manager for real passwords.</p></div>
-            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Reopen encrypted workbooks</h3><p>Encrypted files use Excel-compatible AES-256 Agile Office encryption and can be reopened with <code>openWorkbook(path, { password })</code>.</p></div></details>
+            <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Reopen encrypted workbooks</h3><p>Encrypted files use Excel-compatible AES-256 Agile Office encryption and can be reopened with <code>openWorkbook("private-report.xlsx", { password: "demo" })</code>.</p></div></details>
           </div>
         </article>
       </div>
