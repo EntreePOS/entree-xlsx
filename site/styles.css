@@ -556,8 +556,59 @@ pre { margin: 0; padding: 24px; overflow: auto; font-size: 12.5px; line-height: 
 .api-table tbody tr + tr td { border-top: 1px solid color-mix(in srgb, var(--line) 66%, transparent); }
 .api-table tbody tr:hover { background: color-mix(in srgb, var(--accent-soft) 44%, transparent); }
 .api-table code { color: var(--ink); font-size: 12px; font-weight: 700; overflow-wrap: anywhere; }
+.api-param {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 42%, transparent);
+  border-bottom: 1px dotted currentColor;
+  border-radius: 3px;
+  cursor: help;
+  transition: color .2s ease, background-color .2s ease, border-color .2s ease;
+}
+.api-param:hover, .api-param:focus-visible {
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  border-bottom-style: solid;
+}
+.api-param:focus-visible { outline-width: 2px; outline-offset: 2px; }
 .api-table td:nth-child(2) { color: var(--muted); }
 .api-table a { color: var(--accent); font-weight: 800; white-space: nowrap; }
+
+.parameter-tooltip {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 80;
+  display: grid;
+  width: max-content;
+  max-width: min(300px, calc(100vw - 24px));
+  padding: 11px 13px 12px;
+  color: #eef4fb;
+  background: #172330;
+  border: 1px solid #32465a;
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgb(8 18 30 / 24%);
+  pointer-events: none;
+}
+.parameter-tooltip[hidden] { display: none; }
+.parameter-tooltip::after {
+  position: absolute;
+  left: var(--tooltip-arrow-x, 50%);
+  width: 8px;
+  height: 8px;
+  content: "";
+  background: #172330;
+  border: solid #32465a;
+  transform: translateX(-50%) rotate(45deg);
+}
+.parameter-tooltip[data-placement="top"]::after { bottom: -5px; border-width: 0 1px 1px 0; }
+.parameter-tooltip[data-placement="bottom"]::after { top: -5px; border-width: 1px 0 0 1px; }
+.parameter-tooltip-name {
+  color: #9db7f6;
+  font-family: "Cascadia Code", "SFMono-Regular", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 800;
+}
+.parameter-tooltip-copy { margin-top: 3px; font-size: 12px; line-height: 1.45; }
 
 .cheatsheet-note { margin: 22px 2px 0; color: var(--muted); font-size: 14px; }
 .cheatsheet-note a { color: var(--accent); font-weight: 800; }
