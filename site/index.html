@@ -50,24 +50,35 @@
 
     <section class="orientation" aria-labelledby="path-title">
       <div>
-        <p class="section-kicker">A practical learning path</p>
-        <h2 id="path-title">Choose what you are trying to build.</h2>
+        <p class="section-kicker">Start with the common jobs</p>
+        <h2 id="path-title">Most developers need these three things first.</h2>
       </div>
-      <p>Every lesson is a complete runnable file. The code starts with a simple export, then adds styling, formulas, layout, templates, analysis, and security one layer at a time.</p>
+      <p>Export application data, make the workbook readable, then add calculations. Complete these first. The remaining lessons solve more specific reporting needs.</p>
+      <ol class="beginner-path" aria-label="Recommended first lessons">
+        <li><a href="#lesson-1"><span>Start here</span><strong>Export your data</strong><small>Turn JavaScript records into an XLSX file.</small></a></li>
+        <li><a href="#lesson-2"><span>Then</span><strong>Make it look good</strong><small>Add readable headers, currency, and status styles.</small></a></li>
+        <li><a href="#lesson-3"><span>Next</span><strong>Add calculations</strong><small>Write formulas that recalculate when users edit cells.</small></a></li>
+      </ol>
     </section>
 
     <div class="docs-layout" id="tutorial">
       <aside class="contents" aria-label="Tutorial contents">
-        <p class="contents-label">Tutorial</p>
+        <p class="contents-label">Start here</p>
         <ol>
-          <li><a href="#lesson-1"><span>01</span>Export database records</a></li>
-          <li><a href="#lesson-2"><span>02</span>Reuse report styles</a></li>
-          <li><a href="#lesson-3"><span>03</span>Calculate invoice totals</a></li>
-          <li><a href="#lesson-4"><span>04</span>Build a filterable report</a></li>
-          <li><a href="#lesson-5"><span>05</span>Fill an invoice template</a></li>
-          <li><a href="#lesson-6"><span>06</span>Visualize revenue</a></li>
-          <li><a href="#lesson-7"><span>07</span>Summarize regional sales</a></li>
-          <li><a href="#lesson-8"><span>08</span>Secure a private report</a></li>
+          <li><a href="#lesson-1"><span>01</span>Export application data</a></li>
+          <li><a href="#lesson-2"><span>02</span>Style a polished workbook</a></li>
+          <li><a href="#lesson-3"><span>03</span>Add formulas and totals</a></li>
+        </ol>
+        <p class="contents-label contents-label-secondary">Build real reports</p>
+        <ol>
+          <li><a href="#lesson-4"><span>04</span>Add filters and links</a></li>
+          <li><a href="#lesson-5"><span>05</span>Update an Excel template</a></li>
+          <li><a href="#lesson-6"><span>06</span>Create a chart</a></li>
+        </ol>
+        <p class="contents-label contents-label-secondary">Advanced when needed</p>
+        <ol>
+          <li><a href="#lesson-7"><span>07</span>Build a PivotTable</a></li>
+          <li><a href="#lesson-8"><span>08</span>Protect and encrypt</a></li>
         </ol>
       </aside>
 
@@ -76,9 +87,9 @@
           <header class="lesson-header">
             <div>
               <p class="difficulty">Beginner · 3 minutes</p>
-              <h2>I need to export database records</h2>
-              <p class="feature-name"><span>Feature</span> Workbook creation and record export</p>
-              <p class="use-case"><strong>Use this when:</strong> Your application has an array of records and a user needs a normal Excel file they can open, filter, and share.</p>
+              <h2>Export JavaScript records to Excel</h2>
+              <p class="feature-name"><span>You learn</span> Workbook creation, record export, and file saving</p>
+              <p class="use-case"><strong>Use this when:</strong> Your application has an array of records and someone needs an Excel file they can open, filter, and share.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -133,9 +144,9 @@ await workbook.save("01-create-workbook.xlsx");</code></pre>
           <header class="lesson-header">
             <div>
               <p class="difficulty">Beginner · 6 minutes</p>
-              <h2>I need every report to use the same styles</h2>
-              <p class="feature-name"><span>Feature</span> Named and reusable workbook styles</p>
-              <p class="use-case"><strong>Use this when:</strong> Several reports need the same headers, currency formats, status colors, and brand treatment.</p>
+              <h2>Make the workbook look professional</h2>
+              <p class="feature-name"><span>You learn</span> Headers, currency formats, status colors, and reusable styles</p>
+              <p class="use-case"><strong>Use this when:</strong> The data is correct, but the exported file still looks raw or is difficult to scan.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -203,9 +214,9 @@ await workbook.save("02-reusable-styles.xlsx");</code></pre>
           <header class="lesson-header">
             <div>
               <p class="difficulty">Intermediate · 7 minutes</p>
-              <h2>I need invoice totals to calculate in Excel</h2>
-              <p class="feature-name"><span>Feature</span> Formulas, cached values, and number formats</p>
-              <p class="use-case"><strong>Use this when:</strong> You are generating an invoice, budget, or report whose totals must update when someone edits the spreadsheet.</p>
+              <h2>Add totals that recalculate in Excel</h2>
+              <p class="feature-name"><span>You learn</span> Formulas, cached values, and number formats</p>
+              <p class="use-case"><strong>Use this when:</strong> An invoice, budget, or report must update its totals when someone changes a quantity or price.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -285,9 +296,9 @@ await workbook.save("03-formulas-and-formats.xlsx");</code></pre>
           <header class="lesson-header">
             <div>
               <p class="difficulty">Intermediate · 8 minutes</p>
-              <h2>I need an order report staff can filter</h2>
-              <p class="feature-name"><span>Feature</span> Layout, filters, merged cells, widths, and links</p>
-              <p class="use-case"><strong>Use this when:</strong> A raw export is technically correct but staff need a readable daily report with filters and links back to your application.</p>
+              <h2>Make the report easy to use</h2>
+              <p class="feature-name"><span>You learn</span> Filters, useful column widths, report titles, and links</p>
+              <p class="use-case"><strong>Use this when:</strong> Staff need to filter a daily report and open the related record in your application.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -373,8 +384,8 @@ await workbook.save("04-layout-and-filters.xlsx");</code></pre>
           <header class="lesson-header">
             <div>
               <p class="difficulty">Intermediate · 10 minutes</p>
-              <h2>I need to fill an existing invoice template</h2>
-              <p class="feature-name"><span>Feature</span> Lossless XLSX and XLSM template editing</p>
+              <h2>Update an existing Excel template</h2>
+              <p class="feature-name"><span>You learn</span> Lossless XLSX and XLSM template editing</p>
               <p class="use-case"><strong>Use this when:</strong> A designer or accountant already owns the workbook layout and your code only needs to insert current data.</p>
             </div>
           </header>
@@ -462,8 +473,8 @@ await workbook.save("05-edit-a-template.xlsx");</code></pre>
           <header class="lesson-header">
             <div>
               <p class="difficulty">Advanced · 12 minutes</p>
-              <h2>I need to add a revenue chart</h2>
-              <p class="feature-name"><span>Feature</span> Native Excel chart creation and editing</p>
+              <h2>Turn worksheet data into a chart</h2>
+              <p class="feature-name"><span>You learn</span> Native Excel chart creation and editing</p>
               <p class="use-case"><strong>Use this when:</strong> A report contains monthly or categorical values and readers need to recognize a trend without scanning every number.</p>
             </div>
           </header>
@@ -552,8 +563,8 @@ await workbook.save("06-create-a-chart.xlsx");</code></pre>
           <header class="lesson-header">
             <div>
               <p class="difficulty">Advanced · 15 minutes</p>
-              <h2>I need to summarize sales by region</h2>
-              <p class="feature-name"><span>Feature</span> Native Excel PivotTable creation</p>
+              <h2>Summarize many rows with a PivotTable</h2>
+              <p class="feature-name"><span>You learn</span> Native Excel PivotTable creation</p>
               <p class="use-case"><strong>Use this when:</strong> Many source rows need to be grouped by region, category, store, or another dimension that Excel users may explore.</p>
             </div>
           </header>
@@ -645,8 +656,8 @@ await workbook.save("07-create-a-pivot-table.xlsx");</code></pre>
           <header class="lesson-header">
             <div>
               <p class="difficulty">Advanced · 18 minutes</p>
-              <h2>I need to secure a private report</h2>
-              <p class="feature-name"><span>Feature</span> Cell protection, workbook protection, and file encryption</p>
+              <h2>Lock formulas and encrypt the file</h2>
+              <p class="feature-name"><span>You learn</span> Cell protection, workbook protection, and file encryption</p>
               <p class="use-case"><strong>Use this when:</strong> Users may edit input cells but formulas and workbook structure must stay locked, or the file itself contains private data.</p>
             </div>
           </header>

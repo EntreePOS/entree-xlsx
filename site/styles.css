@@ -261,6 +261,37 @@ h1 {
 
 .orientation > p { max-width: 760px; margin: 26px 0 0; color: var(--muted); font-size: 18px; }
 
+.beginner-path {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 52px 0 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.beginner-path li { min-width: 0; border-right: 1px solid var(--line); }
+.beginner-path li:last-child { border-right: 0; }
+.beginner-path a {
+  display: flex;
+  min-height: 164px;
+  padding: 24px 28px 20px;
+  flex-direction: column;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background-color .2s ease, transform .2s ease;
+}
+.beginner-path a:hover, .beginner-path a:focus-visible { background: var(--accent-soft); }
+.beginner-path a:active { transform: translateY(1px); }
+.beginner-path span {
+  color: var(--accent);
+  font-family: "Cascadia Code", "SFMono-Regular", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 800;
+}
+.beginner-path strong { margin-top: 18px; font-size: 21px; letter-spacing: -.025em; }
+.beginner-path small { max-width: 30ch; margin-top: 7px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+
 .docs-layout {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
@@ -277,6 +308,7 @@ h1 {
 }
 
 .contents ol { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.contents-label-secondary { margin-top: 26px; margin-bottom: 8px; color: var(--muted); font-size: 10px; }
 
 .contents li a {
   display: grid;
@@ -582,6 +614,10 @@ footer strong { color: var(--ink); }
   h1 { font-size: clamp(46px, 14vw, 66px); }
   .hero-summary { font-size: 18px; }
   .orientation { padding: 72px 0; }
+  .beginner-path { grid-template-columns: 1fr; margin-top: 38px; }
+  .beginner-path li { border-right: 0; border-bottom: 1px solid var(--line); }
+  .beginner-path li:last-child { border-bottom: 0; }
+  .beginner-path a { min-height: auto; padding-inline: 0; }
   .docs-layout { display: block; padding-top: 72px; }
   .contents { position: static; margin-bottom: 72px; }
   .contents ol { grid-template-columns: 1fr 1fr; }
