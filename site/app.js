@@ -155,17 +155,311 @@ const signatureHelp = {
   }
 };
 
+const openOptions = {
+  title: "Open options",
+  properties: [
+    { name: "password?", type: "string", detail: "Password for an encrypted Office file." },
+    { name: "encryption.verifyIntegrity?", type: "boolean", default: "true", detail: "Verify the encrypted file HMAC before opening." }
+  ],
+  example: '{ password: "demo" }'
+};
+
+const saveOptions = {
+  title: "Save options",
+  properties: [
+    { name: "password?", type: "string", detail: "Encrypt the XLSX with this open password." },
+    { name: "encryption.spinCount?", type: "number", default: "100000", detail: "Advanced password-key derivation work factor." }
+  ],
+  example: '{ password: "demo" }'
+};
+
+const recordOptions = {
+  title: "Record options",
+  properties: [
+    { name: "headers?", type: "string[]", detail: "Use these keys and treat every selected row as data." },
+    { name: "range?", type: "string", default: "usedRange", detail: "Read only this A1 range." },
+    { name: "defaultValue?", type: "any", default: "null", detail: "Value returned for missing cells." }
+  ],
+  example: '{ range: "A1:C20", defaultValue: null }'
+};
+
+const styleObject = {
+  title: "Style object",
+  properties: [
+    { name: "bold?, italic?, strike?", type: "boolean", detail: "Common font emphasis." },
+    { name: "fontName?, fontSize?", type: "string, number", detail: "Font family and point size." },
+    { name: "color?, fill?", type: "color | object", detail: "Font color and cell background." },
+    { name: "horizontal?, vertical?", type: "string", detail: "Cell alignment." },
+    { name: "wrapText?, shrinkToFit?", type: "boolean", detail: "Control long cell text." },
+    { name: "numberFormat?", type: "string", detail: "Excel format such as $#,##0.00." },
+    { name: "border?", type: "object", detail: "top, right, bottom, left, outline, or inside borders." },
+    { name: "protection?", type: "object", detail: "{ locked?, hidden? }; active after sheet protection." }
+  ],
+  example: '{ bold: true, fill: "#17324D", color: "#FFFFFF" }',
+  footnote: "Also accepts a named style string or an array of styles."
+};
+
+const chartOptions = {
+  title: "Chart options",
+  properties: [
+    { name: "sheet", type: "string | number", detail: "Worksheet containing the chart data." },
+    { name: "range?", type: "string", detail: "Header-first range, such as A1:C13. Use this or series." },
+    { name: "series?", type: "object[]", detail: "{ name?, nameCell?, categories?, xValues?, values }." },
+    { name: "type?", type: "string", default: "column", detail: "column, bar, line, pie, or scatter." },
+    { name: "name?", type: "string", detail: "Internal chart name." },
+    { name: "title?", type: "string", detail: "Visible chart title." },
+    { name: "position?", type: "object", default: "E2:M18", detail: "{ from: \"E2\", to: \"M18\" }." },
+    { name: "legend?", type: "boolean", default: "true", detail: "Set false to hide the legend." },
+    { name: "legendPosition?", type: "string", default: "r", detail: "Excel legend position code." }
+  ],
+  example: '{ sheet: "Sales", type: "column", range: "A1:C13" }'
+};
+
+const chartChanges = {
+  ...chartOptions,
+  title: "Chart changes",
+  properties: chartOptions.properties.filter((property) => property.name !== "sheet"),
+  example: '{ type: "line", range: "A1:C13", title: "Revenue trend" }',
+  footnote: "Pass range or series on every update so the data mapping is explicit."
+};
+
+const pivotOptions = {
+  title: "PivotTable configuration",
+  properties: [
+    { name: "source", type: "object", detail: "Required: { sheet, range? }. Range defaults to used data." },
+    { name: "target", type: "object", detail: "Required: { sheet, cell }, such as Summary!A3." },
+    { name: "name?", type: "string", detail: "Unique PivotTable name." },
+    { name: "rows?, columns?, filters?", type: "string[]", detail: "Source header names assigned to each area." },
+    { name: "values", type: "array", detail: "Required: strings or { field, summarize?, name? }." },
+    { name: "refreshOnLoad?", type: "boolean", default: "true", detail: "Ask Excel to refresh when opened." },
+    { name: "showGrandTotals?", type: "boolean", default: "true", detail: "Show row and column grand totals." },
+    { name: "style?", type: "string", default: "PivotStyleMedium9", detail: "Built-in Excel PivotTable style name." }
+  ],
+  example: '{ source: { sheet: "Orders" }, target: { sheet: "Summary", cell: "A3" }, rows: ["Region"], values: ["Sales"] }',
+  footnote: "summarize accepts sum, count, average, min, or max."
+};
+
+const pivotChanges = {
+  ...pivotOptions,
+  title: "PivotTable changes",
+  properties: pivotOptions.properties.map((property) => ({
+    ...property,
+    name: property.name.endsWith("?") ? property.name : `${property.name}?`
+  })),
+  example: '{ rows: ["Store"], columns: ["Region"] }',
+  footnote: "Only include the fields you want to replace."
+};
+
+const parameterSchemas = {
+  "openWorkbook(source, options?)": { options: openOptions },
+  "openWorkbookSync(path, options?)": { options: openOptions },
+  "parseWorkbook(bytes, options?)": { options: openOptions },
+  "workbook.save(path, options?)": { options: saveOptions },
+  "workbook.saveSync(path, options?)": { options: saveOptions },
+  "workbook.toBuffer(options?)": { options: saveOptions },
+  "workbook.toUint8Array(options?)": { options: saveOptions },
+  "workbook.toBase64(options?)": { options: saveOptions },
+  "workbook.toJSON(options?)": { options: recordOptions },
+  "sheet.setData(data, options?)": {
+    options: {
+      title: "Data options",
+      properties: [
+        { name: "header?", type: "string[]", default: "inferred", detail: "Property order for object records." },
+        { name: "skipHeader?", type: "boolean", default: "false", detail: "Do not write the object-key header row." }
+      ],
+      example: '{ header: ["order", "customer", "total"] }'
+    }
+  },
+  "sheet.appendData(records, options?)": {
+    options: {
+      title: "Append options",
+      properties: [
+        { name: "header?", type: "string[]", default: "first used row", detail: "Explicit object property order." },
+        { name: "origin?", type: "A1 | number | {r,c}", default: "next used row", detail: "Override the first destination cell." }
+      ],
+      example: '{ header: ["order", "customer", "total"] }'
+    }
+  },
+  "sheet.appendRows(rows, options?)": {
+    options: {
+      title: "Row options",
+      properties: [
+        { name: "origin?", type: "A1 | number | {r,c} | -1", default: "-1", detail: "Destination; -1 appends below used data." },
+        { name: "header?", type: "string[]", default: "inferred", detail: "Property order for object rows." },
+        { name: "skipHeader?", type: "boolean", default: "false", detail: "Do not create a header for object rows." }
+      ],
+      example: '{ origin: "A5", skipHeader: true }'
+    }
+  },
+  "sheet.toRows(options?)": {
+    options: {
+      title: "Read options",
+      properties: [
+        { name: "range?", type: "string", default: "usedRange", detail: "Read only this A1 range." },
+        { name: "defaultValue?", type: "any", default: "undefined", detail: "Replace empty cells with this value." }
+      ],
+      example: '{ range: "A1:C10", defaultValue: null }'
+    }
+  },
+  "sheet.toRecords(options?)": { options: recordOptions },
+  "sheet.toCsv(options?)": {
+    options: {
+      title: "CSV options",
+      properties: [
+        { name: "delimiter?", type: "string", default: ",", detail: "Field separator; use \\t for TSV." },
+        { name: "newline?", type: "string", default: "\\n", detail: "Row separator." },
+        { name: "range?", type: "string", default: "usedRange", detail: "Export only this A1 range." },
+        { name: "defaultValue?", type: "any", default: "undefined", detail: "Replace empty cells." }
+      ],
+      example: '{ delimiter: "\\t", newline: "\\r\\n" }'
+    }
+  },
+  "sheet.toHtml(options?)": {
+    options: {
+      title: "HTML options",
+      properties: [
+        { name: "header?", type: "boolean", default: "true", detail: "Use th elements for the first row." },
+        { name: "range?", type: "string", default: "usedRange", detail: "Export only this A1 range." },
+        { name: "defaultValue?", type: "any", default: "undefined", detail: "Replace empty cells." }
+      ],
+      example: '{ header: true, range: "A1:D20" }'
+    }
+  },
+  "sheet.insertRows(before, count?, options?)": {
+    options: {
+      title: "Insert options",
+      properties: [
+        { name: "copyFrom?", type: '"above" | "below" | number', detail: "Copy a neighboring or one-based source row." },
+        { name: "values?", type: "boolean", default: "true", detail: "Set false to copy formatting without values." }
+      ],
+      example: '{ copyFrom: "above", values: false }'
+    }
+  },
+  "sheet.copyRow(source, target, options?)": {
+    options: {
+      title: "Copy options",
+      properties: [
+        { name: "values?", type: "boolean", default: "true", detail: "Set false to copy only row formatting." }
+      ],
+      example: '{ values: false }'
+    }
+  },
+  "cell.style(style, mode?)": { style: styleObject },
+  "range.style(style, mode?)": { style: styleObject },
+  "styles.define(name, style, options?)": {
+    style: styleObject,
+    options: {
+      title: "Named style options",
+      properties: [
+        { name: "extends?", type: "string | string[]", detail: "Parent style names, inherited from left to right." }
+      ],
+      example: '{ extends: ["base", "money"] }'
+    }
+  },
+  "styles.defineMany(definitions)": {
+    definitions: {
+      title: "Definitions object",
+      properties: [
+        { name: "[styleName]", type: "style object", detail: "A direct style definition." },
+        { name: "[styleName].style", type: "style object", detail: "Style body when inheritance is used." },
+        { name: "[styleName].extends?", type: "string | string[]", detail: "Parent named styles." }
+      ],
+      example: '{ base: { fontName: "Aptos" }, header: { extends: "base", style: { bold: true } } }'
+    }
+  },
+  "range.copyStyleFrom(source, options?)": {
+    options: {
+      title: "Style copy options",
+      properties: [
+        { name: "mode?", type: '"replace" | "merge"', default: "replace", detail: "Replace all formatting or merge selected parts." },
+        { name: "repeat?", type: "boolean", default: "false", detail: "Tile source styles when range sizes differ." }
+      ],
+      example: '{ mode: "merge", repeat: true }'
+    }
+  },
+  "sheet.autoFit(options?)": {
+    options: {
+      title: "Auto-fit options",
+      properties: [
+        { name: "min?", type: "number", default: "8", detail: "Minimum column width." },
+        { name: "max?", type: "number", default: "60", detail: "Maximum column width." },
+        { name: "padding?", type: "number", default: "2", detail: "Extra characters added to measured text." },
+        { name: "includeHeader?", type: "boolean", default: "true", detail: "Set false to ignore the first used row." }
+      ],
+      example: '{ min: 10, max: 40, padding: 3 }'
+    }
+  },
+  "charts.add(options)": { options: chartOptions },
+  "charts.update(reference, changes)": { changes: chartChanges },
+  "pivotTables.add(config)": { config: pivotOptions },
+  "pivotTables.update(reference, changes)": { changes: pivotChanges },
+  "cell.clear(options?)": {
+    options: {
+      title: "Clear options",
+      properties: [
+        { name: "keepStyle?", type: "boolean", default: "false", detail: "Keep formatting on the now-empty cell." }
+      ],
+      example: '{ keepStyle: true }'
+    }
+  },
+  "sheet.protectSheet(options?)": {
+    options: {
+      title: "Worksheet protection options",
+      properties: [
+        { name: "password?", type: "string", detail: "Password needed to remove protection." },
+        { name: "objects?, scenarios?", type: "boolean", default: "true", detail: "Protect drawings and scenarios." },
+        { name: "selectLockedCells?", type: "boolean", detail: "Set false to block selecting locked cells." },
+        { name: "selectUnlockedCells?", type: "boolean", detail: "Set false to block selecting unlocked cells." },
+        { name: "formatCells?, formatColumns?, formatRows?", type: "boolean", detail: "Set false to block the matching formatting action." },
+        { name: "insertColumns?, insertRows?", type: "boolean", detail: "Set false to block insertion." },
+        { name: "deleteColumns?, deleteRows?", type: "boolean", detail: "Set false to block deletion." },
+        { name: "sort?, autoFilter?, pivotTables?", type: "boolean", detail: "Set false to block these data actions." }
+      ],
+      example: '{ password: "demo", formatCells: false, deleteRows: false }'
+    }
+  },
+  "workbook.protectStructure(options?)": {
+    options: {
+      title: "Workbook protection options",
+      properties: [
+        { name: "password?", type: "string", detail: "Password needed to remove protection." },
+        { name: "structure?", type: "boolean", default: "true", detail: "Lock adding, deleting, renaming, and moving sheets." },
+        { name: "windows?", type: "boolean", default: "false", detail: "Lock workbook window arrangement." }
+      ],
+      example: '{ password: "demo", structure: true }'
+    }
+  }
+};
+
 const parameterTooltip = document.createElement("div");
 parameterTooltip.className = "parameter-tooltip";
 parameterTooltip.id = "parameter-tooltip";
 parameterTooltip.setAttribute("role", "tooltip");
 parameterTooltip.setAttribute("aria-hidden", "true");
 parameterTooltip.hidden = true;
-parameterTooltip.innerHTML = '<strong class="parameter-tooltip-name"></strong><span class="parameter-tooltip-copy"></span>';
+parameterTooltip.innerHTML = `
+  <div class="parameter-tooltip-heading">
+    <strong class="parameter-tooltip-name"></strong>
+    <span class="parameter-tooltip-kind" hidden>object</span>
+  </div>
+  <span class="parameter-tooltip-copy"></span>
+  <div class="parameter-tooltip-schema" hidden>
+    <span class="parameter-tooltip-schema-title"></span>
+    <div class="parameter-tooltip-properties"></div>
+    <div class="parameter-tooltip-example"><span>Example</span><code></code></div>
+    <span class="parameter-tooltip-footnote" hidden></span>
+  </div>`;
 document.body.append(parameterTooltip);
 
 const tooltipName = parameterTooltip.querySelector(".parameter-tooltip-name");
 const tooltipCopy = parameterTooltip.querySelector(".parameter-tooltip-copy");
+const tooltipKind = parameterTooltip.querySelector(".parameter-tooltip-kind");
+const tooltipSchema = parameterTooltip.querySelector(".parameter-tooltip-schema");
+const tooltipSchemaTitle = parameterTooltip.querySelector(".parameter-tooltip-schema-title");
+const tooltipProperties = parameterTooltip.querySelector(".parameter-tooltip-properties");
+const tooltipExample = parameterTooltip.querySelector(".parameter-tooltip-example");
+const tooltipExampleCode = tooltipExample.querySelector("code");
+const tooltipFootnote = parameterTooltip.querySelector(".parameter-tooltip-footnote");
 let activeParameter;
 
 function positionParameterTooltip() {
@@ -197,6 +491,35 @@ function showParameterTooltip(parameter) {
   activeParameter = parameter;
   tooltipName.textContent = parameter.textContent;
   tooltipCopy.textContent = parameter.dataset.tooltip;
+  const schema = parameter.dataset.schema ? JSON.parse(parameter.dataset.schema) : undefined;
+  tooltipKind.hidden = !schema;
+  tooltipSchema.hidden = !schema;
+  parameterTooltip.classList.toggle("has-schema", Boolean(schema));
+  tooltipProperties.replaceChildren();
+  if (schema) {
+    tooltipSchemaTitle.textContent = schema.title;
+    for (const property of schema.properties) {
+      const row = document.createElement("div");
+      row.className = "parameter-tooltip-property";
+      const key = document.createElement("code");
+      key.textContent = property.name;
+      const details = document.createElement("div");
+      const meta = document.createElement("span");
+      meta.className = "parameter-tooltip-property-meta";
+      meta.textContent = property.default === undefined
+        ? property.type
+        : `${property.type} · default ${property.default}`;
+      const copy = document.createElement("span");
+      copy.textContent = property.detail;
+      details.append(meta, copy);
+      row.append(key, details);
+      tooltipProperties.append(row);
+    }
+    tooltipExample.hidden = !schema.example;
+    tooltipExampleCode.textContent = schema.example ?? "";
+    tooltipFootnote.hidden = !schema.footnote;
+    tooltipFootnote.textContent = schema.footnote ?? "";
+  }
   parameterTooltip.hidden = false;
   parameterTooltip.setAttribute("aria-hidden", "false");
   positionParameterTooltip();
@@ -227,6 +550,7 @@ document.querySelectorAll(".api-table td:first-child code").forEach((code) => {
     const label = match[0];
     const name = label.replace(/\?$/, "");
     const description = signatureHelp[signature]?.[name] ?? parameterHelp[name];
+    const schema = parameterSchemas[signature]?.[name];
     if (!description) {
       fragment.append(document.createTextNode(label));
     } else {
@@ -235,8 +559,11 @@ document.querySelectorAll(".api-table td:first-child code").forEach((code) => {
       parameter.tabIndex = 0;
       parameter.textContent = label;
       parameter.dataset.tooltip = description;
+      if (schema) parameter.dataset.schema = JSON.stringify(schema);
       parameter.setAttribute("aria-describedby", parameterTooltip.id);
-      parameter.setAttribute("aria-label", `${name} parameter: ${description}`);
+      parameter.setAttribute("aria-label", schema
+        ? `${name} parameter: ${description} Accepted properties: ${schema.properties.map((property) => property.name).join(", ")}.`
+        : `${name} parameter: ${description}`);
       parameter.addEventListener("pointerenter", () => showParameterTooltip(parameter));
       parameter.addEventListener("pointerleave", () => {
         if (document.activeElement !== parameter) hideParameterTooltip(parameter);
