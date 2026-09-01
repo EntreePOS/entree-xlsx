@@ -49,7 +49,7 @@ test("supports object rows and contextual sheet errors", () => {
   assert.throws(() => workbook.sheet("Missing"), SheetNotFoundError);
   assert.throws(() => workbook.sheet().setData([["valid"], { invalid: true }]), TypeError);
   assert.equal(workbook.sheet().get("A2"), "Ada");
-  assert.equal(version, "0.3.0");
+  assert.equal(version, "0.4.0");
 });
 
 test("saves and opens a workbook from disk", async () => {

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0
+
+- Add `row()`, `rows()`, and `columns()` worksheet helpers alongside `range()`
+  and `column()`.
+- Add `find()`, `findAll()`, and `forEach()` across worksheet selections.
+- Add chainable whole-row and whole-column styling, height, and width helpers
+  without materializing empty cells.
+- Preserve native row and column styles when creating or editing XLSX files.
+- Expand the README, visual tutorial, and API cheatsheet with the five selection
+  helpers and complete examples.
+
 ## 0.3.0
 
 - Replace ambiguous method names with task-focused APIs: `setData()`,

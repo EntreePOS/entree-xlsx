@@ -8,6 +8,8 @@ charts, and pivots.
 `.xlsx` files or safely update existing `.xlsx` and `.xlsm` templates while
 preserving workbook parts it does not modify. There are no runtime dependencies.
 
+Current version: **0.4.0**
+
 ```bash
 npm install @entree_pos/xlsx
 ```
@@ -48,6 +50,7 @@ formatting, sensible column widths, and an Excel filter.
 
 | Capability | What you can do |
 | --- | --- |
+| Direct worksheet helpers | Select ranges, rows, or columns and search, update, style, and size them with chainable helpers |
 | Rich styling | Fonts, colors, fills, gradients, borders, alignment, number formats, and cell protection |
 | Reusable design system | Define named styles once, inherit from base styles, and compose them across a workbook |
 | Template editing | Open an existing workbook, change only what you need, and preserve unknown OOXML parts |
@@ -188,10 +191,32 @@ sheet.insertRows(4, 2);
 sheet.copyRow(2, 4);
 sheet.deleteRows(10, 1);
 
-sheet.setColumnWidth("B", 24);
-sheet.setRowHeight(1, 28);
+sheet.column("B").width(24);
+sheet.row(1).height(28);
 sheet.autoFit({ min: 8, max: 48, padding: 2 });
 ```
+
+Select exactly the worksheet area you need. Every selection supports `find()`,
+`findAll()`, and `forEach()`:
+
+```js
+const table = sheet.range("A1:C20");
+const header = sheet.row(1);
+const body = sheet.rows("2:20");
+const prices = sheet.column("C");
+const reportColumns = sheet.columns("A:C");
+
+const burger = table.find("Classic Burger");
+console.log(burger?.address); // A2
+
+header.style({ bold: true }).height(24);
+body.style({ vertical: "center" });
+prices.style({ numberFormat: "$#,##0.00" }).width(14);
+reportColumns.forEach((cell) => console.log(cell.address, cell.value));
+```
+
+Rows use one-based Excel row numbers. Numeric column references remain
+zero-based; column letters are usually easier to read.
 
 Read worksheet data in the form your application needs:
 
