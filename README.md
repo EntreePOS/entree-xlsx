@@ -10,6 +10,12 @@ preserving workbook parts it does not modify. There are no runtime dependencies.
 
 Current version: **0.4.0**
 
+> [!WARNING]
+> This package is under active development. APIs may change at any time without
+> prior notice. Do not use it in a production environment yet. If you choose to
+> use it in production, pin the exact package version in your lockfile and review
+> all changes before upgrading.
+
 ```bash
 npm install @entree_pos/xlsx
 ```
