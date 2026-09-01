@@ -89,8 +89,262 @@ const preview = document.querySelector("#preview");
 const tabs = document.querySelector("#sheet-tabs");
 const status = document.querySelector("#status");
 const consoleOutput = document.querySelector("#console");
+const completionMenu = document.querySelector("#editor-completions");
+const apiTooltip = document.querySelector("#editor-api-tooltip");
 let result;
 let activeSheet = 0;
+let completionMatches = [];
+let completionIndex = 0;
+let completionContext;
+let hoveredApiName = "";
+
+const fallbackApis = [
+  ["createWorkbook(name?)", "Create a workbook with one named sheet."],
+  ["openWorkbook(source, options?)", "Open an XLSX workbook."],
+  ["workbook.sheet(reference?)", "Get a worksheet."],
+  ["workbook.addSheet(name, data?)", "Add a worksheet."],
+  ["workbook.save(path, options?)", "Save an XLSX file."],
+  ["sheet.setData(data, options?)", "Write rows or object records."],
+  ["sheet.get(address)", "Read a cell value."],
+  ["sheet.set(address, value)", "Set a cell value."],
+  ["sheet.cell(address)", "Get a Cell object."],
+  ["sheet.range(address)", "Get a rectangular Range object."],
+  ["sheet.row(row)", "Select one row."],
+  ["sheet.rows(selector)", "Select multiple rows."],
+  ["sheet.column(column)", "Select one column."],
+  ["sheet.columns(selector)", "Select multiple columns."],
+  ["sheet.find(matcher)", "Find the first matching cell."],
+  ["sheet.autoFit(options?)", "Fit column widths to their values."],
+  ["sheet.merge(range)", "Merge a cell range."],
+  ["sheet.toRecords(options?)", "Read rows as JavaScript objects."],
+  ["sheet.toHtml(options?)", "Create an HTML table."],
+  ["cell.style(style, mode?)", "Apply formatting to a cell."],
+  ["cell.formula(formula, result?)", "Store a formula and cached result."],
+  ["range.style(style, mode?)", "Apply formatting to a range."]
+];
+
+const parameterInfo = {
+  address: ["string · {r,c}", "Excel address such as A1 or D12."],
+  callback: ["function", "Function called for each selected cell."],
+  changes: ["object", "Properties to update."],
+  column: ["string · number", "Column letter or index."],
+  config: ["object", "Configuration for the new item."],
+  count: ["number", "Number of rows or items."],
+  data: ["any[][] · object[]", "Rows or JavaScript object records."],
+  definitions: ["object", "Named style definitions."],
+  format: ["string", "Excel number-format code."],
+  formula: ["string", "Excel formula without the leading equals sign."],
+  height: ["number", "Row height in points."],
+  matcher: ["any · function", "Value or callback used to find cells."],
+  mode: ["merge · replace", "How formatting combines with the current style."],
+  name: ["string", "Name for the workbook item."],
+  options: ["object", "Optional settings for the method."],
+  parts: ["string · string[]", "Style properties to clear."],
+  password: ["string", "Password required to open the workbook."],
+  path: ["string", "Local XLSX or XLSM file path."],
+  records: ["object[]", "Objects whose keys map to columns."],
+  range: ["string", "Excel range such as A1:D20."],
+  reference: ["string · number", "Name, index, or ID of an existing item."],
+  result: ["any", "Cached value shown before Excel recalculates."],
+  row: ["number", "One-based worksheet row number."],
+  rows: ["any[][]", "Two-dimensional row array."],
+  selector: ["string · array", "Range such as A:C or 2:5, or selected references."],
+  sheet: ["string · number", "Worksheet name or zero-based index."],
+  source: ["value", "Workbook, cell, range, or style to read."],
+  start: ["number", "First row affected by the operation."],
+  style: ["string · object · array", "Named style or style object."],
+  target: ["value", "Destination cell, row, or URL."],
+  tooltip: ["string", "Optional hyperlink hover text."],
+  value: ["any", "JavaScript value stored in the cell."],
+  width: ["number", "Excel column width."]
+};
+
+function makeApiEntry(signature, description) {
+  const open = signature.indexOf("(");
+  return { signature, description, name: (open === -1 ? signature : signature.slice(0, open)).trim() };
+}
+
+let apiCatalog = fallbackApis.map(([signature, description]) => makeApiEntry(signature, description));
+
+async function loadApiCatalog() {
+  try {
+    const response = await fetch("../index.html");
+    if (!response.ok) return;
+    const documentCopy = new DOMParser().parseFromString(await response.text(), "text/html");
+    const entries = [...documentCopy.querySelectorAll("#cheatsheet .api-table tbody tr")].map((row) => {
+      const signature = row.querySelector("code")?.textContent.trim();
+      const description = row.querySelector("td:nth-child(2)")?.textContent.trim();
+      return signature && description ? makeApiEntry(signature, description) : undefined;
+    }).filter(Boolean);
+    if (entries.length) apiCatalog = entries;
+  } catch {
+    // The built-in core catalog remains available when the reference cannot load.
+  }
+}
+
+function getCompletionContext() {
+  if (editor.selectionStart !== editor.selectionEnd) return undefined;
+  const before = editor.value.slice(0, editor.selectionStart);
+  const match = before.match(/([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*\.?)$/);
+  if (!match) return undefined;
+  return { text: match[1], start: editor.selectionStart - match[1].length, end: editor.selectionStart };
+}
+
+function measureEditor() {
+  const style = getComputedStyle(editor);
+  const canvas = measureEditor.canvas ??= document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  context.font = style.font;
+  return {
+    charWidth: context.measureText("M").width,
+    lineHeight: Number.parseFloat(style.lineHeight),
+    paddingLeft: Number.parseFloat(style.paddingLeft),
+    paddingTop: Number.parseFloat(style.paddingTop)
+  };
+}
+
+function positionCompletions() {
+  if (!completionContext) return;
+  const metrics = measureEditor();
+  const before = editor.value.slice(0, completionContext.end);
+  const lines = before.split("\n");
+  const left = metrics.paddingLeft + (lines.at(-1).length * metrics.charWidth) - editor.scrollLeft;
+  const top = metrics.paddingTop + (lines.length * metrics.lineHeight) - editor.scrollTop;
+  completionMenu.style.left = `${Math.max(10, Math.min(left, editor.clientWidth - 250))}px`;
+  completionMenu.style.top = `${Math.max(10, Math.min(top, editor.clientHeight - 160))}px`;
+}
+
+function updateCompletionSelection() {
+  completionMenu.querySelectorAll("button").forEach((button, index) => {
+    const selected = index === completionIndex;
+    button.setAttribute("aria-selected", String(selected));
+    if (selected) {
+      editor.setAttribute("aria-activedescendant", button.id);
+      button.scrollIntoView({ block: "nearest" });
+    }
+  });
+}
+
+function hideCompletions() {
+  completionMenu.hidden = true;
+  completionMenu.replaceChildren();
+  completionMatches = [];
+  completionContext = undefined;
+  editor.removeAttribute("aria-activedescendant");
+}
+
+function acceptCompletion(index = completionIndex) {
+  const entry = completionMatches[index];
+  if (!entry || !completionContext) return;
+  const callable = entry.signature.includes("(");
+  const replacement = `${entry.name}${callable ? "()" : ""}`;
+  editor.setRangeText(replacement, completionContext.start, completionContext.end, "end");
+  if (callable) editor.setSelectionRange(editor.selectionStart - 1, editor.selectionStart - 1);
+  hideCompletions();
+  editor.focus();
+}
+
+function showCompletions() {
+  completionContext = getCompletionContext();
+  const query = completionContext?.text.toLowerCase();
+  if (!query || (!query.includes(".") && query.length < 2)) {
+    hideCompletions();
+    return;
+  }
+  const unique = new Map();
+  for (const entry of apiCatalog) {
+    const fullName = entry.name.toLowerCase();
+    const shortName = fullName.split(".").at(-1);
+    if ((fullName.startsWith(query) || (!query.includes(".") && shortName.startsWith(query))) && !unique.has(entry.name)) {
+      unique.set(entry.name, entry);
+    }
+  }
+  completionMatches = [...unique.values()].slice(0, 8);
+  if (!completionMatches.length) {
+    hideCompletions();
+    return;
+  }
+  completionIndex = 0;
+  completionMenu.replaceChildren(...completionMatches.map((entry, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.id = `editor-completion-${index}`;
+    button.className = "editor-completion";
+    button.role = "option";
+    const signature = document.createElement("code");
+    signature.textContent = entry.signature;
+    const kind = document.createElement("small");
+    kind.textContent = "API";
+    const detail = document.createElement("span");
+    detail.textContent = entry.description;
+    button.append(signature, kind, detail);
+    button.addEventListener("mousedown", (event) => event.preventDefault());
+    button.addEventListener("click", () => acceptCompletion(index));
+    return button;
+  }));
+  completionMenu.hidden = false;
+  positionCompletions();
+  updateCompletionSelection();
+}
+
+function parametersFor(signature) {
+  const open = signature.indexOf("(");
+  const close = signature.lastIndexOf(")");
+  if (open === -1 || close <= open + 1) return [];
+  const names = [...signature.slice(open + 1, close).matchAll(/[A-Za-z_$][\w$]*/g)]
+    .map((match) => match[0])
+    .filter((name, index, all) => all.indexOf(name) === index);
+  return names.map((name) => ({ name, info: parameterInfo[name] ?? ["value", "Method parameter."] }));
+}
+
+function hideApiTooltip() {
+  hoveredApiName = "";
+  apiTooltip.hidden = true;
+  apiTooltip.replaceChildren();
+}
+
+function showApiTooltip(entry, clientX, clientY) {
+  hoveredApiName = entry.name;
+  const signature = document.createElement("code");
+  signature.textContent = entry.signature;
+  const description = document.createElement("p");
+  description.textContent = entry.description;
+  apiTooltip.replaceChildren(signature, description);
+  const parameters = parametersFor(entry.signature);
+  if (parameters.length) {
+    const list = document.createElement("dl");
+    for (const parameter of parameters) {
+      const term = document.createElement("dt");
+      term.textContent = `${parameter.name}: ${parameter.info[0]}`;
+      const detail = document.createElement("dd");
+      detail.textContent = parameter.info[1];
+      list.append(term, detail);
+    }
+    apiTooltip.append(list);
+  }
+  apiTooltip.hidden = false;
+  const bounds = apiTooltip.getBoundingClientRect();
+  const left = Math.min(window.innerWidth - bounds.width - 12, clientX + 14);
+  const top = Math.min(window.innerHeight - bounds.height - 12, clientY + 16);
+  apiTooltip.style.left = `${Math.max(12, left)}px`;
+  apiTooltip.style.top = `${Math.max(12, top)}px`;
+}
+
+function apiAtPointer(event) {
+  const bounds = editor.getBoundingClientRect();
+  const metrics = measureEditor();
+  const x = event.clientX - bounds.left - metrics.paddingLeft + editor.scrollLeft;
+  const y = event.clientY - bounds.top - metrics.paddingTop + editor.scrollTop;
+  if (x < 0 || y < 0) return undefined;
+  const line = editor.value.split("\n")[Math.floor(y / metrics.lineHeight)];
+  if (line === undefined) return undefined;
+  const column = Math.floor(x / metrics.charWidth);
+  const token = [...line.matchAll(/[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*/g)]
+    .find((match) => column >= match.index && column <= match.index + match[0].length)?.[0];
+  if (!token) return undefined;
+  return apiCatalog.find((entry) => entry.name === token)
+    ?? (token.length > 2 ? apiCatalog.find((entry) => entry.name.endsWith(`.${token}`)) : undefined);
+}
 
 function setStatus(message, kind = "") {
   status.textContent = message;
@@ -265,6 +519,8 @@ function runCode() {
 
 function setSample(name) {
   editor.value = samples[name];
+  hideCompletions();
+  hideApiTooltip();
   result = undefined;
   downloadButton.disabled = true;
   setStatus("Ready");
@@ -273,8 +529,35 @@ function setSample(name) {
 sample.addEventListener("change", () => { setSample(sample.value); runCode(); });
 resetButton.addEventListener("click", () => { setSample(sample.value); runCode(); });
 runButton.addEventListener("click", runCode);
+editor.addEventListener("input", showCompletions);
+editor.addEventListener("click", hideCompletions);
+editor.addEventListener("blur", () => window.setTimeout(hideCompletions, 0));
+editor.addEventListener("scroll", () => { hideCompletions(); hideApiTooltip(); });
+editor.addEventListener("mousemove", (event) => {
+  const entry = apiAtPointer(event);
+  if (!entry) {
+    hideApiTooltip();
+    return;
+  }
+  if (entry.name !== hoveredApiName) showApiTooltip(entry, event.clientX, event.clientY);
+});
+editor.addEventListener("mouseleave", hideApiTooltip);
 editor.addEventListener("keydown", (event) => {
-  if ((event.ctrlKey || event.metaKey) && event.key === "Enter") { event.preventDefault(); runCode(); }
+  if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+    event.preventDefault();
+    hideCompletions();
+    runCode();
+    return;
+  }
+  if (!completionMenu.hidden && ["ArrowDown", "ArrowUp", "Enter", "Tab", "Escape"].includes(event.key)) {
+    event.preventDefault();
+    if (event.key === "ArrowDown") completionIndex = (completionIndex + 1) % completionMatches.length;
+    if (event.key === "ArrowUp") completionIndex = (completionIndex - 1 + completionMatches.length) % completionMatches.length;
+    if (event.key === "Enter" || event.key === "Tab") acceptCompletion();
+    if (event.key === "Escape") hideCompletions();
+    if (!completionMenu.hidden) updateCompletionSelection();
+    return;
+  }
   if (event.key === "Tab") {
     event.preventDefault();
     const start = editor.selectionStart;
@@ -294,3 +577,4 @@ downloadButton.addEventListener("click", () => {
 
 setSample("data");
 runCode();
+loadApiCatalog();
