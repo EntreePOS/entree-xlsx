@@ -1,3 +1,5 @@
+import { parameterSchemas } from "./api-details.js";
+
 const samples = {
   data: `import { createWorkbook } from "@entree_pos/xlsx";
 
@@ -215,14 +217,20 @@ function positionCompletions() {
 }
 
 function updateCompletionSelection() {
+  let selectedButton;
   completionMenu.querySelectorAll("button").forEach((button, index) => {
     const selected = index === completionIndex;
     button.setAttribute("aria-selected", String(selected));
     if (selected) {
+      selectedButton = button;
       editor.setAttribute("aria-activedescendant", button.id);
       button.scrollIntoView({ block: "nearest" });
     }
   });
+  if (selectedButton) {
+    const bounds = selectedButton.getBoundingClientRect();
+    showApiTooltip(completionMatches[completionIndex], bounds.right, bounds.top);
+  }
 }
 
 function hideCompletions() {
@@ -231,6 +239,7 @@ function hideCompletions() {
   completionMatches = [];
   completionContext = undefined;
   editor.removeAttribute("aria-activedescendant");
+  hideApiTooltip();
 }
 
 function acceptCompletion(index = completionIndex) {
@@ -279,6 +288,10 @@ function showCompletions() {
     detail.textContent = entry.description;
     button.append(signature, kind, detail);
     button.addEventListener("mousedown", (event) => event.preventDefault());
+    button.addEventListener("pointerenter", () => {
+      completionIndex = index;
+      updateCompletionSelection();
+    });
     button.addEventListener("click", () => acceptCompletion(index));
     return button;
   }));
@@ -294,7 +307,11 @@ function parametersFor(signature) {
   const names = [...signature.slice(open + 1, close).matchAll(/[A-Za-z_$][\w$]*/g)]
     .map((match) => match[0])
     .filter((name, index, all) => all.indexOf(name) === index);
-  return names.map((name) => ({ name, info: parameterInfo[name] ?? ["value", "Method parameter."] }));
+  return names.map((name) => ({
+    name,
+    info: parameterInfo[name] ?? ["value", "Method parameter."],
+    schema: parameterSchemas[signature]?.[name]
+  }));
 }
 
 function hideApiTooltip() {
@@ -321,6 +338,37 @@ function showApiTooltip(entry, clientX, clientY) {
       list.append(term, detail);
     }
     apiTooltip.append(list);
+    for (const parameter of parameters.filter(({ schema }) => schema)) {
+      const schema = document.createElement("section");
+      schema.className = "editor-api-schema";
+      const title = document.createElement("strong");
+      title.textContent = parameter.schema.title;
+      const properties = document.createElement("div");
+      properties.className = "editor-api-properties";
+      for (const [name, type, defaultValue, detail] of parameter.schema.properties) {
+        const property = document.createElement("div");
+        const heading = document.createElement("code");
+        heading.textContent = name;
+        const meta = document.createElement("small");
+        meta.textContent = `${type}${defaultValue ? ` · default ${defaultValue}` : ""}`;
+        const copy = document.createElement("span");
+        copy.textContent = detail;
+        property.append(heading, meta, copy);
+        properties.append(property);
+      }
+      schema.append(title, properties);
+      if (parameter.schema.example) {
+        const example = document.createElement("p");
+        example.className = "editor-api-example";
+        const label = document.createElement("span");
+        label.textContent = "Example";
+        const code = document.createElement("code");
+        code.textContent = parameter.schema.example;
+        example.append(label, code);
+        schema.append(example);
+      }
+      apiTooltip.append(schema);
+    }
   }
   apiTooltip.hidden = false;
   const bounds = apiTooltip.getBoundingClientRect();

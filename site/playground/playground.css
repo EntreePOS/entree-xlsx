@@ -200,6 +200,8 @@
   position: fixed;
   z-index: 20;
   width: min(390px, calc(100vw - 24px));
+  max-height: calc(100vh - 24px);
+  overflow: auto;
   padding: 13px 14px;
   border: 1px solid #405267;
   border-radius: 9px;
@@ -214,6 +216,22 @@
 .editor-api-tooltip dl { display: grid; grid-template-columns: max-content 1fr; gap: 5px 10px; margin: 10px 0 0; padding-top: 9px; border-top: 1px solid #2b3b4c; }
 .editor-api-tooltip dt { color: #dce7f3; font: 700 10px/1.45 "Cascadia Code", ui-monospace, monospace; }
 .editor-api-tooltip dd { margin: 0; color: #93a5b8; font-size: 10px; line-height: 1.45; }
+
+.editor-api-schema {
+  margin-top: 11px;
+  padding-top: 10px;
+  border-top: 1px solid #2b3b4c;
+}
+
+.editor-api-schema > strong { color: #dce7f3; font-size: 11px; }
+.editor-api-properties { display: grid; gap: 8px; margin-top: 8px; }
+.editor-api-properties > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; }
+.editor-api-properties code { color: #a9c6ff; font-size: 10px; overflow-wrap: anywhere; }
+.editor-api-properties small { color: #7890a8; font-size: 9px; }
+.editor-api-properties span { grid-column: 1 / -1; color: #a7b6c6; font-size: 10px; line-height: 1.4; }
+.editor-api-example { display: grid; gap: 4px; margin-top: 10px !important; }
+.editor-api-example span { color: #7890a8; font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.editor-api-example code { color: #dce7f3; font-size: 10px; overflow-wrap: anywhere; }
 
 .output-toolbar {
   color: var(--ink);
