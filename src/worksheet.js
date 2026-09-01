@@ -1,5 +1,6 @@
 import { decodeAddress, decodeColumn, decodeRange, encodeAddress, encodeRange, normalizeRange } from "./address.js";
 import { Cell } from "./cell.js";
+import { Column } from "./column.js";
 import { Range } from "./range.js";
 import { escapeXml } from "./xml.js";
 import { legacyPasswordHash } from "./protection.js";
@@ -86,6 +87,30 @@ export class Worksheet {
 
   range(address) {
     return new Range(this.source, address, this.onChange, this.onStructureChange, this.resolveStyle);
+  }
+
+  column(column) {
+    return new Column(this.source, column, this.onChange, this.onStructureChange, this.resolveStyle);
+  }
+
+  find(matcher) {
+    return this.findAll(matcher)[0];
+  }
+
+  findAll(matcher) {
+    const found = [];
+    const addresses = cellAddresses(this.source).sort((left, right) => {
+      const a = decodeAddress(left);
+      const b = decodeAddress(right);
+      return a.r - b.r || a.c - b.c;
+    });
+    for (const address of addresses) {
+      const cell = this.cell(address);
+      if (cell.value === undefined && !cell.unsafeRaw?.formula) continue;
+      const match = typeof matcher === "function" ? matcher(cell) : cell.value === matcher;
+      if (match) found.push(cell);
+    }
+    return found;
   }
 
   appendRows(data, options = {}) {

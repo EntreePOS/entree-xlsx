@@ -31,6 +31,20 @@ export class Range {
     return rows;
   }
 
+  find(matcher) {
+    return this.findAll(matcher)[0];
+  }
+
+  findAll(matcher) {
+    const found = [];
+    this.forEach((cell) => {
+      if (cell.value === undefined && !cell.unsafeRaw?.formula) return;
+      const match = typeof matcher === "function" ? matcher(cell) : cell.value === matcher;
+      if (match) found.push(cell);
+    });
+    return found;
+  }
+
   setValues(values) {
     if (!Array.isArray(values) || values.some((row) => !Array.isArray(row))) {
       throw new TypeError("Range values must be an array of rows.");

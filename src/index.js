@@ -1,6 +1,7 @@
 import { XlsxClient } from "./client.js";
 
 export { Cell } from "./cell.js";
+export { Column } from "./column.js";
 export { Range } from "./range.js";
 export { Worksheet } from "./worksheet.js";
 export { Workbook } from "./workbook.js";

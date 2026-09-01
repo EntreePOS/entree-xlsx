@@ -194,6 +194,16 @@ function cellXml(address, cell, styles) {
   return `<c r="${address}"${styleAttribute}>${formula}<v>${escapeXml(value)}</v></c>`;
 }
 
+function columnXml(column, index, styles) {
+  if (!column) return "";
+  const styleIndex = column.style ? styles.index(column.style, column.namedStyle) : Number(column.styleIndex ?? 0);
+  if (column.style) column.styleIndex = styleIndex;
+  const width = column.width !== undefined ? ` width="${column.width}" customWidth="1"` : "";
+  const hidden = column.hidden ? ' hidden="1"' : "";
+  const style = styleIndex ? ` style="${styleIndex}"` : "";
+  return `<col min="${index + 1}" max="${index + 1}"${width}${hidden}${style}/>`;
+}
+
 function sheetXml(worksheet, styles) {
   const addresses = Object.keys(worksheet)
     .filter((key) => /^[A-Z]+[1-9]\d*$/.test(key))
@@ -220,9 +230,7 @@ function sheetXml(worksheet, styles) {
     const hidden = properties.hidden ? ' hidden="1"' : "";
     return `<row r="${row + 1}"${height}${hidden}>${cells.join("")}</row>`;
   }).join("");
-  const columns = (worksheet["!cols"] ?? []).map((column, index) => column
-    ? `<col min="${index + 1}" max="${index + 1}" width="${column.width ?? 10}" customWidth="1"${column.hidden ? ' hidden="1"' : ""}/>`
-    : "").join("");
+  const columns = (worksheet["!cols"] ?? []).map((column, index) => columnXml(column, index, styles)).join("");
   const merges = worksheet["!merges"]?.length
     ? `<mergeCells count="${worksheet["!merges"].length}">${worksheet["!merges"].map((range) => `<mergeCell ref="${encodeRange(range)}"/>`).join("")}</mergeCells>`
     : "";
@@ -546,9 +554,13 @@ function patchRowProperties(xml, rows = []) {
 
 function patchWorksheetStructures(xml, worksheet) {
   let output = removeElement(xml, "cols");
-  const columns = (worksheet["!cols"] ?? []).map((column, index) => column
-    ? `<col min="${index + 1}" max="${index + 1}" width="${column.width ?? 10}" customWidth="1"${column.hidden ? ' hidden="1"' : ""}/>`
-    : "").join("");
+  const columns = (worksheet["!cols"] ?? []).map((column, index) => {
+    if (!column) return "";
+    const width = column.width !== undefined ? ` width="${column.width}" customWidth="1"` : "";
+    const hidden = column.hidden ? ' hidden="1"' : "";
+    const style = column.styleIndex ? ` style="${column.styleIndex}"` : "";
+    return `<col min="${index + 1}" max="${index + 1}"${width}${hidden}${style}/>`;
+  }).join("");
   if (columns) output = output.replace(/<(?:\w+:)?sheetData\b/i, `<cols>${columns}</cols><sheetData`);
   output = patchRowProperties(output, worksheet["!rows"]);
   for (const name of ["sheetProtection", "autoFilter", "mergeCells"]) output = removeElement(output, name);
@@ -701,8 +713,15 @@ function writePreservedXlsx(workbook, state) {
   for (const sheetName of state.dirtySheetStructures) {
     const path = state.sheetPaths.get(sheetName);
     if (!path || !files[path]) throw new Error(`Cannot locate the original XML part for worksheet ${sheetName}.`);
+    const worksheet = workbook.Sheets[sheetName];
+    for (const column of worksheet?.["!cols"] ?? []) {
+      if (!column?.style) continue;
+      if (!styleRegistry) throw new Error("Cannot edit template column styles because the workbook has no styles part.");
+      column.styleIndex = styleRegistry.index(column.style, undefined, column.namedStyle);
+      stylesXml = styleRegistry.xml;
+    }
     const xml = Buffer.isBuffer(files[path]) ? files[path].toString("utf8") : String(files[path]);
-    files[path] = sortSheetData(patchWorksheetStructures(xml, workbook.Sheets[sheetName]));
+    files[path] = sortSheetData(patchWorksheetStructures(xml, worksheet));
   }
   if (state.workbookDirty) {
     const xml = Buffer.isBuffer(files[state.workbookPath]) ? files[state.workbookPath].toString("utf8") : String(files[state.workbookPath]);
@@ -922,7 +941,15 @@ function readSheet(xml, styleInfo, strings, relationships) {
   const columns = [];
   for (const { attributes } of allTags(xml, "col")) {
     for (let index = Number(attributes.min) - 1; index < Number(attributes.max); index += 1) {
-      columns[index] = { ...(attributes.width ? { width: Number(attributes.width) } : {}), ...(attributes.hidden === "1" ? { hidden: true } : {}) };
+      const styleIndex = Number(attributes.style ?? 0);
+      const style = styleInfo.styles[styleIndex] ?? {};
+      const namedStyle = styleInfo.namedStyles[styleIndex];
+      columns[index] = {
+        ...(attributes.width ? { width: Number(attributes.width) } : {}),
+        ...(attributes.hidden === "1" ? { hidden: true } : {}),
+        ...(styleIndex ? { styleIndex, style } : {}),
+        ...(namedStyle && namedStyle !== "Normal" ? { namedStyle } : {})
+      };
     }
   }
   if (columns.length) worksheet["!cols"] = columns;

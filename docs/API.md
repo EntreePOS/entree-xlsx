@@ -645,6 +645,30 @@ Returns a `Range` object.
 const header = worksheet.range("A1:D1");
 ```
 
+## `worksheet.column(column)`
+
+Returns a `Column` helper. A column can be selected by letter or by a zero-based
+index.
+
+```js
+const items = worksheet.column("A");
+const prices = worksheet.column(1); // column B
+```
+
+## `worksheet.find(valueOrPredicate)` and `worksheet.findAll(valueOrPredicate)`
+
+Search populated cells in row order. `find()` returns the first matching
+`Cell`, or `undefined`. `findAll()` returns every matching `Cell`.
+
+```js
+const item = worksheet.find("Classic Burger");
+console.log(item?.address);
+
+const expensive = worksheet.findAll((cell) =>
+  typeof cell.value === "number" && cell.value > 100
+);
+```
+
 ## `worksheet.appendRows(data, options?)`
 
 Appends or inserts array rows or object rows.
@@ -916,6 +940,47 @@ when the workbook contents must be encrypted.
 
 ---
 
+# `Column`
+
+## `column.index` and `column.letter`
+
+Read-only zero-based index and normalized Excel column letter.
+
+## `column.find(valueOrPredicate)` and `column.findAll(valueOrPredicate)`
+
+Search populated cells in the column and return `Cell` objects.
+
+```js
+const cell = worksheet.column("A").find("Classic Burger");
+console.log(cell?.address); // A2
+cell?.set("Deluxe Burger");
+```
+
+## `column.forEach(callback)`
+
+Calls the callback for each populated cell in row order. Empty cells are not
+materialized or visited.
+
+## `column.style(style, mode?)`
+
+Styles the entire Excel column without creating a cell for every possible row.
+The style is also applied to existing cells in the column. As with cell and
+range styles, `mode` can be `"merge"` or `"replace"`.
+
+```js
+worksheet.column("B").style({ numberFormat: "$#,##0.00" });
+```
+
+## `column.width(width)`
+
+Sets the Excel character-based width and returns the same column helper.
+
+```js
+worksheet.column("A").width(24).style({ bold: true });
+```
+
+---
+
 # `Cell`
 
 ## `cell.address`
@@ -1081,6 +1146,14 @@ Returns a rectangular array of arrays. Empty cells are `undefined`.
 
 ```js
 const values = worksheet.range("A1:C3").getValues();
+```
+
+## `range.find(valueOrPredicate)` and `range.findAll(valueOrPredicate)`
+
+Search populated cells inside the range and return `Cell` objects.
+
+```js
+const cell = worksheet.range("A2:A100").find("Classic Burger");
 ```
 
 ## `range.setValues(rows)`

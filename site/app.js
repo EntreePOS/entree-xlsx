@@ -62,8 +62,8 @@ document.querySelectorAll(".copy-button").forEach((button) => {
   });
 });
 
-const links = [...document.querySelectorAll(".contents a[href^='#lesson-']")];
-const lessons = [...document.querySelectorAll(".lesson")];
+const links = [...document.querySelectorAll(".contents a[href^='#']")];
+const lessons = [...document.querySelectorAll(".lesson, .helper-guide")];
 
 const visibleLessons = new Map();
 const observer = new IntersectionObserver((entries) => {
@@ -100,6 +100,7 @@ const parameterHelp = {
   formula: "An Excel formula expression stored in the cell.",
   height: "The row height in points.",
   mode: "How the new style should combine with existing formatting.",
+  matcher: "A cell value or callback that identifies matching cells.",
   name: "The name used for the workbook item being created or requested.",
   options: "Optional settings that change how this method runs.",
   parts: "The style properties to clear while leaving other formatting intact.",
@@ -136,6 +137,7 @@ const parameterTypes = {
   formula: "string",
   height: "number",
   mode: "string",
+  matcher: "any · function",
   name: "string",
   options: "object",
   parts: "string · string[]",
@@ -407,6 +409,7 @@ const parameterSchemas = {
   },
   "cell.style(style, mode?)": { style: styleObject },
   "range.style(style, mode?)": { style: styleObject },
+  "column.style(style, mode?)": { style: styleObject },
   "styles.define(name, style, options?)": {
     style: styleObject,
     options: {

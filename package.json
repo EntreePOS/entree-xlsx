@@ -41,7 +41,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "node --test \"test/*.test.js\"",
+    "test": "node test/run-tests.js",
     "showcase": "node test/generate-examples.js",
     "tutorial:sync": "node site/examples/sync-code-snippets.js",
     "tutorial:check": "node site/examples/sync-code-snippets.js --check",
