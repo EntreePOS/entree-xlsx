@@ -179,15 +179,19 @@
   display: flex;
   min-height: 43px;
   overflow-x: auto;
-  padding: 6px 10px 0;
-  background: var(--surface-muted);
+  padding: 4px 10px 0 48px;
+  background: #f3f4f6;
+  border-top: 1px solid #c9ced6;
   border-bottom: 1px solid var(--line);
 }
 
 .sheet-tabs button {
-  padding: 7px 13px;
+  min-width: 92px;
+  padding: 7px 15px;
   border: 0;
   border-bottom: 3px solid transparent;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
   background: transparent;
   color: var(--muted);
   cursor: pointer;
@@ -197,7 +201,10 @@
 }
 
 .sheet-tabs button[aria-selected="true"] {
-  border-color: var(--accent);
+  border-right-color: #d5d9df;
+  border-bottom-color: #217346;
+  border-left-color: #d5d9df;
+  background: white;
   color: var(--ink);
 }
 
@@ -205,8 +212,8 @@
   flex: 1;
   min-height: 440px;
   overflow: auto;
-  padding: 18px;
-  background: #eef2f6;
+  padding: 0;
+  background: #fff;
 }
 
 .preview-empty {
@@ -220,26 +227,66 @@
 .sheet-frame {
   display: inline-block;
   min-width: 100%;
-  padding: 28px;
   background: white;
-  border: 1px solid #d5dce5;
-  box-shadow: 0 12px 30px rgb(29 44 68 / 10%);
 }
 
 .sheet-table {
+  min-width: 100%;
   border-collapse: collapse;
   color: #111827;
   font-family: Aptos, "Segoe UI", sans-serif;
   font-size: 14px;
+  table-layout: fixed;
+}
+
+.sheet-table th,
+.sheet-table td {
+  box-sizing: border-box;
+  border: 1px solid #d6d9de;
 }
 
 .sheet-table td {
   min-width: 84px;
   height: 26px;
   padding: 4px 8px;
-  border: 1px solid #d7dde5;
   background: white;
   white-space: pre-wrap;
+}
+
+.sheet-table .sheet-corner,
+.sheet-table .column-marker,
+.sheet-table .row-marker {
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  user-select: none;
+}
+
+.sheet-table .sheet-corner,
+.sheet-table .column-marker {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  height: 25px;
+}
+
+.sheet-table .sheet-corner,
+.sheet-table .row-marker {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: 46px;
+  min-width: 46px;
+}
+
+.sheet-table .sheet-corner {
+  z-index: 4;
+}
+
+.sheet-table .row-marker {
+  padding: 0 7px;
 }
 
 .console-panel {
@@ -301,5 +348,5 @@
   .playground-toolbar { align-items: stretch; flex-direction: column; }
   .toolbar-actions { display: grid; grid-template-columns: 1fr 1fr; }
   .output-toolbar { flex-direction: row; align-items: center; }
-  .sheet-frame { padding: 12px; }
+  .sheet-tabs { padding-left: 46px; }
 }

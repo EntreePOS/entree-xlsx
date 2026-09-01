@@ -124,21 +124,23 @@ function applyStyle(element, style = {}) {
   if (style.wrapText ?? alignment.wrapText) element.style.whiteSpace = "normal";
 }
 
+function columnName(index) {
+  let name = "";
+  for (let value = index + 1; value > 0; value = Math.floor((value - 1) / 26)) {
+    name = String.fromCharCode(65 + ((value - 1) % 26)) + name;
+  }
+  return name;
+}
+
 function renderSheet(index) {
   activeSheet = index;
   const sheet = result.workbook.sheets[index];
   tabs.querySelectorAll("button").forEach((button, buttonIndex) => button.setAttribute("aria-selected", String(buttonIndex === index)));
   preview.replaceChildren();
-  if (!sheet.cells.length) {
-    const empty = document.createElement("div");
-    empty.className = "preview-empty";
-    empty.textContent = "This worksheet is empty.";
-    preview.append(empty);
-    return;
-  }
-
-  const maxRow = Math.max(...sheet.cells.map(({ r }) => r));
-  const maxColumn = Math.max(...sheet.cells.map(({ c }) => c));
+  const maxDataRow = sheet.cells.length ? Math.max(...sheet.cells.map(({ r }) => r)) : -1;
+  const maxDataColumn = sheet.cells.length ? Math.max(...sheet.cells.map(({ c }) => c)) : -1;
+  const rowCount = Math.max(maxDataRow + 1, 18);
+  const columnCount = Math.max(maxDataColumn + 1, 8);
   const cells = new Map(sheet.cells.map((cell) => [`${cell.r}:${cell.c}`, cell]));
   const merged = new Map();
   for (const range of sheet.merges) {
@@ -153,17 +155,40 @@ function renderSheet(index) {
   const table = document.createElement("table");
   table.className = "sheet-table";
   const colgroup = document.createElement("colgroup");
-  for (let c = 0; c <= maxColumn; c += 1) {
+  const rowMarkerColumn = document.createElement("col");
+  rowMarkerColumn.className = "row-marker-column";
+  colgroup.append(rowMarkerColumn);
+  for (let c = 0; c < columnCount; c += 1) {
     const col = document.createElement("col");
     if (sheet.columnWidths[c]) col.style.width = `${Math.max(56, sheet.columnWidths[c] * 7)}px`;
     colgroup.append(col);
   }
   table.append(colgroup);
+  const thead = document.createElement("thead");
+  const markerRow = document.createElement("tr");
+  const corner = document.createElement("th");
+  corner.className = "sheet-corner";
+  corner.setAttribute("aria-label", "Select all cells");
+  markerRow.append(corner);
+  for (let c = 0; c < columnCount; c += 1) {
+    const marker = document.createElement("th");
+    marker.className = "column-marker";
+    marker.scope = "col";
+    marker.textContent = columnName(c);
+    markerRow.append(marker);
+  }
+  thead.append(markerRow);
+  table.append(thead);
   const tbody = document.createElement("tbody");
-  for (let r = 0; r <= maxRow; r += 1) {
+  for (let r = 0; r < rowCount; r += 1) {
     const row = document.createElement("tr");
     if (sheet.rowHeights[r]) row.style.height = `${sheet.rowHeights[r]}px`;
-    for (let c = 0; c <= maxColumn; c += 1) {
+    const rowMarker = document.createElement("th");
+    rowMarker.className = "row-marker";
+    rowMarker.scope = "row";
+    rowMarker.textContent = String(r + 1);
+    row.append(rowMarker);
+    for (let c = 0; c < columnCount; c += 1) {
       const merge = merged.get(`${r}:${c}`);
       if (merge?.covered) continue;
       const element = document.createElement("td");
