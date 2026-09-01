@@ -93,6 +93,7 @@ const status = document.querySelector("#status");
 const consoleOutput = document.querySelector("#console");
 const completionMenu = document.querySelector("#editor-completions");
 const apiTooltip = document.querySelector("#editor-api-tooltip");
+const diagnostics = document.querySelector("#code-diagnostics code");
 let result;
 let activeSheet = 0;
 let completionMatches = [];
@@ -178,10 +179,114 @@ async function loadApiCatalog() {
       const description = row.querySelector("td:nth-child(2)")?.textContent.trim();
       return signature && description ? makeApiEntry(signature, description) : undefined;
     }).filter(Boolean);
-    if (entries.length) apiCatalog = entries;
+    if (entries.length) {
+      apiCatalog = entries;
+      renderDiagnostics();
+    }
   } catch {
     // The built-in core catalog remains available when the reference cannot load.
   }
+}
+
+function editDistance(left, right) {
+  const previous = Array.from({ length: right.length + 1 }, (_, index) => index);
+  for (let i = 1; i <= left.length; i += 1) {
+    const current = [i];
+    for (let j = 1; j <= right.length; j += 1) {
+      current[j] = Math.min(
+        current[j - 1] + 1,
+        previous[j] + 1,
+        previous[j - 1] + (left[i - 1] === right[j - 1] ? 0 : 1)
+      );
+    }
+    previous.splice(0, previous.length, ...current);
+  }
+  return previous[right.length];
+}
+
+function inferApiVariables(source) {
+  const variables = new Map();
+  for (const match of source.matchAll(/\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:await\s+)?(?:createWorkbook|openWorkbook|openWorkbookSync|parseWorkbook)\s*\(/g)) {
+    variables.set(match[1], "workbook");
+  }
+  const returnTypes = new Map([
+    ["sheet", "sheet"], ["cell", "cell"], ["range", "range"],
+    ["row", "row"], ["rows", "rows"], ["column", "column"], ["columns", "columns"]
+  ]);
+  for (let pass = 0; pass < 3; pass += 1) {
+    for (const match of source.matchAll(/\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*([A-Za-z_$][\w$]*)\.([A-Za-z_$][\w$]*)\s*\(/g)) {
+      if (variables.has(match[2]) && returnTypes.has(match[3])) variables.set(match[1], returnTypes.get(match[3]));
+    }
+  }
+  return variables;
+}
+
+function unknownApiRanges(source) {
+  const variables = inferApiVariables(source);
+  const methodsByOwner = new Map();
+  const methodNames = new Set();
+  for (const { name } of apiCatalog) {
+    const [owner, method] = name.split(".");
+    if (!method) continue;
+    if (!methodsByOwner.has(owner)) methodsByOwner.set(owner, new Set());
+    methodsByOwner.get(owner).add(method);
+    methodNames.add(method);
+  }
+  const ranges = [];
+  const linePattern = /.*(?:\n|$)/g;
+  for (const lineMatch of source.matchAll(linePattern)) {
+    const line = lineMatch[0];
+    if (!line) continue;
+    const lineStart = lineMatch.index;
+    let hasApiReceiver = false;
+    for (const match of line.matchAll(/\b([A-Za-z_$][\w$]*)\.([A-Za-z_$][\w$]*)\s*\(/g)) {
+      const owner = variables.get(match[1]);
+      if (!owner) continue;
+      hasApiReceiver = true;
+      if (!methodsByOwner.get(owner)?.has(match[2])) {
+        const start = lineStart + match.index + match[0].indexOf(match[2]);
+        ranges.push({ start, end: start + match[2].length });
+      }
+    }
+    if (hasApiReceiver) {
+      for (const match of line.matchAll(/\.([A-Za-z_$][\w$]*)\s*\(/g)) {
+        const characterBeforeDot = line[match.index - 1] ?? "";
+        if (characterBeforeDot !== ")" && characterBeforeDot !== "]") continue;
+        if (!methodNames.has(match[1])) {
+          const start = lineStart + match.index + 1;
+          ranges.push({ start, end: start + match[1].length });
+        }
+      }
+    }
+  }
+  const topLevelApis = apiCatalog.map(({ name }) => name).filter((name) => !name.includes("."));
+  for (const match of source.matchAll(/(?<!\.)\b([A-Za-z_$][\w$]*)\s*\(/g)) {
+    if (topLevelApis.includes(match[1])) continue;
+    if (topLevelApis.some((name) => editDistance(match[1], name) <= 2)) {
+      ranges.push({ start: match.index, end: match.index + match[1].length });
+    }
+  }
+  return ranges
+    .sort((a, b) => a.start - b.start || a.end - b.end)
+    .filter((range, index, all) => index === 0 || range.start !== all[index - 1].start || range.end !== all[index - 1].end);
+}
+
+function renderDiagnostics() {
+  const source = editor.value;
+  const fragment = document.createDocumentFragment();
+  let cursor = 0;
+  for (const range of unknownApiRanges(source)) {
+    fragment.append(document.createTextNode(source.slice(cursor, range.start)));
+    const unknown = document.createElement("span");
+    unknown.className = "unknown-api";
+    unknown.textContent = source.slice(range.start, range.end);
+    fragment.append(unknown);
+    cursor = range.end;
+  }
+  fragment.append(document.createTextNode(source.slice(cursor)));
+  diagnostics.replaceChildren(fragment);
+  diagnostics.parentElement.scrollTop = editor.scrollTop;
+  diagnostics.parentElement.scrollLeft = editor.scrollLeft;
 }
 
 function getCompletionContext() {
@@ -249,6 +354,7 @@ function acceptCompletion(index = completionIndex) {
   const replacement = `${entry.name}${callable ? "()" : ""}`;
   editor.setRangeText(replacement, completionContext.start, completionContext.end, "end");
   if (callable) editor.setSelectionRange(editor.selectionStart - 1, editor.selectionStart - 1);
+  renderDiagnostics();
   hideCompletions();
   editor.focus();
 }
@@ -567,6 +673,7 @@ function runCode() {
 
 function setSample(name) {
   editor.value = samples[name];
+  renderDiagnostics();
   hideCompletions();
   hideApiTooltip();
   result = undefined;
@@ -577,10 +684,15 @@ function setSample(name) {
 sample.addEventListener("change", () => { setSample(sample.value); runCode(); });
 resetButton.addEventListener("click", () => { setSample(sample.value); runCode(); });
 runButton.addEventListener("click", runCode);
-editor.addEventListener("input", showCompletions);
+editor.addEventListener("input", () => { renderDiagnostics(); showCompletions(); });
 editor.addEventListener("click", hideCompletions);
 editor.addEventListener("blur", () => window.setTimeout(hideCompletions, 0));
-editor.addEventListener("scroll", () => { hideCompletions(); hideApiTooltip(); });
+editor.addEventListener("scroll", () => {
+  diagnostics.parentElement.scrollTop = editor.scrollTop;
+  diagnostics.parentElement.scrollLeft = editor.scrollLeft;
+  hideCompletions();
+  hideApiTooltip();
+});
 editor.addEventListener("mousemove", (event) => {
   const entry = apiAtPointer(event);
   if (!entry) {
@@ -610,6 +722,7 @@ editor.addEventListener("keydown", (event) => {
     event.preventDefault();
     const start = editor.selectionStart;
     editor.setRangeText("  ", start, editor.selectionEnd, "end");
+    renderDiagnostics();
   }
 });
 downloadButton.addEventListener("click", () => {

@@ -52,7 +52,8 @@
         </div>
         <label class="editor-label" for="code">JavaScript</label>
         <div class="code-editor-wrap">
-          <textarea id="code" class="code-editor" spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="playground-support editor-api-tooltip" aria-autocomplete="list" aria-controls="editor-completions"></textarea>
+          <pre id="code-diagnostics" class="code-diagnostics" aria-hidden="true"><code></code></pre>
+          <textarea id="code" class="code-editor" wrap="off" spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="playground-support editor-api-tooltip" aria-autocomplete="list" aria-controls="editor-completions"></textarea>
           <div id="editor-completions" class="editor-completions" role="listbox" aria-label="API suggestions" hidden></div>
           <div id="editor-api-tooltip" class="editor-api-tooltip" role="tooltip" hidden></div>
         </div>
