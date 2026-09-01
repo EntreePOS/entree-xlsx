@@ -191,29 +191,43 @@ async function loadApiCatalog() {
 }
 
 function editDistance(left, right) {
-  const previous = Array.from({ length: right.length + 1 }, (_, index) => index);
+  const matrix = Array.from({ length: left.length + 1 }, () => Array(right.length + 1).fill(0));
+  for (let i = 0; i <= left.length; i += 1) matrix[i][0] = i;
+  for (let j = 0; j <= right.length; j += 1) matrix[0][j] = j;
   for (let i = 1; i <= left.length; i += 1) {
-    const current = [i];
     for (let j = 1; j <= right.length; j += 1) {
-      current[j] = Math.min(
-        current[j - 1] + 1,
-        previous[j] + 1,
-        previous[j - 1] + (left[i - 1] === right[j - 1] ? 0 : 1)
+      matrix[i][j] = Math.min(
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j] + 1,
+        matrix[i - 1][j - 1] + (left[i - 1] === right[j - 1] ? 0 : 1)
       );
+      if (i > 1 && j > 1 && left[i - 1] === right[j - 2] && left[i - 2] === right[j - 1]) {
+        matrix[i][j] = Math.min(matrix[i][j], matrix[i - 2][j - 2] + 1);
+      }
     }
-    previous.splice(0, previous.length, ...current);
   }
-  return previous[right.length];
+  return matrix[left.length][right.length];
+}
+
+function apiWordSimilarity(input, candidate) {
+  const left = input.toLowerCase();
+  const right = candidate.toLowerCase();
+  if (left === right) return 1;
+  const length = Math.max(left.length, right.length);
+  const distanceScore = length ? 1 - editDistance(left, right) / length : 0;
+  let prefixLength = 0;
+  while (prefixLength < Math.min(left.length, right.length) && left[prefixLength] === right[prefixLength]) prefixLength += 1;
+  const prefixScore = prefixLength / Math.max(1, Math.min(left.length, right.length));
+  const containsScore = left.includes(right) || right.includes(left) ? .82 : 0;
+  return Math.max(containsScore, distanceScore * .76 + prefixScore * .24);
 }
 
 function closestName(input, candidates) {
-  const closest = [...candidates]
-    .map((candidate) => ({ candidate, distance: editDistance(input.toLowerCase(), candidate.toLowerCase()) }))
-    .sort((left, right) => left.distance - right.distance || left.candidate.localeCompare(right.candidate))[0]?.candidate;
-  if (!closest) return undefined;
-  return editDistance(input.toLowerCase(), closest.toLowerCase()) <= Math.max(2, Math.ceil(input.length * .4))
-    ? closest
-    : undefined;
+  const closest = [...new Set(candidates)]
+    .map((candidate) => ({ candidate, score: apiWordSimilarity(input, candidate) }))
+    .sort((left, right) => right.score - left.score || left.candidate.localeCompare(right.candidate))[0];
+  const minimumScore = input.length <= 3 ? .72 : .58;
+  return closest?.score >= minimumScore ? closest.candidate : undefined;
 }
 
 function inferApiVariables(source) {
@@ -262,6 +276,7 @@ function unknownApiRanges(source) {
           start,
           end: start + match[2].length,
           name: `${match[1]}.${match[2]}`,
+          word: match[2],
           suggestion: suggestion ? `${match[1]}.${suggestion}` : undefined
         });
       }
@@ -276,6 +291,7 @@ function unknownApiRanges(source) {
             start,
             end: start + match[1].length,
             name: match[1],
+            word: match[1],
             suggestion: closestName(match[1], methodNames)
           });
         }
@@ -285,12 +301,14 @@ function unknownApiRanges(source) {
   const topLevelApis = apiCatalog.map(({ name }) => name).filter((name) => !name.includes("."));
   for (const match of source.matchAll(/(?<!\.)\b([A-Za-z_$][\w$]*)\s*\(/g)) {
     if (topLevelApis.includes(match[1])) continue;
-    if (topLevelApis.some((name) => editDistance(match[1], name) <= 2)) {
+    const suggestion = closestName(match[1], topLevelApis);
+    if (suggestion) {
       ranges.push({
         start: match.index,
         end: match.index + match[1].length,
         name: match[1],
-        suggestion: closestName(match[1], topLevelApis)
+        word: match[1],
+        suggestion
       });
     }
   }
@@ -303,11 +321,17 @@ function diagnosticMessage(diagnostic, source = editor.value, level = "error") {
   const before = source.slice(0, diagnostic.start).split("\n");
   const location = `${before.length}:${before.at(-1).length + 1}`;
   const suggestion = diagnostic.suggestion ? ` Did you mean "${diagnostic.suggestion}()"?` : "";
-  return `[${level}] Unknown API "${diagnostic.name}()" at ${location}.${suggestion}`;
+  return `[${level}] Unknown API word "${diagnostic.word ?? diagnostic.name}" at ${location}.${suggestion}`;
 }
 
 function runtimeSuggestion(message) {
-  const unknown = /([A-Za-z_$][\w$]*) is not a function/.exec(message)?.[1];
+  const patterns = [
+    /([A-Za-z_$][\w$]*) is not a function/,
+    /([A-Za-z_$][\w$]*) is not defined/,
+    /reading ['"]([A-Za-z_$][\w$]*)['"]/,
+    /Unexpected identifier ['"]?([A-Za-z_$][\w$]*)/
+  ];
+  const unknown = patterns.map((pattern) => pattern.exec(message)?.[1]).find(Boolean);
   if (!unknown) return undefined;
   const methods = apiCatalog.map(({ name }) => name.split(".").at(-1));
   const suggestion = closestName(unknown, methods);
