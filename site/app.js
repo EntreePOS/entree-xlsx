@@ -602,7 +602,7 @@ function hideParameterTooltip(parameter) {
   parameterTooltip.setAttribute("aria-hidden", "true");
 }
 
-document.querySelectorAll(".api-table td:first-child code").forEach((code) => {
+document.querySelectorAll(".api-table td:first-child code, .core-api-table td:first-child code").forEach((code) => {
   const signature = code.textContent;
   const open = signature.indexOf("(");
   const close = signature.lastIndexOf(")");

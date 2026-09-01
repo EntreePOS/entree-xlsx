@@ -3,6 +3,7 @@ const input = document.querySelector("#api-query");
 const count = document.querySelector("#api-count");
 const clear = document.querySelector("#clear-search");
 const empty = document.querySelector("#api-empty");
+input.value = new URLSearchParams(location.search).get("q") ?? "";
 
 function prepareLinks(root) {
   root.querySelectorAll('a[href^="#"]').forEach((link) => {

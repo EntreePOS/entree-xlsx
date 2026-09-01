@@ -1169,6 +1169,71 @@ await workbook.save("15-encrypt-a-workbook.xlsx", {
       </div>
     </div>
 
+    <section class="core-cheatsheet" id="core-api" aria-labelledby="core-api-title">
+      <header class="core-cheatsheet-header">
+        <div>
+          <p class="section-kicker">Core API cheatsheet</p>
+          <h2 id="core-api-title">The methods you will use most.</h2>
+        </div>
+        <div>
+          <p>Start here for everyday workbook creation, selection, formatting, and output. The searchable API page covers every method and advanced option.</p>
+          <a class="core-api-link" href="api/">Search the complete API <span aria-hidden="true">→</span></a>
+        </div>
+      </header>
+
+      <div class="core-api-grid">
+        <article class="core-api-group">
+          <div class="core-api-group-title"><span>01</span><h3>Create and save</h3></div>
+          <table class="core-api-table">
+            <tbody>
+              <tr><td><code>createWorkbook(name?)</code></td><td>Create a workbook.</td><td><a href="#lesson-1">01</a></td></tr>
+              <tr><td><code>openWorkbook(source, options?)</code></td><td>Open an existing workbook.</td><td><a href="#lesson-10">10</a></td></tr>
+              <tr><td><code>workbook.sheet(reference?)</code></td><td>Get a worksheet.</td><td><a href="#lesson-1">01</a></td></tr>
+              <tr><td><code>workbook.addSheet(name, data?)</code></td><td>Add another worksheet.</td><td><a href="#lesson-4">04</a></td></tr>
+              <tr><td><code>workbook.save(path, options?)</code></td><td>Save the XLSX file.</td><td><a href="#lesson-1">01</a></td></tr>
+              <tr><td><code>sheet.setData(data, options?)</code></td><td>Write a complete dataset.</td><td><a href="#lesson-1">01</a></td></tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="core-api-group">
+          <div class="core-api-group-title"><span>02</span><h3>Select and update</h3></div>
+          <table class="core-api-table">
+            <tbody>
+              <tr><td><code>sheet.get(address)</code></td><td>Read a cell value.</td><td><a href="#lesson-3">03</a></td></tr>
+              <tr><td><code>sheet.set(address, value)</code></td><td>Change a cell value.</td><td><a href="#lesson-3">03</a></td></tr>
+              <tr><td><code>sheet.cell(address)</code></td><td>Work with one cell.</td><td><a href="#lesson-3">03</a></td></tr>
+              <tr><td><code>sheet.range(address)</code></td><td>Select a rectangle.</td><td><a href="#lesson-5">05</a></td></tr>
+              <tr><td><code>sheet.row(row)</code></td><td>Select one row.</td><td><a href="#lesson-6">06</a></td></tr>
+              <tr><td><code>sheet.rows(selector)</code></td><td>Select multiple rows.</td><td><a href="#lesson-6">06</a></td></tr>
+              <tr><td><code>sheet.column(column)</code></td><td>Select one column.</td><td><a href="#lesson-6">06</a></td></tr>
+              <tr><td><code>sheet.columns(selector)</code></td><td>Select multiple columns.</td><td><a href="#lesson-6">06</a></td></tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="core-api-group">
+          <div class="core-api-group-title"><span>03</span><h3>Format and read</h3></div>
+          <table class="core-api-table">
+            <tbody>
+              <tr><td><code>cell.style(style, mode?)</code></td><td>Format one cell.</td><td><a href="#lesson-7">07</a></td></tr>
+              <tr><td><code>cell.formula(formula, result?)</code></td><td>Add a formula.</td><td><a href="#lesson-8">08</a></td></tr>
+              <tr><td><code>range.style(style, mode?)</code></td><td>Format a cell range.</td><td><a href="#lesson-5">05</a></td></tr>
+              <tr><td><code>sheet.find(matcher)</code></td><td>Find a populated cell.</td><td><a href="#lesson-6">06</a></td></tr>
+              <tr><td><code>sheet.autoFit(options?)</code></td><td>Fit columns to values.</td><td><a href="#lesson-9">09</a></td></tr>
+              <tr><td><code>sheet.merge(range)</code></td><td>Merge a cell range.</td><td><a href="#lesson-10">10</a></td></tr>
+              <tr><td><code>sheet.toRecords(options?)</code></td><td>Read rows as objects.</td><td><a href="api/?q=toRecords">API</a></td></tr>
+              <tr><td><code>sheet.toHtml(options?)</code></td><td>Create an HTML table.</td><td><a href="api/?q=toHtml">API</a></td></tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+      <div class="core-api-footer">
+        <span>22 essential methods</span>
+        <a class="button secondary" href="api/">Browse the complete searchable API</a>
+      </div>
+    </section>
+
     <section class="cheatsheet" id="cheatsheet" aria-labelledby="cheatsheet-title">
       <header class="cheatsheet-header">
         <div>
