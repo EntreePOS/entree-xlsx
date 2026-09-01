@@ -375,6 +375,13 @@ entree-xlsx convert orders.xlsx orders.csv --sheet Orders
 - Native ECMAScript modules (`import` / `export`)
 - No runtime dependencies
 
+> [!NOTE]
+> This package is designed specifically for use by Entree POS software. Its API
+> evolves to support Entree POS coding conventions and product needs; it is not
+> intended to provide a stable public API. Breaking changes may occur at any time
+> without prior notice. Use this package at your own risk and pin the exact
+> version if you depend on it.
+
 ## License
 
 MIT
