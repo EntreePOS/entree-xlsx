@@ -1,6 +1,14 @@
 import assert from "node:assert/strict";
 import { parseWorkbook } from "../../src/index.js";
 import { executePlayground } from "./runtime.js";
+import { samples } from "./samples.js";
+
+for (const [name, sample] of Object.entries(samples)) {
+  const sampleResult = await executePlayground(sample);
+  assert.ok(sampleResult.bytes.length > 1000, `${name} should produce an XLSX file`);
+  assert.ok(sampleResult.workbook.sheets.length >= 1, `${name} should produce a worksheet`);
+  assert.doesNotThrow(() => parseWorkbook(sampleResult.bytes), `${name} should produce a readable XLSX file`);
+}
 
 const source = `
 const workbook = createWorkbook("Inventory");
@@ -30,4 +38,4 @@ assert.equal(sheet.unsafeRaw["!rows"][0].height, 26);
 assert.equal(sheet.unsafeRaw["!cols"][1].width, 16);
 assert.ok(result.logs.length >= 6);
 
-console.log(`Verified browser playground output (${result.bytes.length} bytes).`);
+console.log(`Verified ${Object.keys(samples).length} playground examples and browser XLSX output (${result.bytes.length} bytes).`);

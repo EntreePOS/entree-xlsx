@@ -39,10 +39,21 @@
         <div class="playground-toolbar">
           <label for="sample">Example
             <select id="sample">
-              <option value="data">Create a workbook</option>
-              <option value="styles">Apply styles</option>
-              <option value="helpers">Use row and column helpers</option>
-              <option value="formula">Add a formula</option>
+              <optgroup label="Workbook basics">
+                <option value="data">Create a workbook</option>
+                <option value="records">Convert objects into rows</option>
+                <option value="sheets">Add multiple worksheets</option>
+              </optgroup>
+              <optgroup label="Formatting and layout">
+                <option value="styles">Apply styles</option>
+                <option value="namedStyles">Reuse named styles</option>
+                <option value="dates">Format dates and percentages</option>
+                <option value="layout">Merge, filter, and auto-fit</option>
+              </optgroup>
+              <optgroup label="Data and calculations">
+                <option value="helpers">Find and update cells</option>
+                <option value="formula">Add formulas and totals</option>
+              </optgroup>
             </select>
           </label>
           <div class="toolbar-actions">
