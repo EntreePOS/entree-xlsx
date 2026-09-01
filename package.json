@@ -12,11 +12,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/huangxuewu/entree-xlsx.git"
+    "url": "git+https://github.com/EntreePOS/entree-xlsx.git"
   },
-  "homepage": "https://huangxuewu.github.io/entree-xlsx/",
+  "homepage": "https://entreepos.github.io/entree-xlsx/",
   "bugs": {
-    "url": "https://github.com/huangxuewu/entree-xlsx/issues"
+    "url": "https://github.com/EntreePOS/entree-xlsx/issues"
   },
   "license": "MIT",
   "author": "Entree POS",

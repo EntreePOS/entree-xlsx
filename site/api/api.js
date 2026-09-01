@@ -46,7 +46,7 @@ async function loadApi() {
     filterApi();
   } catch (error) {
     content.setAttribute("aria-busy", "false");
-    content.innerHTML = `<p class="api-empty">The API list could not be loaded. <a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md">Open the complete reference on GitHub.</a></p>`;
+    content.innerHTML = `<p class="api-empty">The API list could not be loaded. <a href="https://github.com/EntreePOS/entree-xlsx/blob/main/docs/API.md">Open the complete reference on GitHub.</a></p>`;
     count.textContent = "API unavailable";
   }
 }

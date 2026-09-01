@@ -1,0 +1,36 @@
+name: Publish GitHub package
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          registry-url: https://npm.pkg.github.com
+          scope: "@entreepos"
+          package-manager-cache: false
+
+      - name: Test package
+        run: npm test
+
+      - name: Use the GitHub Packages name
+        run: npm pkg set name="@entreepos/xlsx" publishConfig.registry="https://npm.pkg.github.com"
+
+      - name: Publish package
+        run: npm publish --registry=https://npm.pkg.github.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
