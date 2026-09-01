@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Run small @entree_pos/xlsx examples, review the workbook, and download the XLSX file.">
+  <meta name="theme-color" content="#f6f8fb">
+  <title>Playground | @entree_pos/xlsx</title>
+  <link rel="stylesheet" href="../styles.css?v=0.4.1">
+  <link rel="stylesheet" href="playground.css?v=0.4.1">
+  <script src="playground.js?v=0.4.1" type="module"></script>
+</head>
+<body>
+  <a class="skip-link" href="#playground">Skip to playground</a>
+  <header class="site-header">
+    <a class="brand" href="../" aria-label="Entree XLSX home">
+      <span class="brand-mark" aria-hidden="true">X</span>
+      <span>@entree_pos/xlsx</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="../#tutorial">Tutorials</a>
+      <a href="../api/">API</a>
+      <a href="./" aria-current="page">Playground</a>
+      <a href="https://www.npmjs.com/package/@entree_pos/xlsx">npm</a>
+      <a href="https://github.com/huangxuewu/entree-xlsx">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="playground-page" id="playground">
+    <header class="playground-intro">
+      <div>
+        <p class="section-kicker">Browser playground · no setup required</p>
+        <h1>Write code. Review the sheet. Download the XLSX.</h1>
+      </div>
+      <p>Practice the core workbook API with small examples. Your code runs locally in a temporary browser worker and is discarded when the run finishes.</p>
+    </header>
+
+    <section class="playground-workspace" aria-label="Code playground">
+      <div class="editor-panel">
+        <div class="playground-toolbar">
+          <label for="sample">Example
+            <select id="sample">
+              <option value="data">Create a workbook</option>
+              <option value="styles">Apply styles</option>
+              <option value="helpers">Use row and column helpers</option>
+              <option value="formula">Add a formula</option>
+            </select>
+          </label>
+          <div class="toolbar-actions">
+            <button id="reset" class="quiet-button" type="button">Reset</button>
+            <button id="run" class="run-button" type="button">Run <span>Ctrl ↵</span></button>
+          </div>
+        </div>
+        <label class="editor-label" for="code">JavaScript</label>
+        <textarea id="code" class="code-editor" spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="playground-support"></textarea>
+      </div>
+
+      <div class="output-panel">
+        <div class="playground-toolbar output-toolbar">
+          <div>
+            <strong>Workbook preview</strong>
+            <span id="status" class="run-status" role="status">Ready</span>
+          </div>
+          <button id="download" class="download-button" type="button" disabled>Download XLSX</button>
+        </div>
+        <div id="sheet-tabs" class="sheet-tabs" role="tablist" aria-label="Workbook sheets"></div>
+        <div id="preview" class="workbook-preview" aria-live="polite"></div>
+        <details class="console-panel">
+          <summary>Console output</summary>
+          <pre id="console">Run the code to see console output.</pre>
+        </details>
+      </div>
+    </section>
+
+    <section class="playground-help" id="playground-support" aria-label="Playground support">
+      <div><strong>Available here</strong><span>Workbook creation, sheets, cells, ranges, row and column helpers, basic styles, formulas, HTML preview, and XLSX download.</span></div>
+      <div><strong>Use Node.js for</strong><span>Opening local templates, password encryption, charts, PivotTables, and advanced OOXML preservation.</span></div>
+      <div><strong>Keyboard shortcut</strong><span>Press Ctrl+Enter or Command+Enter to run the current example.</span></div>
+    </section>
+  </main>
+
+  <footer>
+    <span>@entree_pos/xlsx</span>
+    <span>Playground files run locally in your browser</span>
+  </footer>
+</body>
+</html>

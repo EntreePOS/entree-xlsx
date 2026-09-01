@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="styles.css?v=0.4.1">
   <script src="app.js?v=0.4.1" defer></script>
 </head>
-<body>
+<body class="tutorial-page">
   <a class="skip-link" href="#tutorial">Skip to tutorial</a>
 
   <header class="site-header">
@@ -18,9 +18,9 @@
       <span>@entree_pos/xlsx</span>
     </a>
     <nav aria-label="Primary navigation">
-      <a href="#tutorial">Tutorial</a>
-      <a href="#cheatsheet">Cheatsheet</a>
-      <a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md">API</a>
+      <a href="#tutorial" aria-current="page">Tutorials</a>
+      <a href="api/">API</a>
+      <a href="playground/">Playground</a>
       <a href="https://www.npmjs.com/package/@entree_pos/xlsx">npm</a>
       <a href="https://github.com/huangxuewu/entree-xlsx">GitHub</a>
       <button class="theme-button" type="button" aria-label="Change color theme">Theme</button>
@@ -39,6 +39,7 @@
         </div>
         <div class="hero-actions">
           <a class="button primary" href="#lesson-1">Start with data</a>
+          <a class="button secondary" href="playground/">Try the playground</a>
           <a class="button secondary" href="assets/examples/11-create-a-chart.xlsx" download>Download an example</a>
         </div>
       </div>
@@ -1354,7 +1355,8 @@ await workbook.save("15-encrypt-a-workbook.xlsx", {
       <h2 id="next-title">Install the library and keep the API reference nearby.</h2>
       <div class="next-actions">
         <a class="button primary" href="https://www.npmjs.com/package/@entree_pos/xlsx">Open on npm</a>
-        <a class="button secondary" href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md">Browse every method</a>
+        <a class="button secondary" href="api/">Browse every method</a>
+        <a class="button secondary" href="playground/">Try the playground</a>
         <a class="button secondary" href="https://github.com/huangxuewu/entree-xlsx/tree/main/site/examples">View tutorial source</a>
       </div>
     </section>

@@ -30,6 +30,8 @@ jobs:
         run: node site/examples/sync-code-snippets.js --check
       - name: Verify tutorial workbooks
         run: node site/examples/verify-all.js
+      - name: Verify browser playground
+        run: node site/playground/verify-playground.js
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload tutorial site
