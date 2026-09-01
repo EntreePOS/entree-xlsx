@@ -2,7 +2,9 @@ import { XlsxClient } from "./client.js";
 
 export { Cell } from "./cell.js";
 export { Column } from "./column.js";
+export { Columns } from "./columns.js";
 export { Range } from "./range.js";
+export { Row, Rows } from "./row.js";
 export { Worksheet } from "./worksheet.js";
 export { Workbook } from "./workbook.js";
 export { ChartCollection } from "./charts.js";

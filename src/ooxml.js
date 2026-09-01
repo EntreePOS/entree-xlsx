@@ -226,9 +226,12 @@ function sheetXml(worksheet, styles) {
   }
   const rowXml = [...rows].sort(([a], [b]) => a - b).map(([row, cells]) => {
     const properties = worksheet["!rows"]?.[row] ?? {};
+    const styleIndex = properties.style ? styles.index(properties.style, properties.namedStyle) : Number(properties.styleIndex ?? 0);
+    if (properties.style) properties.styleIndex = styleIndex;
     const height = properties.height ? ` ht="${properties.height}" customHeight="1"` : "";
     const hidden = properties.hidden ? ' hidden="1"' : "";
-    return `<row r="${row + 1}"${height}${hidden}>${cells.join("")}</row>`;
+    const style = styleIndex ? ` s="${styleIndex}" customFormat="1"` : "";
+    return `<row r="${row + 1}"${height}${hidden}${style}>${cells.join("")}</row>`;
   }).join("");
   const columns = (worksheet["!cols"] ?? []).map((column, index) => columnXml(column, index, styles)).join("");
   const merges = worksheet["!merges"]?.length
@@ -538,14 +541,15 @@ function patchRowProperties(xml, rows = []) {
     const opening = new RegExp(`<(?:\\w+:)?row\\b(?=[^>]*\\br="${rowNumber}"(?:\\s|/|>))[^>]*`, "i");
     const apply = (tag) => {
       const selfClosing = tag.endsWith("/");
-      let updated = tag.replace(/\/$/, "").replace(/\s(?:ht|customHeight|hidden)="[^"]*"/gi, "");
+      let updated = tag.replace(/\/$/, "").replace(/\s(?:ht|customHeight|hidden|s|customFormat)="[^"]*"/gi, "");
       if (properties.height) updated += ` ht="${properties.height}" customHeight="1"`;
       if (properties.hidden) updated += ' hidden="1"';
+      if (properties.styleIndex) updated += ` s="${properties.styleIndex}" customFormat="1"`;
       return `${updated}${selfClosing ? "/" : ""}`;
     };
     if (opening.test(output)) output = output.replace(opening, apply);
     else {
-      const attributes = `${properties.height ? ` ht="${properties.height}" customHeight="1"` : ""}${properties.hidden ? ' hidden="1"' : ""}`;
+      const attributes = `${properties.height ? ` ht="${properties.height}" customHeight="1"` : ""}${properties.hidden ? ' hidden="1"' : ""}${properties.styleIndex ? ` s="${properties.styleIndex}" customFormat="1"` : ""}`;
       output = output.replace(/<\/(?:\w+:)?sheetData\s*>/i, `<row r="${rowNumber}"${attributes}/></sheetData>`);
     }
   });
@@ -718,6 +722,12 @@ function writePreservedXlsx(workbook, state) {
       if (!column?.style) continue;
       if (!styleRegistry) throw new Error("Cannot edit template column styles because the workbook has no styles part.");
       column.styleIndex = styleRegistry.index(column.style, undefined, column.namedStyle);
+      stylesXml = styleRegistry.xml;
+    }
+    for (const row of worksheet?.["!rows"] ?? []) {
+      if (!row?.style) continue;
+      if (!styleRegistry) throw new Error("Cannot edit template row styles because the workbook has no styles part.");
+      row.styleIndex = styleRegistry.index(row.style, undefined, row.namedStyle);
       stylesXml = styleRegistry.xml;
     }
     const xml = Buffer.isBuffer(files[path]) ? files[path].toString("utf8") : String(files[path]);
@@ -955,7 +965,17 @@ function readSheet(xml, styleInfo, strings, relationships) {
   if (columns.length) worksheet["!cols"] = columns;
   const rows = [];
   for (const { attributes } of allTags(xml, "row")) {
-    if (attributes.ht || attributes.hidden === "1") rows[Number(attributes.r) - 1] = { ...(attributes.ht ? { height: Number(attributes.ht) } : {}), ...(attributes.hidden === "1" ? { hidden: true } : {}) };
+    const styleIndex = Number(attributes.s ?? 0);
+    const style = styleInfo.styles[styleIndex] ?? {};
+    const namedStyle = styleInfo.namedStyles[styleIndex];
+    if (attributes.ht || attributes.hidden === "1" || styleIndex) {
+      rows[Number(attributes.r) - 1] = {
+        ...(attributes.ht ? { height: Number(attributes.ht) } : {}),
+        ...(attributes.hidden === "1" ? { hidden: true } : {}),
+        ...(styleIndex ? { styleIndex, style } : {}),
+        ...(namedStyle && namedStyle !== "Normal" ? { namedStyle } : {})
+      };
+    }
   }
   if (rows.length) worksheet["!rows"] = rows;
   const filter = allTags(xml, "autoFilter")[0]?.attributes.ref;

@@ -112,6 +112,7 @@ const parameterHelp = {
   result: "An optional cached value shown before Excel recalculates the formula.",
   row: "The one-based worksheet row number.",
   rows: "A two-dimensional array where each inner array is one worksheet row.",
+  selector: "A row or column selection such as A:C, 2:5, or an array of references.",
   sheet: "A worksheet name, zero-based index, or Worksheet object.",
   source: "The workbook input, cell, range, or style being read or copied.",
   start: "The first one-based row affected by the operation.",
@@ -149,6 +150,7 @@ const parameterTypes = {
   result: "any",
   row: "number",
   rows: "array[]",
+  selector: "string · array",
   sheet: "string · number",
   source: "value",
   start: "number",
@@ -410,6 +412,9 @@ const parameterSchemas = {
   "cell.style(style, mode?)": { style: styleObject },
   "range.style(style, mode?)": { style: styleObject },
   "column.style(style, mode?)": { style: styleObject },
+  "columns.style(style, mode?)": { style: styleObject },
+  "row.style(style, mode?)": { style: styleObject },
+  "rows.style(style, mode?)": { style: styleObject },
   "styles.define(name, style, options?)": {
     style: styleObject,
     options: {

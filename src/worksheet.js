@@ -1,7 +1,9 @@
 import { decodeAddress, decodeColumn, decodeRange, encodeAddress, encodeRange, normalizeRange } from "./address.js";
 import { Cell } from "./cell.js";
 import { Column } from "./column.js";
+import { Columns } from "./columns.js";
 import { Range } from "./range.js";
+import { Row, Rows } from "./row.js";
 import { escapeXml } from "./xml.js";
 import { legacyPasswordHash } from "./protection.js";
 import { normalizeStyle } from "./style.js";
@@ -91,6 +93,18 @@ export class Worksheet {
 
   column(column) {
     return new Column(this.source, column, this.onChange, this.onStructureChange, this.resolveStyle);
+  }
+
+  columns(selector) {
+    return new Columns(this.source, selector, this.onChange, this.onStructureChange, this.resolveStyle);
+  }
+
+  row(row) {
+    return new Row(this.source, row, this.onChange, this.onStructureChange, this.resolveStyle);
+  }
+
+  rows(selector) {
+    return new Rows(this.source, selector, this.onChange, this.onStructureChange, this.resolveStyle);
   }
 
   find(matcher) {

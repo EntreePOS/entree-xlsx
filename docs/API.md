@@ -655,6 +655,33 @@ const items = worksheet.column("A");
 const prices = worksheet.column(1); // column B
 ```
 
+## `worksheet.columns(selector)`
+
+Returns a `Columns` helper for a letter range or an array of column references.
+Numeric references are zero-based, just like `worksheet.column()`.
+
+```js
+const report = worksheet.columns("A:C");
+const selected = worksheet.columns(["A", "C", 4]); // A, C, and E
+```
+
+## `worksheet.row(row)`
+
+Returns a `Row` helper. Row numbers are one-based, matching Excel.
+
+```js
+const header = worksheet.row(1);
+```
+
+## `worksheet.rows(selector)`
+
+Returns a `Rows` helper for a row range or an array of one-based row numbers.
+
+```js
+const body = worksheet.rows("2:20");
+const selected = worksheet.rows([2, 5, 8]);
+```
+
 ## `worksheet.find(valueOrPredicate)` and `worksheet.findAll(valueOrPredicate)`
 
 Search populated cells in row order. `find()` returns the first matching
@@ -977,6 +1004,109 @@ Sets the Excel character-based width and returns the same column helper.
 
 ```js
 worksheet.column("A").width(24).style({ bold: true });
+```
+
+---
+
+# `Columns`
+
+## `columns.indexes` and `columns.letters`
+
+Read-only arrays containing the selected zero-based indexes and normalized
+Excel column letters.
+
+## `columns.find(valueOrPredicate)` and `columns.findAll(valueOrPredicate)`
+
+Search populated cells in row order across the selected columns and return
+`Cell` objects.
+
+## `columns.forEach(callback)`
+
+Calls the callback for each populated cell in row order. Empty cells are not
+materialized or visited.
+
+## `columns.style(style, mode?)`
+
+Applies a whole-column style to every selected column without creating empty
+cells.
+
+```js
+worksheet.columns("A:C").style({ vertical: "center" });
+```
+
+## `columns.width(width)`
+
+Sets the same Excel character-based width for every selected column.
+
+```js
+worksheet.columns(["B", "D"]).width(14);
+```
+
+---
+
+# `Row`
+
+## `row.number` and `row.index`
+
+Read-only one-based row number and zero-based row index.
+
+## `row.find(valueOrPredicate)` and `row.findAll(valueOrPredicate)`
+
+Search populated cells from left to right in the row and return `Cell` objects.
+
+## `row.forEach(callback)`
+
+Calls the callback for each populated cell from left to right. Empty cells are
+not materialized or visited.
+
+## `row.style(style, mode?)`
+
+Applies a native whole-row style and updates the row's existing cells.
+
+```js
+worksheet.row(1).style({ bold: true });
+```
+
+## `row.height(height)`
+
+Sets the row height in points.
+
+```js
+worksheet.row(1).height(24);
+```
+
+---
+
+# `Rows`
+
+## `rows.numbers`
+
+A read-only array containing the selected one-based row numbers.
+
+## `rows.find(valueOrPredicate)` and `rows.findAll(valueOrPredicate)`
+
+Search populated cells in row order across the selected rows and return `Cell`
+objects.
+
+## `rows.forEach(callback)`
+
+Calls the callback for each populated cell in row order. Empty cells are not
+materialized or visited.
+
+## `rows.style(style, mode?)`
+
+Applies a native whole-row style to every selected row.
+
+```js
+worksheet.rows("2:20").style({ vertical: "center" });
+```
+
+## `rows.height(height)`
+
+Sets the same height in points for every selected row.
+
+```js
+worksheet.rows([2, 5, 8]).height(22);
 ```
 
 ---
