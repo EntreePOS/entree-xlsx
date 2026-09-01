@@ -91,6 +91,7 @@ const preview = document.querySelector("#preview");
 const tabs = document.querySelector("#sheet-tabs");
 const status = document.querySelector("#status");
 const consoleOutput = document.querySelector("#console");
+const consolePanel = document.querySelector(".console-panel");
 const completionMenu = document.querySelector("#editor-completions");
 const apiTooltip = document.querySelector("#editor-api-tooltip");
 const diagnostics = document.querySelector("#code-diagnostics code");
@@ -100,6 +101,7 @@ let completionMatches = [];
 let completionIndex = 0;
 let completionContext;
 let hoveredApiName = "";
+let lastRunDiagnostics = [];
 
 const fallbackApis = [
   ["createWorkbook(name?)", "Create a workbook with one named sheet."],
@@ -204,6 +206,16 @@ function editDistance(left, right) {
   return previous[right.length];
 }
 
+function closestName(input, candidates) {
+  const closest = [...candidates]
+    .map((candidate) => ({ candidate, distance: editDistance(input.toLowerCase(), candidate.toLowerCase()) }))
+    .sort((left, right) => left.distance - right.distance || left.candidate.localeCompare(right.candidate))[0]?.candidate;
+  if (!closest) return undefined;
+  return editDistance(input.toLowerCase(), closest.toLowerCase()) <= Math.max(2, Math.ceil(input.length * .4))
+    ? closest
+    : undefined;
+}
+
 function inferApiVariables(source) {
   const variables = new Map();
   for (const match of source.matchAll(/\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:await\s+)?(?:createWorkbook|openWorkbook|openWorkbookSync|parseWorkbook)\s*\(/g)) {
@@ -245,7 +257,13 @@ function unknownApiRanges(source) {
       hasApiReceiver = true;
       if (!methodsByOwner.get(owner)?.has(match[2])) {
         const start = lineStart + match.index + match[0].indexOf(match[2]);
-        ranges.push({ start, end: start + match[2].length });
+        const suggestion = closestName(match[2], methodsByOwner.get(owner) ?? []);
+        ranges.push({
+          start,
+          end: start + match[2].length,
+          name: `${match[1]}.${match[2]}`,
+          suggestion: suggestion ? `${match[1]}.${suggestion}` : undefined
+        });
       }
     }
     if (hasApiReceiver) {
@@ -254,7 +272,12 @@ function unknownApiRanges(source) {
         if (characterBeforeDot !== ")" && characterBeforeDot !== "]") continue;
         if (!methodNames.has(match[1])) {
           const start = lineStart + match.index + 1;
-          ranges.push({ start, end: start + match[1].length });
+          ranges.push({
+            start,
+            end: start + match[1].length,
+            name: match[1],
+            suggestion: closestName(match[1], methodNames)
+          });
         }
       }
     }
@@ -263,12 +286,32 @@ function unknownApiRanges(source) {
   for (const match of source.matchAll(/(?<!\.)\b([A-Za-z_$][\w$]*)\s*\(/g)) {
     if (topLevelApis.includes(match[1])) continue;
     if (topLevelApis.some((name) => editDistance(match[1], name) <= 2)) {
-      ranges.push({ start: match.index, end: match.index + match[1].length });
+      ranges.push({
+        start: match.index,
+        end: match.index + match[1].length,
+        name: match[1],
+        suggestion: closestName(match[1], topLevelApis)
+      });
     }
   }
   return ranges
     .sort((a, b) => a.start - b.start || a.end - b.end)
     .filter((range, index, all) => index === 0 || range.start !== all[index - 1].start || range.end !== all[index - 1].end);
+}
+
+function diagnosticMessage(diagnostic, source = editor.value, level = "error") {
+  const before = source.slice(0, diagnostic.start).split("\n");
+  const location = `${before.length}:${before.at(-1).length + 1}`;
+  const suggestion = diagnostic.suggestion ? ` Did you mean "${diagnostic.suggestion}()"?` : "";
+  return `[${level}] Unknown API "${diagnostic.name}()" at ${location}.${suggestion}`;
+}
+
+function runtimeSuggestion(message) {
+  const unknown = /([A-Za-z_$][\w$]*) is not a function/.exec(message)?.[1];
+  if (!unknown) return undefined;
+  const methods = apiCatalog.map(({ name }) => name.split(".").at(-1));
+  const suggestion = closestName(unknown, methods);
+  return suggestion ? `[suggestion] Did you mean "${suggestion}()"?` : undefined;
 }
 
 function renderDiagnostics() {
@@ -627,13 +670,17 @@ function renderResult() {
     tabs.append(button);
   });
   renderSheet(Math.min(activeSheet, result.workbook.sheets.length - 1));
-  consoleOutput.textContent = result.logs.length
-    ? result.logs.map(({ level, text }) => `[${level}] ${text}`).join("\n")
-    : "No console output.";
+  const output = [
+    ...result.logs.map(({ level, text }) => `[${level}] ${text}`),
+    ...lastRunDiagnostics.map((diagnostic) => diagnosticMessage(diagnostic, editor.value, "warning"))
+  ];
+  consoleOutput.textContent = output.length ? output.join("\n") : "No console output.";
+  if (lastRunDiagnostics.length) consolePanel.open = true;
   downloadButton.disabled = false;
 }
 
 function runCode() {
+  lastRunDiagnostics = unknownApiRanges(editor.value);
   runButton.disabled = true;
   downloadButton.disabled = true;
   setStatus("Running…");
@@ -644,6 +691,7 @@ function runCode() {
     runButton.disabled = false;
     setStatus("Stopped after 5 seconds", "error");
     consoleOutput.textContent = "The example took too long and was stopped. Check for an infinite loop.";
+    consolePanel.open = true;
   }, 5000);
   worker.addEventListener("message", ({ data }) => {
     window.clearTimeout(timeout);
@@ -652,7 +700,11 @@ function runCode() {
     if (!data.ok) {
       result = undefined;
       setStatus("Fix the error and run again", "error");
-      consoleOutput.textContent = data.error;
+      const suggestions = lastRunDiagnostics.length
+        ? lastRunDiagnostics.map((diagnostic) => diagnosticMessage(diagnostic))
+        : [runtimeSuggestion(data.error)].filter(Boolean);
+      consoleOutput.textContent = [`[error] ${data.error}`, ...suggestions].join("\n");
+      consolePanel.open = true;
       preview.innerHTML = `<div class="preview-empty">The workbook preview will appear after the code runs successfully.</div>`;
       tabs.replaceChildren();
       return;
@@ -667,6 +719,7 @@ function runCode() {
     runButton.disabled = false;
     setStatus("Playground error", "error");
     consoleOutput.textContent = event.message;
+    consolePanel.open = true;
   });
   worker.postMessage({ source: editor.value });
 }
