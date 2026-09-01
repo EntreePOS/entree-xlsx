@@ -345,6 +345,7 @@ h1 {
 }
 
 .lesson + .lesson { padding-top: 84px; }
+.helper-guide + .lesson { padding-top: 84px; }
 .lesson:last-child { padding-bottom: 72px; }
 
 .helper-guide {
