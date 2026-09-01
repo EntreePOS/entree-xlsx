@@ -36,7 +36,7 @@ function escapeHtml(source) {
 let page = await readFile(pagePath, "utf8");
 const originalPage = page;
 for (const [index, fileName] of sourceFiles.entries()) {
-  const lesson = index + 1;
+  const lesson = index < 5 ? index + 1 : index + 2;
   const sourceText = await readFile(join(examplesDirectory, "code", fileName), "utf8");
   const lineCount = sourceText.trimEnd().split("\n").length;
   if (lesson === 1 && lineCount > 15) throw new Error("Lesson 1 must stay beginner friendly and fit within 15 lines.");
