@@ -90,6 +90,7 @@ await workbook.save("sales.xlsx");</code></pre>
           <li><a href="#lesson-14"><span>14</span>Build a PivotTable</a></li>
           <li><a href="#lesson-15"><span>15</span>Protect a worksheet</a></li>
           <li><a href="#lesson-16"><span>16</span>Encrypt a workbook</a></li>
+          <li><a href="#lesson-17"><span>17</span>Send an XLSX by email</a></li>
         </ol>
       </aside>
 
@@ -1131,6 +1132,76 @@ await workbook.save("15-encrypt-a-workbook.xlsx", {
             <details class="advanced-tip"><summary>Show advanced tip</summary><div><h3>Open encrypted files again</h3><p>Use <code>openWorkbook("private.xlsx", { password: "demo" })</code> when reading an encrypted workbook.</p></div></details>
           </div>
         </article>
+
+        <article class="lesson" id="lesson-17">
+          <header class="lesson-header">
+            <div>
+              <p class="difficulty">Advanced · 5 minutes</p>
+              <h2>Send an XLSX file by email</h2>
+            </div>
+          </header>
+          <div class="lesson-grid">
+            <div class="code-panel">
+              <div class="panel-bar"><span>Complete example: 16-send-xlsx-email.js</span><div class="panel-actions"><a href="https://github.com/huangxuewu/entree-xlsx/blob/main/site/examples/code/16-send-xlsx-email.js">View source</a><button class="copy-button" type="button">Copy code</button></div></div>
+              <pre><code>// npm install @entree_pos/xlsx nodemailer
+import { createWorkbook } from "@entree_pos/xlsx";
+import nodemailer from "nodemailer";
+
+const workbook = createWorkbook("Daily Sales");
+const sheet = workbook.sheet();
+
+sheet.setData([
+  ["Item", "Quantity", "Sales"],
+  ["Classic Burger", 24, 300],
+  ["Seasoned Fries", 18, 72],
+  ["Cold Brew", 15, 67.5]
+]);
+sheet.row(1).style({ bold: true, fill: "#2457C5", color: "#FFFFFF" });
+sheet.column("C").style({ numberFormat: "$#,##0.00" });
+sheet.autoFit();
+
+// Keep the XLSX in memory. Nodemailer accepts a Buffer as attachment content.
+const xlsx = workbook.toBuffer();
+
+const mailer = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT ?? 587),
+  secure: process.env.SMTP_PORT === "465",
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASSWORD
+  }
+});
+
+await mailer.sendMail({
+  from: process.env.EMAIL_FROM,
+  to: "manager@example.com",
+  subject: "Daily sales report",
+  text: "The daily sales workbook is attached.",
+  attachments: [{
+    filename: "daily-sales.xlsx",
+    content: xlsx,
+    contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  }]
+});</code></pre>
+            </div>
+            <div class="email-result" aria-label="Email with an XLSX attachment">
+              <div class="email-result-status"><span aria-hidden="true">✓</span> Ready to send</div>
+              <dl>
+                <div><dt>To</dt><dd>manager@example.com</dd></div>
+                <div><dt>Subject</dt><dd>Daily sales report</dd></div>
+              </dl>
+              <div class="email-attachment">
+                <span class="email-attachment-icon" aria-hidden="true">X</span>
+                <span><strong>daily-sales.xlsx</strong><small>XLSX attachment</small></span>
+              </div>
+            </div>
+          </div>
+          <div class="notes-grid">
+            <div class="note"><h3>Note</h3><p><code>toBuffer()</code> creates the XLSX in memory. Nodemailer sends that buffer directly, so no temporary file is needed.</p></div>
+            <details class="advanced-tip"><summary>Need a browser Blob?</summary><div><h3>Create a Blob for browser APIs</h3><p>Use <code>new Blob([workbook.toUint8Array()], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })</code>.</p></div></details>
+          </div>
+        </article>
       </div>
     </div>
 
@@ -1154,6 +1225,7 @@ await workbook.save("15-encrypt-a-workbook.xlsx", {
               <tr><td><code>workbook.sheet(reference?)</code></td><td>Get a worksheet.</td><td><a href="#lesson-1">01</a></td></tr>
               <tr><td><code>workbook.addSheet(name, data?)</code></td><td>Add another worksheet.</td><td><a href="#lesson-4">04</a></td></tr>
               <tr><td><code>workbook.save(path, options?)</code></td><td>Save the XLSX file.</td><td><a href="#lesson-1">01</a></td></tr>
+              <tr><td><code>workbook.toBuffer(options?)</code></td><td>Create XLSX bytes in memory.</td><td><a href="#lesson-17">17</a></td></tr>
               <tr><td><code>sheet.setData(data, options?)</code></td><td>Write a complete dataset.</td><td><a href="#lesson-1">01</a></td></tr>
             </tbody>
           </table>

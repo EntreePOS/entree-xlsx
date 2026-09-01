@@ -22,7 +22,8 @@ const sourceFiles = [
   "12-edit-a-chart.js",
   "13-create-a-pivot-table.js",
   "14-protect-a-sheet.js",
-  "15-encrypt-a-workbook.js"
+  "15-encrypt-a-workbook.js",
+  "16-send-xlsx-email.js"
 ];
 
 function escapeHtml(source) {
@@ -41,7 +42,8 @@ for (const [index, fileName] of sourceFiles.entries()) {
   const lineCount = sourceText.trimEnd().split("\n").length;
   if (lesson === 1 && lineCount > 15) throw new Error("Lesson 1 must stay beginner friendly and fit within 15 lines.");
   if (lesson <= 5 && lineCount > 30) throw new Error(`Foundation lesson ${lesson} must fit within 30 lines.`);
-  if (!sourceText.includes('from "@entree_pos/xlsx"') || !sourceText.includes(".save(")) {
+  const createsXlsxOutput = sourceText.includes(".save(") || sourceText.includes(".toBuffer(");
+  if (!sourceText.includes('from "@entree_pos/xlsx"') || !createsXlsxOutput) {
     throw new Error(`Lesson ${lesson} is not a complete runnable example.`);
   }
   const source = escapeHtml(sourceText);

@@ -578,6 +578,69 @@ pre { margin: 0; padding: 24px; overflow: auto; font-size: 12.5px; line-height: 
 
 .result-card figcaption a { color: var(--accent); font-weight: 800; }
 
+.email-result {
+  display: grid;
+  min-height: 300px;
+  align-content: center;
+  gap: 24px;
+  padding: clamp(28px, 5vw, 56px);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.email-result-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.email-result-status span {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  color: #ffffff;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.email-result dl { display: grid; gap: 12px; margin: 0; }
+.email-result dl div { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 14px; }
+.email-result dt { color: var(--muted); font-size: 12px; font-weight: 700; }
+.email-result dd { margin: 0; color: var(--ink); font-size: 14px; font-weight: 750; }
+
+.email-attachment {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--accent-soft) 68%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
+  border-radius: 8px;
+}
+
+.email-attachment-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  color: #ffffff;
+  background: #217346;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: 850;
+}
+
+.email-attachment > span:last-child { display: grid; gap: 3px; }
+.email-attachment strong { color: var(--ink); font-size: 13px; }
+.email-attachment small { color: var(--muted); font-size: 11px; }
+
 .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
 
 .note {
