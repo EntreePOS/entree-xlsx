@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.1
+
+- Clarify that the package is under active development for Entree POS software,
+  is not intended to provide a stable public API, and may introduce breaking
+  changes without prior notice.
+- Replace the hard-coded README version with a live npm version badge.
+
 ## 0.4.0
 
 - Add `row()`, `rows()`, and `columns()` worksheet helpers alongside `range()`

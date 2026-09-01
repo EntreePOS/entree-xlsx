@@ -1,6 +1,6 @@
 # @entree_pos/xlsx API Reference
 
-Version: `0.4.0`
+Version: `0.4.1`
 Runtime: Node.js 18 or newer  
 Module format: native ECMAScript modules (ESM)  
 Runtime dependencies: none

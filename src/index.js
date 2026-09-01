@@ -19,4 +19,4 @@ export const createWorkbook = client.create.bind(client);
 export const openWorkbook = client.open.bind(client);
 export const openWorkbookSync = client.openSync.bind(client);
 export const parseWorkbook = client.parse.bind(client);
-export const version = "0.4.0";
+export const version = "0.4.1";
