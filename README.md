@@ -8,7 +8,7 @@ charts, and pivots.
 `.xlsx` files or safely update existing `.xlsx` and `.xlsm` templates while
 preserving workbook parts it does not modify. There are no runtime dependencies.
 
-Current version: **0.4.0**
+[![npm version](https://img.shields.io/npm/v/%40entree_pos%2Fxlsx?label=version)](https://www.npmjs.com/package/@entree_pos/xlsx)
 
 > [!WARNING]
 > This package is under active development. APIs may change at any time without
