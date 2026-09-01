@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A practical, visual tutorial for creating polished Excel workbooks with @entree_pos/xlsx.">
+  <meta name="description" content="JavaScript examples and API reference for creating XLSX workbooks with @entree_pos/xlsx.">
   <meta name="theme-color" content="#f6f8fb">
-  <title>@entree_pos/xlsx | Visual tutorial</title>
+  <title>@entree_pos/xlsx | JavaScript XLSX examples</title>
   <link rel="stylesheet" href="styles.css?v=0.4.1">
   <script src="app.js?v=0.4.1" defer></script>
 </head>
@@ -31,37 +31,34 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
         <p class="eyebrow">Version 0.4.1 · Modern JavaScript for Node.js 18+</p>
-        <h1 id="hero-title">Build better Excel files.</h1>
-        <p class="hero-summary">Simplified spreadsheet creation in JavaScript.</p>
+        <h1 id="hero-title">Create XLSX files with JavaScript.</h1>
         <div class="install-row">
           <code>npm install @entree_pos/xlsx</code>
           <button class="copy-button" type="button" data-copy="npm install @entree_pos/xlsx">Copy</button>
         </div>
         <div class="hero-actions">
-          <a class="button primary" href="#lesson-1">Start with data</a>
-          <a class="button secondary" href="playground/">Try the playground</a>
-          <a class="button secondary" href="assets/examples/11-create-a-chart.xlsx" download>Download an example</a>
+          <a class="button primary" href="playground/">Run this code</a>
+          <a class="button secondary" href="api/">API reference</a>
         </div>
       </div>
-      <figure class="hero-result">
-        <div class="window-bar"><span>monthly-revenue.xlsx</span><span>Live workbook result</span></div>
-        <img src="assets/results/11-create-a-chart.png" alt="Excel worksheet with monthly revenue data and a blue line chart" width="1470" height="662">
-      </figure>
-    </section>
+      <div class="hero-code code-panel">
+        <div class="panel-bar"><span>report.js</span><button class="copy-button" type="button">Copy code</button></div>
+        <pre><code>import { createWorkbook } from "@entree_pos/xlsx";
 
-    <section class="orientation" aria-labelledby="path-title">
-      <div>
-        <p class="section-kicker">Learn one small step at a time</p>
-        <h2 id="path-title">Start with five examples.</h2>
+const workbook = createWorkbook("Sales");
+const sheet = workbook.sheet();
+
+sheet.setData([
+  ["Item", "Qty", "Price"],
+  ["Burger", 2, 12.5],
+  ["Fries", 1, 4]
+]);
+
+sheet.row(1).style({ bold: true });
+sheet.column("C").style({ numberFormat: "$#,##0.00" });
+
+await workbook.save("sales.xlsx");</code></pre>
       </div>
-      <p>These examples cover the basic concepts you need to get started. Copy the code, run it, and open the generated workbook to see the result.</p>
-      <ol class="beginner-path" aria-label="Recommended first lessons">
-        <li><a href="#lesson-1"><span>01 · 1 minute</span><strong>Create an XLSX file</strong><small>Add rows and save your first workbook.</small></a></li>
-        <li><a href="#lesson-2"><span>02 · 2 minutes</span><strong>Convert objects into rows</strong><small>Save application records as spreadsheet data.</small></a></li>
-        <li><a href="#lesson-3"><span>03 · 2 minutes</span><strong>Change cell values</strong><small>Update specific cells and add new data.</small></a></li>
-        <li><a href="#lesson-4"><span>04 · 2 minutes</span><strong>Add a sheet</strong><small>Organize related data in two tabs.</small></a></li>
-        <li><a href="#lesson-5"><span>05 · 3 minutes</span><strong>Apply styles</strong><small>Format a header and currency.</small></a></li>
-      </ol>
     </section>
 
     <div class="docs-layout" id="tutorial">
@@ -102,8 +99,6 @@
             <div>
               <p class="difficulty">Beginner · 1 minute</p>
               <h2>Create your first XLSX file</h2>
-              <p class="feature-name"><span>You learn</span> Create a workbook, add rows, and save the XLSX file</p>
-              <p class="use-case"><strong>Use this when:</strong> You want the smallest complete example that creates a spreadsheet you can open.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -138,8 +133,6 @@ await workbook.save("01-add-data.xlsx");</code></pre>
             <div>
               <p class="difficulty">Beginner · 2 minutes</p>
               <h2>Convert objects into rows</h2>
-              <p class="feature-name"><span>You learn</span> Convert an array of JavaScript objects into headers and rows</p>
-              <p class="use-case"><strong>Use this when:</strong> You have records from a database or API that you want to save as a spreadsheet.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -176,8 +169,6 @@ await workbook.save("02-export-records.xlsx");</code></pre>
             <div>
               <p class="difficulty">Beginner · 2 minutes</p>
               <h2>Change cell values</h2>
-              <p class="feature-name"><span>You learn</span> Find cells by their Excel addresses and update their values</p>
-              <p class="use-case"><strong>Use this when:</strong> You need to change specific values or add a small amount of data without replacing the entire worksheet.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -219,8 +210,6 @@ await workbook.save("03-change-cells.xlsx");</code></pre>
             <div>
               <p class="difficulty">Beginner · 2 minutes</p>
               <h2>Add another worksheet</h2>
-              <p class="feature-name"><span>You learn</span> Put related datasets in separate workbook tabs</p>
-              <p class="use-case"><strong>Use this when:</strong> One file needs separate tabs for products, categories, locations, or other related lists.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -263,8 +252,6 @@ await workbook.save("04-multiple-sheets.xlsx");</code></pre>
             <div>
               <p class="difficulty">Beginner · 3 minutes</p>
               <h2>Apply styles</h2>
-              <p class="feature-name"><span>You learn</span> Style a header, format currency, and set column widths</p>
-              <p class="use-case"><strong>Use this when:</strong> Your data exports correctly and you want one small visual improvement before learning a full style system.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -312,8 +299,6 @@ await workbook.save("05-first-style.xlsx");</code></pre>
             <div>
               <p class="difficulty">Everyday helpers · 3 minutes</p>
               <h2 id="helpers-title">Find and update data</h2>
-              <p class="feature-name"><span>You learn</span> Select a range, row, rows, column, or columns, then search and update their cells</p>
-              <p class="use-case"><strong>Use this when:</strong> You want to work with a meaningful part of the worksheet instead of managing individual cell addresses.</p>
             </div>
           </header>
           <div class="helper-grid">
@@ -383,8 +368,6 @@ reportColumns.width(18);</code></pre>
             <div>
               <p class="difficulty">Beginner · 6 minutes</p>
               <h2>Make the workbook look professional</h2>
-              <p class="feature-name"><span>You learn</span> Headers, currency formats, status colors, and reusable styles</p>
-              <p class="use-case"><strong>Use this when:</strong> The data is correct, but the exported file still looks raw or is difficult to scan.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -453,8 +436,6 @@ await workbook.save("06-reusable-styles.xlsx");</code></pre>
             <div>
               <p class="difficulty">Intermediate · 7 minutes</p>
               <h2>Add totals that recalculate in Excel</h2>
-              <p class="feature-name"><span>You learn</span> Formulas, cached values, and number formats</p>
-              <p class="use-case"><strong>Use this when:</strong> An invoice, budget, or report must update its totals when someone changes a quantity or price.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -535,8 +516,6 @@ await workbook.save("07-formulas-and-formats.xlsx");</code></pre>
             <div>
               <p class="difficulty">Intermediate · 8 minutes</p>
               <h2>Make the report easy to use</h2>
-              <p class="feature-name"><span>You learn</span> Filters, useful column widths, report titles, and links</p>
-              <p class="use-case"><strong>Use this when:</strong> Staff need to filter a daily report and open the related record in your application.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -623,8 +602,6 @@ await workbook.save("08-layout-and-filters.xlsx");</code></pre>
             <div>
               <p class="difficulty">Intermediate · 10 minutes</p>
               <h2>Update an existing Excel template</h2>
-              <p class="feature-name"><span>You learn</span> Lossless XLSX and XLSM template editing</p>
-              <p class="use-case"><strong>Use this when:</strong> A designer or accountant already owns the workbook layout and your code only needs to insert current data.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -712,8 +689,6 @@ await workbook.save("09-edit-a-template.xlsx");</code></pre>
             <div>
               <p class="difficulty">Intermediate · 6 minutes</p>
               <h2>Format cell values</h2>
-              <p class="feature-name"><span>You learn</span> Keep typed values while controlling how Excel displays them</p>
-              <p class="use-case"><strong>Use this when:</strong> A report includes dates, rates, and budgets that should be sortable and calculable instead of stored as display text.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -762,8 +737,6 @@ await workbook.save("10-format-dates-and-percentages.xlsx");</code></pre>
             <div>
               <p class="difficulty">Advanced · 12 minutes</p>
               <h2>Turn worksheet data into a chart</h2>
-              <p class="feature-name"><span>You learn</span> Native Excel chart creation from a worksheet range</p>
-              <p class="use-case"><strong>Use this when:</strong> A report contains monthly or categorical values and readers need to recognize a trend without scanning every number.</p>
             </div>
           </header>
           <div class="lesson-grid lesson-grid-wide-result">
@@ -845,8 +818,6 @@ await workbook.save("11-create-a-chart.xlsx");</code></pre>
             <div>
               <p class="difficulty">Advanced · 12 minutes</p>
               <h2>Edit a chart without rebuilding it</h2>
-              <p class="feature-name"><span>You learn</span> Update chart type, title, and source range by chart ID</p>
-              <p class="use-case"><strong>Use this when:</strong> A workbook or template already contains a chart and your application needs to change how it presents current data.</p>
             </div>
           </header>
           <div class="lesson-grid lesson-grid-wide-result">
@@ -935,8 +906,6 @@ await workbook.save("12-edit-a-chart.xlsx");</code></pre>
             <div>
               <p class="difficulty">Advanced · 15 minutes</p>
               <h2>Summarize many rows with a PivotTable</h2>
-              <p class="feature-name"><span>You learn</span> Native Excel PivotTable creation</p>
-              <p class="use-case"><strong>Use this when:</strong> Many source rows need to be grouped by region, category, store, or another dimension that Excel users may explore.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -1028,8 +997,6 @@ await workbook.save("13-create-a-pivot-table.xlsx");</code></pre>
             <div>
               <p class="difficulty">Advanced · 18 minutes</p>
               <h2>Protect editable cells and formulas</h2>
-              <p class="feature-name"><span>You learn</span> Cell protection, worksheet protection, and workbook structure protection</p>
-              <p class="use-case"><strong>Use this when:</strong> Users may edit input cells but formulas and workbook structure must stay locked.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -1124,8 +1091,6 @@ await workbook.save("14-protect-a-sheet.xlsx");</code></pre>
             <div>
               <p class="difficulty">Advanced · 5 minutes</p>
               <h2>Require a password to open the workbook</h2>
-              <p class="feature-name"><span>You learn</span> Excel-compatible AES-256 file encryption</p>
-              <p class="use-case"><strong>Use this when:</strong> The workbook contains private information and its contents must stay unreadable without a password.</p>
             </div>
           </header>
           <div class="lesson-grid">
@@ -1172,11 +1137,9 @@ await workbook.save("15-encrypt-a-workbook.xlsx", {
     <section class="core-cheatsheet" id="core-api" aria-labelledby="core-api-title">
       <header class="core-cheatsheet-header">
         <div>
-          <p class="section-kicker">Core API cheatsheet</p>
-          <h2 id="core-api-title">The methods you will use most.</h2>
+          <h2 id="core-api-title">Core API</h2>
         </div>
         <div>
-          <p>Start here for everyday workbook creation, selection, formatting, and output. The searchable API page covers every method and advanced option.</p>
           <a class="core-api-link" href="api/">Search the complete API <span aria-hidden="true">→</span></a>
         </div>
       </header>
@@ -1415,21 +1378,11 @@ await workbook.save("15-encrypt-a-workbook.xlsx", {
       <p class="cheatsheet-note">Need style property names, encryption helpers, or every option? <a href="https://github.com/huangxuewu/entree-xlsx/blob/main/docs/API.md">Open the complete API reference.</a></p>
     </section>
 
-    <section class="next-step" aria-labelledby="next-title">
-      <p class="section-kicker">Ready for your own data?</p>
-      <h2 id="next-title">Install the library and keep the API reference nearby.</h2>
-      <div class="next-actions">
-        <a class="button primary" href="https://www.npmjs.com/package/@entree_pos/xlsx">Open on npm</a>
-        <a class="button secondary" href="api/">Browse every method</a>
-        <a class="button secondary" href="playground/">Try the playground</a>
-        <a class="button secondary" href="https://github.com/huangxuewu/entree-xlsx/tree/main/site/examples">View tutorial source</a>
-      </div>
-    </section>
   </main>
 
   <footer>
-    <div><strong>@entree_pos/xlsx</strong><span>MIT licensed. Built for modern Node.js.</span></div>
-    <div class="research-links"><span>Learning path informed by common workflows documented by</span><a href="https://docs.sheetjs.com/docs/getting-started/examples/export/">SheetJS</a><a href="https://github.com/exceljs/exceljs">ExcelJS</a><a href="https://github.com/dtjohnson/xlsx-populate">xlsx-populate</a></div>
+    <div><strong>@entree_pos/xlsx</strong><span>Version 0.4.1 · MIT</span></div>
+    <div class="research-links"><a href="https://www.npmjs.com/package/@entree_pos/xlsx">npm</a><a href="https://github.com/huangxuewu/entree-xlsx">GitHub</a></div>
   </footer>
 </body>
 </html>

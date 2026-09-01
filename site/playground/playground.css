@@ -1,7 +1,7 @@
 .playground-page {
   width: min(1500px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 52px 0 72px;
+  padding: 32px 0 56px;
 }
 
 .playground-intro {
@@ -9,13 +9,13 @@
   grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr);
   gap: 56px;
   align-items: end;
-  margin-bottom: 30px;
+  margin-bottom: 18px;
 }
 
 .playground-intro h1 {
   max-width: 900px;
   margin: 8px 0 0;
-  font-size: clamp(2.25rem, 5vw, 4.6rem);
+  font-size: clamp(2rem, 4vw, 3.5rem);
   line-height: 1;
   letter-spacing: -.055em;
 }
@@ -313,24 +313,11 @@
   white-space: pre-wrap;
 }
 
-.playground-help {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+.playground-limit {
   margin-top: 18px;
+  color: var(--muted);
+  font-size: .82rem;
 }
-
-.playground-help div {
-  display: grid;
-  gap: 6px;
-  padding: 16px 18px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--surface);
-}
-
-.playground-help strong { font-size: .86rem; }
-.playground-help span { color: var(--muted); font-size: .86rem; line-height: 1.5; }
 
 @media (max-width: 980px) {
   .playground-intro,
@@ -340,7 +327,6 @@
   .playground-intro { gap: 18px; }
   .output-panel { border-left: 0; border-top: 1px solid var(--line); }
   .code-editor { min-height: 460px; }
-  .playground-help { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 620px) {
